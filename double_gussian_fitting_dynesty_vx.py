@@ -103,11 +103,11 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 6*umu1-6   # scale and shift to [-3., 3.)
+    mu1 = 3*umu1-3   # scale and shift to [-3., 3.)
     sigma1 = (usigma1)*3
     amp1 = uamp1*3
     
-    mu2 =3.5*umu2  # scale and shift to [-3., 3.)
+    mu2 =2*umu2-1  # scale and shift to [-3., 3.)
     sigma2 = (usigma2)*2
     amp2 = uamp2*2
 
@@ -216,7 +216,8 @@ rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Helvetica"]})
 
-
+results = sampler.results
+print(results['logz'][-1])
 
 h=plt.hist(v_x, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 xplot = np.linspace(min(x), max(x), 100)
@@ -231,12 +232,14 @@ plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="darkorange"
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
 plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]))
 plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
+plt.text(min(x),max(h[0]-0.01),'$logz=%.0f$'%(results['logz'][-1]))
+plt.text(max(x)/2,max(h[0]-0.01),'$nbins=%s$'%(nbins))
 
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel('v$_{x}$ (mas yr$^{-1}$)') 
 
 
-
-
-
+#%%
+results = sampler.results
+print(results['logz'][-1])
