@@ -53,9 +53,12 @@ rcParams.update({
 
 
 chip=3
-nbins=25
-v_x,v_y=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',usecols=[0,1],unpack=True)
-
+nbins=23
+accu=10
+v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
+# select=np.where((dvx<accu)&(dvy<accu))
+select=np.where((dvx<accu))
+v_x=v_x[select]
 fig,ax=plt.subplots(1,1)
 h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
@@ -107,9 +110,9 @@ def prior_transform(utheta):
     sigma1 = (usigma1)*3
     amp1 = uamp1*3
     
-    mu2 =2*umu2-1  # scale and shift to [-3., 3.)
-    sigma2 = (usigma2)*2
-    amp2 = uamp2*2
+    mu2 =2.5*umu2  # scale and shift to [-3., 3.)
+    sigma2 = (usigma2)*3.5
+    amp2 = uamp2*3
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform
@@ -231,9 +234,11 @@ plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="darkorange"
 # plt.axvline(mean[0],linestyle='dashed',color='orange')
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
 plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]))
+plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]))
 plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
-plt.text(min(x),max(h[0]-0.01),'$logz=%.0f$'%(results['logz'][-1]))
-plt.text(max(x)/2,max(h[0]-0.01),'$nbins=%s$'%(nbins))
+plt.text(min(x),max(h[0]-0.02),'$logz=%.0f$'%(results['logz'][-1]))
+plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins))
+plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
 
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
