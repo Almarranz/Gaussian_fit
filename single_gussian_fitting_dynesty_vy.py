@@ -12,7 +12,7 @@
 
 
 import numpy as np
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import emcee
 import corner
 import dynesty
@@ -53,7 +53,7 @@ rcParams.update({
 
 
 chip=3
-nbins=28
+nbins=13
 v_x,v_y=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',usecols=[0,1],unpack=True)
 fig,ax=plt.subplots(1,2)
 h=ax[0].hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
@@ -109,8 +109,8 @@ def prior_transform(utheta):
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
     mu1 = 6*umu1-3   # scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*8-4
-    amp1 = uamp1*2
+    sigma1 = (usigma1)*3
+    amp1 = uamp1*3
 
     return mu1, sigma1, amp1
 # prior transform
@@ -127,7 +127,7 @@ def prior_transform(utheta):
 # In[10]:
 
 
-sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=3, nlive=500,
+sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=3, nlive=200,
                                         bound='multi', sample='rwalk')
 sampler.run_nested()
 res = sampler.results
@@ -210,14 +210,14 @@ rcParams.update({'ytick.major.width': '1.5'})
 rcParams.update({'ytick.minor.pad': '7.0'})
 rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 30})
+rcParams.update({'font.size': 20})
 rcParams.update({'figure.figsize':(10,5)})
 rcParams.update({
     "text.usetex": True,
     "font.family": "sans-serif",
     "font.sans-serif": ["Helvetica"]})
 
-
+results = sampler.results
 
 h=plt.hist(v_y, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 xplot = np.linspace(min(x), max(x), 100)
@@ -230,6 +230,10 @@ plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="darkorange"
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mu_{l}$ (mas yr$^{-1}$)') 
+plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]))
+plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]))
+plt.text(max(x)/2,max(h[0]-0.01),'$logz=%.0f$'%(results['logz'][-1]))
+plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins))
 
 
 
