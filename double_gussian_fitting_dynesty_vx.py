@@ -20,9 +20,11 @@ import dynesty
 
 # In[3]:
 
-
+band='H'
+folder='im_jitter_NOgains/'
+exptime=10
 data='/Users/amartinez/Desktop/PhD/python/Gaussian_fit/'
-
+tmp='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'tmp_bs/'
 
 # In[4]:
 
@@ -50,10 +52,10 @@ rcParams.update({
 
 
 # In[5]:
-
+lst=np.loadtxt(tmp+'lst.txt')
 
 chip=3
-nbins=23
+nbins=20
 accu=10
 v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
@@ -106,12 +108,12 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 3*umu1-3   # scale and shift to [-3., 3.)
+    mu1 = umu1-2   # scale and shift to [-3., 3.)
     sigma1 = (usigma1)*3
     amp1 = uamp1*3
     
-    mu2 =2.5*umu2  # scale and shift to [-3., 3.)
-    sigma2 = (usigma2)*3.5
+    mu2 =umu2  
+    sigma2 = (usigma2)*4
     amp2 = uamp2*3
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
@@ -239,6 +241,7 @@ plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
 plt.text(min(x),max(h[0]-0.02),'$logz=%.0f$'%(results['logz'][-1]))
 plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins))
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
+plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst))
 
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
