@@ -19,10 +19,11 @@ import dynesty
 
 
 # In[3]:
-
-
+band='H'
+folder='im_jitter_NOgains/'
+exptime=10
 data='/Users/amartinez/Desktop/PhD/python/Gaussian_fit/'
-
+tmp='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'tmp_bs/'
 
 # In[4]:
 
@@ -50,14 +51,14 @@ rcParams.update({
 
 
 # In[5]:
-
+lst=np.loadtxt(tmp+'lst.txt')
 
 chip=3
-nbins=16
-accu=10
+nbins=22
+accu=1000
 v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
-select=np.where((dvx<accu))
+select=np.where((dvy<accu))
 v_y=v_y[select]
 fig,ax=plt.subplots(1,1)
 h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
@@ -106,13 +107,13 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 1*umu1   # scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*3
-    amp1 = uamp1*0.7
+    mu1 = 2*umu1-1  # scale and shift to [-3., 3.)
+    sigma1 = (usigma1)*2
+    amp1 = uamp1*3
     
-    mu2 =10*umu2-5  # scale and shift to [-3., 3.)
-    sigma2 = (usigma2)*3+2
-    amp2 = uamp2*1
+    mu2 =2*umu2-1 # scale and shift to [-3., 3.)
+    sigma2 = (usigma2)*5
+    amp2 = uamp2*3
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform
@@ -233,13 +234,13 @@ plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="darkorange"
 
 # plt.axvline(mean[0],linestyle='dashed',color='orange')
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
-plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]))
-plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]))
+plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='red')
+plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='red')
 plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
 plt.text(min(x),max(h[0]-0.02),'$logz=%.0f$'%(results['logz'][-1]))
 plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins))
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
-
+plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst))
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel('v$_{y}$ (mas yr$^{-1}$)') 
