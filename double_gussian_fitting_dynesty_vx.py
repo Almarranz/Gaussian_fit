@@ -55,7 +55,7 @@ rcParams.update({
 lst=np.loadtxt(tmp+'lst.txt')
 
 chip=3
-nbins=20
+nbins=14
 accu=10
 v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
@@ -251,3 +251,14 @@ plt.xlabel('v$_{x}$ (mas yr$^{-1}$)')
 #%%
 results = sampler.results
 print(results['logz'][-1])
+#print(max(np.exp(max(results['logl']))))
+
+print(10**((min(results['logl']))))
+a=max(results['logl'])
+print(a)
+print(10**-0.0003)
+
+
+print(results['logl'])
+
+
