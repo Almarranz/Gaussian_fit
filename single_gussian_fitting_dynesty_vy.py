@@ -53,7 +53,7 @@ rcParams.update({
 
 
 chip=3
-nbins=13
+nbins=22
 v_x,v_y=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',usecols=[0,1],unpack=True)
 fig,ax=plt.subplots(1,2)
 h=ax[0].hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
@@ -108,9 +108,9 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1 = utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 6*umu1-3   # scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*3
-    amp1 = uamp1*3
+    mu1 = 2*umu1-1  # scale and shift to [-3., 3.)
+    sigma1 = (usigma1)*1+2
+    amp1 = uamp1*1
 
     return mu1, sigma1, amp1
 # prior transform

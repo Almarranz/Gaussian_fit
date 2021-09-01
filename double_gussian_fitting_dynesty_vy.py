@@ -54,7 +54,7 @@ rcParams.update({
 lst=np.loadtxt(tmp+'lst.txt')
 
 chip=3
-nbins=22
+nbins=15
 accu=1000
 v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
@@ -111,9 +111,9 @@ def prior_transform(utheta):
     sigma1 = (usigma1)*2
     amp1 = uamp1*3
     
-    mu2 =2*umu2-1 # scale and shift to [-3., 3.)
-    sigma2 = (usigma2)*5
-    amp2 = uamp2*3
+    mu2 =0.5*umu2-0.025 # scale and shift to [-3., 3.)
+    sigma2 = (usigma2)*3.5
+    amp2 = uamp2*4
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform

@@ -52,7 +52,7 @@ rcParams.update({
 
 
 chip=3
-nbins=23
+nbins=17
 accu=10
 v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
@@ -114,17 +114,17 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2, umu3, usigma3, uamp3= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 3*umu1-3   # scale and shift to [-3., 3.)
+    mu1 = 10*umu1-5# scale and shift to [-3., 3.)
     sigma1 = (usigma1)*3
-    amp1 = uamp1*3
+    amp1 = uamp1*2
     
-    mu2 =2.5*umu2  # scale and shift to [-3., 3.)
-    sigma2 = (usigma2)*3.5
-    amp2 = uamp2*3
+    mu2 =10*umu2-5# scale and shift to [-3., 3.)
+    sigma2 = (usigma2)*3
+    amp2 = uamp2*2
     
-    mu3 =2.5*umu3  # scale and shift to [-3., 3.)
-    sigma3 = (usigma3)*3.5
-    amp3 = uamp3*3
+    mu3 =umu3  # scale and shift to [-3., 3.)
+    sigma3 = (usigma3)*4
+    amp3 = uamp3*2
     
     
 
@@ -236,17 +236,17 @@ xplot = np.linspace(min(x), max(x), 100)
 
 plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5])
          + gaussian(xplot, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="darkorange", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="darkorange", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot, mean[6], mean[7], mean[8])  , color="darkorange", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="green", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
 
 
 # plt.axvline(mean[0],linestyle='dashed',color='orange')
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
-plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]))
-plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]))
-plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
-plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
+plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
+plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
+plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
+plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
 plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
 plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
 
