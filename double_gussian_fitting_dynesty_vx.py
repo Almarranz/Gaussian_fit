@@ -52,8 +52,9 @@ rcParams.update({
 
 
 # In[5]:
-lst=np.loadtxt(tmp+'lst.txt')
-
+lst=np.loadtxt(tmp+'lst.txt') # this read a txt file indicating the list of common stars used for the alignments
+#There are 3 different lists. 1,2 and 3. Being # 3 the smaller and more 'accured' within the brick
+#This is generated en 13_alig....
 chip=3
 nbins=14
 accu=10
@@ -249,16 +250,16 @@ plt.xlabel('v$_{x}$ (mas yr$^{-1}$)')
 
 
 #%%
-results = sampler.results
-print(results['logz'][-1])
-#print(max(np.exp(max(results['logl']))))
+# results = sampler.results
+# print(results['logz'][-1])
+# #print(max(np.exp(max(results['logl']))))
 
-print(10**((min(results['logl']))))
-a=max(results['logl'])
-print(a)
-print(10**-0.0003)
+# print(10**((min(results['logl']))))
+# a=max(results['logl'])
+# print(a)
+# print(10**-0.0003)
 
 
-print(results['logl'])
-
+# print(results['logl'])
+ 
 
