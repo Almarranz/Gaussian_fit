@@ -51,13 +51,29 @@ rcParams.update({
 
 
 # In[5]:
-lst=np.loadtxt(tmp+'lst.txt')
+
 
 chip=3
+
 nbins=15
 accu=1000
-v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
-# select=np.where((dvx<accu)&(dvy<accu))
+in_brick=0
+if in_brick==1:
+    if chip =='both':
+        v_x2,v_y2,dvx2,dvy2=np.loadtxt(data+'arcsec_vx_vy_chip2.txt',unpack=True)
+        v_x3,v_y3,dvx3,dvy3=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
+        v_x=np.r_[v_x2,v_x3]
+        v_y=np.r_[v_y2,v_y3]
+        dvx=np.r_[dvx2,dvx3]
+        dvy=np.r_[dvy2,dvy3]
+    elif chip==2 or chip==3:
+        lst=np.loadtxt(tmp+'lst_chip%s.txt'%(chip))
+        v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+elif in_brick==0:
+        lst=3
+        v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)        
+
+
 select=np.where((dvy<accu))
 v_y=v_y[select]
 fig,ax=plt.subplots(1,1)
@@ -111,8 +127,8 @@ def prior_transform(utheta):
     sigma1 = (usigma1)*2
     amp1 = uamp1*3
     
-    mu2 =0.5*umu2-0.025 # scale and shift to [-3., 3.)
-    sigma2 = (usigma2)*3.5
+    mu2 =2*umu2-1 # scale and shift to [-3., 3.)
+    sigma2 = (usigma2)*5
     amp2 = uamp2*4
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
@@ -217,11 +233,14 @@ rcParams.update({'font.size': 20})
 rcParams.update({'figure.figsize':(10,5)})
 rcParams.update({
     "text.usetex": True,
-    "font.family": "sans-serif",
+    "font.family": "serif",
     "font.sans-serif": ["Helvetica"]})
+
+
 
 results = sampler.results
 print(results['logz'][-1])
+
 
 h=plt.hist(v_y, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 xplot = np.linspace(min(x), max(x), 100)
@@ -230,22 +249,38 @@ xplot = np.linspace(min(x), max(x), 100)
 
 plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="darkorange", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
 
 # plt.axvline(mean[0],linestyle='dashed',color='orange')
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
 plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='red')
 plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='red')
 plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
-plt.text(min(x),max(h[0]-0.02),'$logz=%.0f$'%(results['logz'][-1]))
-plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins))
+plt.text(min(x),max(h[0]-0.02),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins),color='b')
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
-plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst))
+if chip==2 or chip==3:
+    plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst),color='b')
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel('v$_{y}$ (mas yr$^{-1}$)') 
+plt.xlabel('v$_{y}$ (mas yr$^{-1}$), Chip %s'%(chip)) 
 
+# #%%
+# # Example data
+# t = np.arange(0.0, 1.0 + 0.01, 0.01)
+# s = np.cos(4 * np.pi * t) + 2
 
-#%%
-results = sampler.results
-print(results['logz'][-1])
+# plt.rc('text', usetex=True)
+# plt.rc('font', family='serif')
+# plt.plot(t, s)
+
+# plt.xlabel(r'\textbf{time} (s)')
+# plt.ylabel(r'\textit{voltage} (mV)',fontsize=16)
+# plt.title(r"\TeX\ is Number "
+#           r"$\displaystyle\sum_{n=1}^\infty\frac{-e^{i\pi}}{2^n}$!",
+#           fontsize=16, color='gray')
+# # Make room for the ridiculously large title.
+# plt.subplots_adjust(top=0.8)
+
+# plt.savefig('tex_demo')
+# plt.show()

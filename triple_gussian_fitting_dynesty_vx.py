@@ -27,6 +27,7 @@ data='/Users/amartinez/Desktop/PhD/python/Gaussian_fit/'
 
 
 # plt.rcParams['figure.figsize'] = (20,10)
+#from matplotlib import rc
 from matplotlib import rcParams
 rcParams.update({'xtick.major.pad': '7.0'})
 rcParams.update({'xtick.major.size': '7.5'})
@@ -49,12 +50,18 @@ rcParams.update({
 
 
 # In[5]:
-
-
+# from matplotlib import rc
+# plt.rc('text', usetex=True)
+# plt.rc('font', family='serif')
 chip=3
-nbins=17
+nbins=20
+in_brick=1
+
 accu=10
-v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
+if in_brick==0:
+    v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
+elif in_brick==1:
+    v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
 select=np.where((dvx<accu))
 v_x=v_x[select]
@@ -114,17 +121,17 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2, umu3, usigma3, uamp3= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 10*umu1-5# scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*3
-    amp1 = uamp1*2
+    mu1 = 6*umu1-3   # scale and shift to [-3., 3.)
+    sigma1 = (usigma1)*3+1.8
+    amp1 = uamp1*3
     
-    mu2 =10*umu2-5# scale and shift to [-3., 3.)
-    sigma2 = (usigma2)*3
-    amp2 = uamp2*2
+    mu2 = umu2*0.5
+    sigma2 = (usigma2)*3.8
+    amp2 = uamp2*3
     
-    mu3 =umu3  # scale and shift to [-3., 3.)
-    sigma3 = (usigma3)*4
-    amp3 = uamp3*2
+    mu3 =3*umu3  # scale and shift to [-3., 3.)
+    sigma3 = (usigma3)*2
+    amp3 = uamp3*0.1
     
     
 
