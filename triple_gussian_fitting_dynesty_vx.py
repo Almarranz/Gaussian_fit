@@ -19,9 +19,11 @@ import dynesty
 
 # In[4]:
 
-
+band='H'
+folder='im_jitter_NOgains/'
+exptime=10
 data='/Users/amartinez/Desktop/PhD/python/Gaussian_fit/'
-
+tmp='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'tmp_bs/'
 
 # In[4]:
 
@@ -54,13 +56,14 @@ rcParams.update({
 # plt.rc('text', usetex=True)
 # plt.rc('font', family='serif')
 chip=3
-nbins=20
-in_brick=1
+nbins=25
+in_brick=0
 
 accu=10
-if in_brick==0:
+if in_brick==1:
+    lst=np.loadtxt(tmp+'lst_chip%s.txt'%(chip))
     v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',unpack=True)
-elif in_brick==1:
+elif in_brick==0:
     v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
 select=np.where((dvx<accu))
@@ -121,17 +124,17 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2, umu3, usigma3, uamp3= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 6*umu1-3   # scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*3+1.8
-    amp1 = uamp1*3
+    mu1 = 2*umu1   # scale and shift to [-3., 3.)
+    sigma1 = (usigma1)*3
+    amp1 = uamp1*1
     
-    mu2 = umu2*0.5
-    sigma2 = (usigma2)*3.8
-    amp2 = uamp2*3
+    mu2 = 0.5*umu2
+    sigma2 = (usigma2)*2+2
+    amp2 = uamp2*0.5
     
-    mu3 =3*umu3  # scale and shift to [-3., 3.)
-    sigma3 = (usigma3)*2
-    amp3 = uamp3*0.1
+    mu3 =3*umu3-4  # scale and shift to [-3., 3.)
+    sigma3 = (usigma3)*4
+    amp3 = uamp3*1
     
     
 
@@ -259,7 +262,10 @@ plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
 
 plt.text(min(x),max(h[0]/2),'$logz=%.0f$'%(results['logz'][-1]))
 plt.text(max(x)/2,max(h[0]/2-0.01),'$nbins=%s$'%(nbins))
-
+if (chip==2 or chip==3) and in_brick==1:
+    plt.text(max(x)/2,max(h[0]-0.05),'$list = %.0f$'%(lst))
+elif in_brick==0:
+    plt.text(max(x)/2,max(h[0]-0.05),'$list = %s$'%('out Brick'))
 
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
