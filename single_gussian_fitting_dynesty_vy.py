@@ -20,8 +20,13 @@ import dynesty
 
 # In[3]:
 
-
+band='H'
+folder='im_jitter_NOgains/'
+exptime=10
 data='/Users/amartinez/Desktop/PhD/python/Gaussian_fit/'
+tmp='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'tmp_bs/'
+
+
 
 
 # In[4]:
@@ -53,26 +58,25 @@ rcParams.update({
 
 
 chip=3
-nbins=22
+nbins=20
 v_x,v_y=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',usecols=[0,1],unpack=True)
-fig,ax=plt.subplots(1,2)
-h=ax[0].hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
-x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]
-ax[0].axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
-ax[0].legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
+fig,ax=plt.subplots(1,1)
+h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
+x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
+ax.axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
+ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
               %(chip,len(v_y),np.mean(v_y),np.std(v_y))],fontsize=12,markerscale=0,shadow=True,loc=3,handlelength=-0.0)
-y=h[0]
+y=h[0]#height for each bin
 #yerr = y*0.05
 #yerr = y*0.01
 yerr=0.0001
 y += yerr
-ax[1].scatter(x,y)
-
+ax.scatter(x,y,color='g',zorder=3)
 
 # In[6]:
 
 
-y
+lst=np.loadtxt(tmp+'lst_chip%s.txt'%(chip))
 
 
 # In[7]:
@@ -109,7 +113,7 @@ def prior_transform(utheta):
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
     mu1 = 2*umu1-1  # scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*1+2
+    sigma1 = (usigma1)*4
     amp1 = uamp1*1
 
     return mu1, sigma1, amp1
@@ -227,15 +231,14 @@ xplot = np.linspace(min(x), max(x), 100)
 
 plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="darkorange", linestyle='dashed', linewidth=3, alpha=0.6)
 
-plt.ylabel('N')
+plt.ylabel('$N$')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mu_{l}$ (mas yr$^{-1}$)') 
+plt.xlabel(r'$\mu_{l} (mas\ yr^{-1})$') 
 plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]))
 plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]))
 plt.text(max(x)/2,max(h[0]-0.01),'$logz=%.0f$'%(results['logz'][-1]))
 plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins))
-
-
+plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst))
 
 
 
