@@ -55,9 +55,9 @@ rcParams.update({
 
 chip=3
 
-nbins=15
+nbins=19
 accu=1000
-in_brick=0
+in_brick=1
 if in_brick==1:
     if chip =='both':
         v_x2,v_y2,dvx2,dvy2=np.loadtxt(data+'arcsec_vx_vy_chip2.txt',unpack=True)
@@ -124,11 +124,11 @@ def prior_transform(utheta):
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
     mu1 = 2*umu1-1  # scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*2
+    sigma1 = (usigma1)*4
     amp1 = uamp1*3
     
     mu2 =2*umu2-1 # scale and shift to [-3., 3.)
-    sigma2 = (usigma2)*5
+    sigma2 = (usigma2)*8
     amp2 = uamp2*4
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
@@ -233,7 +233,7 @@ rcParams.update({'font.size': 20})
 rcParams.update({'figure.figsize':(10,5)})
 rcParams.update({
     "text.usetex": True,
-    "font.family": "serif",
+    "font.family": "sans-serif",
     "font.sans-serif": ["Helvetica"]})
 
 
@@ -259,11 +259,13 @@ plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
 plt.text(min(x),max(h[0]-0.02),'$logz=%.0f$'%(results['logz'][-1]),color='b')
 plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins),color='b')
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
-if chip==2 or chip==3:
-    plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst),color='b')
-plt.ylabel('N')
+if (chip==2 or chip==3) and in_brick==1:
+    plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst))
+elif in_brick==0:
+    plt.text(max(x)/2,max(h[0]-0.03),'$list = %s$'%('out Brick'))
+plt.ylabel('$N$')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel('v$_{y}$ (mas yr$^{-1}$), Chip %s'%(chip)) 
+plt.xlabel('$v_{y} (mas\ yr^{-1}), Chip %s$'%(chip)) 
 
 # #%%
 # # Example data

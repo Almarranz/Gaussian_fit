@@ -59,7 +59,7 @@ rcParams.update({
 #chip='both'
 chip=3
 in_brick=0 #slect stars on the brick, if =1 or out of brick if =1.
-nbins=19
+nbins=20
 accu=10 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':
@@ -129,7 +129,7 @@ def prior_transform(utheta):
     sigma1 = 6*(usigma1)-3
     amp1 = uamp1*1
     
-    mu2 = umu2*0.5
+    mu2 = 2*umu2-1
     sigma2 = (usigma2)*3.8
     amp2 = uamp2*1
 
@@ -258,12 +258,15 @@ plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
 plt.text(min(x),max(h[0]-0.02),'$logz=%.0f$'%(results['logz'][-1]))
 plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins))
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
-if chip==2 or chip==3:
+if (chip==2 or chip==3) and in_brick==1:
     plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst))
-
-plt.ylabel('N')
+elif in_brick==0:
+    plt.text(max(x)/2,max(h[0]-0.03),'$list = %s$'%('out Brick'))
+    
+    
+plt.ylabel('$N$')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel('v$_{x}$ (mas yr$^{-1}$), Chip %s'%(chip)) 
+plt.xlabel(r'$v_{x} (mas\ yr^{-1}), Chip %s$'%(chip)) 
 
 
 #%%
