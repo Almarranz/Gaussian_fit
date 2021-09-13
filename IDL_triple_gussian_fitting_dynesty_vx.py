@@ -16,7 +16,8 @@ import emcee
 import corner
 import dynesty
 
-
+from astropy.stats import sigma_clip
+from astropy.stats import sigma_clipped_stats
 # In[4]:
 
 band='H'
@@ -55,20 +56,43 @@ rcParams.update({
 # from matplotlib import rc
 # plt.rc('text', usetex=True)
 # plt.rc('font', family='serif')
-chip=3
-nbins=21
-in_brick=1
+chip=2
+nbins=32
+in_brick=0
 
-accu=10000
+accu=1.5
 if in_brick==1:
     lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-    v_x,v_y,dvx,dvy=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+    v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
-    v_x,v_y,dvx,dvy=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)
-# select=np.where((dvx<accu)&(dvy<accu))
-select=np.where((dvx<accu))
+    if chip=='both':
+        lst='All '
+        v_x10,v_y10,dvx10,dvy10,mh10=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
+        v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
+        v_x16,v_y16,dvx16,dvy16,mh16=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
+        v_x=np.r_[v_x16,v_x12,v_x10]
+        v_y=np.r_[v_y16,v_y12,v_y10]
+        dvx=np.r_[dvx16,dvx12,dvx10]
+        dvy=np.r_[dvy16,dvy12,dvy10]
+        mh=np.r_[mh16,mh12,mh10]
+        # v_x=np.r_[v_x16,v_x12]
+        # v_y=np.r_[v_y16,v_y12]
+        # dvx=np.r_[dvx16,dvx12]
+        # dvy=np.r_[dvy16,dvy12]
+        # mh=np.r_[mh16,mh12]
+        
+    else:
+        lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
+        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
+
+select=np.where((dvx<accu)&(dvy<accu))
 v_x=v_x[select]
+v_y=v_y[select]
+mh_all=mh
+mh=mh[select]
 fig,ax=plt.subplots(1,1)
+sig_h=sigma_clip(v_x,sigma=100,maxiters=20,cenfunc='mean',masked=True)
+v_x=v_x[sig_h.mask==False]
 h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
 ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
@@ -87,10 +111,16 @@ ax.scatter(x,y,color='g',zorder=3)
 
 # In[ ]:
 
+ejes=[dvx,dvy]
+names=['x','y']
+if accu<5:
+    fig, ax=plt.subplots(1,2,figsize=(20,10))
+    for i in range(len(ejes)):
+        ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
+        ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
+        ax[i].set_xlabel('$[H]$',fontsize=20)
+        ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
 
-# for i in range(len(yerr)):
-#     if yerr[i] ==0:
-#         yerr[i]=np.mean(yerr[i-1],yerr[i+1])
 
 
 # In[7]:
@@ -124,17 +154,17 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2, umu3, usigma3, uamp3= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 3*umu1   # scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*3
-    amp1 = uamp1*0.1
+    mu1 =2.5*umu1  # scale and shift to [-3., 3.)
+    sigma1 = 2*(usigma1)
+    amp1 = uamp1*0.5
     
-    mu2 = 2*umu2-1
-    sigma2 = (usigma2)*2+2
-    amp2 = uamp2*2
+    mu2 = 1*umu2-0.5
+    sigma2 = 2*(usigma2+1)
+    amp2 = uamp2*0.5
     
-    mu3 =-3*umu3 # scale and shift to [-3., 3.)
-    sigma3 = (usigma3)*4
-    amp3 = uamp3*2
+    mu3 =-4*umu3 # scale and shift to [-3., 3.)
+    sigma3 = 3.2*(usigma3)
+    amp3 = uamp3*0.5
     
     
 
@@ -255,18 +285,23 @@ plt.plot(xplot, gaussian(xplot, mean[6], mean[7], mean[8]) , color='black', line
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
 plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
 plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
+plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='green')
 plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
+plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
 plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
 plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
+plt.text(max(x)/2,max(h[0]-0.05),'$amp_{3}=%.3f$'%(mean[8]))
 
 plt.text(min(x),max(h[0]/2),'$logz=%.0f$'%(results['logz'][-1]))
 plt.text(max(x)/2,max(h[0]/2-0.01),'$nbins=%s$'%(nbins))
 if (chip==2 or chip==3) and in_brick==1:
     plt.text(max(x)/2,max(h[0]-0.05),'$list = %.0f$'%(lst))
 elif in_brick==0:
-    plt.text(max(x)/2,max(h[0]-0.05),'$list = %s$'%('out Brick'))
-
+    if (chip==2 or chip==3):
+        plt.text(max(x)/2,max(h[0]/2-0.03),'$list =%.0f %s$'%(lst,'out'))
+    elif chip=='both':
+        plt.text(max(x)/2,max(h[0]/2-0.03),'$list =%s %s$'%(lst,'out'))
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel('v$_{x}$ (mas yr$^{-1}$), IDL') 

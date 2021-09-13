@@ -55,32 +55,54 @@ rcParams.update({
 
 chip=3
 
-nbins=25
-accu=1000
+nbins=15
+
+accu=1.2
 
 in_brick=1#slect list in or out brick
 
 if in_brick==1:
     if chip =='both':
-        v_x2,v_y2,dvx2,dvy2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-        v_x3,v_y3,dvx3,dvy3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+        v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+        v_x3,v_y3,dvx3,dvy3,mh3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
         v_x=np.r_[v_x2,v_x3]
         v_y=np.r_[v_y2,v_y3]
         dvx=np.r_[dvx2,dvx3]
         dvy=np.r_[dvy2,dvy3]
+        mh=np.r[mh2,mh3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
         # v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
-        v_x,v_y,dvx,dvy=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
-        lst=3
-        v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)        
+    if chip=='both':
+        lst='All '
+        #v_x10,v_y10,dvx10,dvy10,mh10=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
+        v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
+        v_x16,v_y16,dvx16,dvy16,mh16=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
+        # v_x=np.r_[v_x16,v_x12,v_x10]
+        # v_y=np.r_[v_y16,v_y12,v_y10]
+        # dvx=np.r_[dvx16,dvx12,dvx10]
+        # dvy=np.r_[dvy16,dvy12,dvy10]
+        # mh=np.r_[mh16,mh12,mh10]
+        v_x=np.r_[v_x16,v_x12]
+        v_y=np.r_[v_y16,v_y12]
+        dvx=np.r_[dvx16,dvx12]
+        dvy=np.r_[dvy16,dvy12]
+        mh=np.r_[mh16,mh12]
+        
+    else:
+        lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
+        v_x,v_y,dvx,dvy=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
 
 
-select=np.where((dvy<accu))
+select=np.where((dvy<accu) & (dvx<accu) )
 v_y=v_y[select]
+v_x=v_x[select]
+mh_all=mh
+mh=mh[select]
 fig,ax=plt.subplots(1,1)
-sig_h=sigma_clip(v_y,sigma=100,maxiters=20,cenfunc='mean',masked=True)
+sig_h=sigma_clip(v_y,sigma=500,maxiters=20,cenfunc='mean',masked=True)
 v_y=v_y[sig_h.mask==False]
 h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
@@ -97,10 +119,15 @@ ax.scatter(x,y,color='g',zorder=3)
 
 # In[6]:
 
-
-# for i in range(len(yerr)):
-#     if yerr[i] ==0:
-#         yerr[i]=np.mean(yerr[i-1],yerr[i+1])
+ejes=[dvx,dvy]
+names=['x','y']
+if accu<5:
+    fig, ax=plt.subplots(1,2,figsize=(20,10))
+    for i in range(len(ejes)):
+        ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
+        ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
+        ax[i].set_xlabel('$[H]$',fontsize=20)
+        ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
 
 
 # In[7]:
@@ -129,12 +156,12 @@ def prior_transform(utheta):
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
     mu1 = 2*umu1-1 # scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*3
-    amp1 = uamp1*1.5
+    sigma1 = (usigma1)*2
+    amp1 = uamp1*2
     
     mu2 = 2*umu2-1# scale and shift to [-3., 3.)
     sigma2 = 4*(usigma2)
-    amp2 = uamp2*4
+    amp2 = uamp2*1
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform
@@ -260,14 +287,19 @@ plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="k", linesty
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
 plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='red')
 plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='red')
+plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='red')
 plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
-plt.text(min(x),max(h[0]-0.02),'$logz=%.0f$'%(results['logz'][-1]),color='b')
-plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins),color='b')
+plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
+plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
 if (chip==2 or chip==3) and in_brick==1:
-    plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst))
+    plt.text(max(x)/2,max(h[0]-0.05),'$list = %.0f$'%(lst),color='b')
 elif in_brick==0:
-    plt.text(max(x)/2,max(h[0]-0.03),'$list = %s$'%('out Brick'))
+    if (chip==2 or chip==3):
+        plt.text(max(x)/2,max(h[0]-0.05),'$list =%.0f %s$'%(lst,'out'),color='b')
+    elif chip=='both':
+        plt.text(max(x)/2,max(h[0]-0.05),'$list =%s %s$'%(lst,'out'),color='b')
 plt.ylabel('$N$')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel('$v_{y} (mas\ yr^{-1}), IDL,\ Chip %s$'%(chip)) 

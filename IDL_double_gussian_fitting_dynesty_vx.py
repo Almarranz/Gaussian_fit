@@ -59,25 +59,29 @@ rcParams.update({
 #chip='both'
 chip=3
 in_brick=1 #slect stars on the brick, if =1 or out of brick if =1.
-nbins=19
-accu=100000 # select stars cutting by uncertainty. With a large value all star are selected
+nbins=21
+accu=1.5 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':
-        v_x2,v_y2,dvx2,dvy2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-        v_x3,v_y3,dvx3,dvy3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+        v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+        v_x3,v_y3,dvx3,dvy3,mh3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
         v_x=np.r_[v_x2,v_x3]
         v_y=np.r_[v_y2,v_y3]
         dvx=np.r_[dvx2,dvx3]
         dvy=np.r_[dvy2,dvy3]
+        mh=np.r[mh2,mh3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-        v_x,v_y,dvx,dvy=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
     lst=3
-    v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)
+    v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
-select=np.where((dvx<accu))
+select=np.where((dvy<accu) & (dvx<accu) )
 v_x=v_x[select]
+v_y=v_y[select]
+mh_all=mh
+mh=mh[select]
 fig,ax=plt.subplots(1,1)
 h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
@@ -93,11 +97,15 @@ ax.scatter(x,y,color='g',zorder=3)
 
 
 # In[6]:
-
-
-# for i in range(len(yerr)):
-#     if yerr[i] ==0:
-#         yerr[i]=np.mean(yerr[i-1],yerr[i+1])
+ejes=[dvx,dvy]
+names=['x','y']
+if accu<5:
+    fig, ax=plt.subplots(1,2,figsize=(20,10))
+    for i in range(len(ejes)):
+        ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
+        ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
+        ax[i].set_xlabel('$[H]$',fontsize=20)
+        ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
 
 
 # In[7]:
@@ -131,7 +139,7 @@ def prior_transform(utheta):
     
     mu2 = 2*umu2-1
     sigma2 = (usigma2)*3.8
-    amp2 = uamp2*0.6
+    amp2 = uamp2*6
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform
@@ -247,17 +255,19 @@ xplot = np.linspace(min(x), max(x), 100)
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
 plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="darkorange", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="darkorange", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
 
 # plt.axvline(mean[0],linestyle='dashed',color='orange')
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
-plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]))
-plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]))
+plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='red')
+plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='red')
+plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='red')
 plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
-plt.text(min(x),max(h[0]-0.02),'$logz=%.0f$'%(results['logz'][-1]))
-plt.text(max(x)/2,max(h[0]-0.02),'$nbins=%s$'%(nbins))
+plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
+plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
 if (chip==2 or chip==3) and in_brick==1:
     plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst))
 elif in_brick==0:
