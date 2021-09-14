@@ -57,10 +57,10 @@ rcParams.update({
 #There are 3 different lists. 1,2 and 3. Being # 3 the smaller and more 'accured' within the brick
 #This is generated en 13_alig....
 #chip='both'
-chip=2
-in_brick=1 #slect stars on the brick, if =1 or out of brick if =1.
-nbins=20
-accu=1 # select stars cutting by uncertainty. With a large value all star are selected
+chip='both'
+in_brick=0 #slect stars on the brick, if =1 or out of brick if =1.
+nbins=35
+accu=1.1 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':
         v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
@@ -74,8 +74,26 @@ if in_brick==1:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
         v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
-    lst=3
-    v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)
+     if chip=='both':
+        lst='All '
+        v_x10,v_y10,dvx10,dvy10,mh10=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
+        #v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
+        v_x16,v_y16,dvx16,dvy16,mh16=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
+        
+        # v_x=np.r_[v_x16,v_x12,v_x10]
+        # v_y=np.r_[v_y16,v_y12,v_y10]
+        # dvx=np.r_[dvx16,dvx12,dvx10]
+        # dvy=np.r_[dvy16,dvy12,dvy10]
+        # mh=np.r_[mh16,mh12,mh10]
+        
+        v_x=np.r_[v_x16,v_x10]
+        v_y=np.r_[v_y16,v_y10]
+        dvx=np.r_[dvx16,dvx10]
+        dvy=np.r_[dvy16,dvy10]
+        mh=np.r_[mh16,mh10]
+     else:
+        lst=3
+        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
 select=np.where((dvy<accu) & (dvx<accu) )
 v_x=v_x[select]
@@ -265,6 +283,8 @@ plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='red')
 plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='red')
 plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
 plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+if accu<10:
+    plt.text(min(x),max(h[0]-0.05),'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
 plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
 plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
