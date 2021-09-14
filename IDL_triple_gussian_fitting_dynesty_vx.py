@@ -56,11 +56,11 @@ rcParams.update({
 # from matplotlib import rc
 # plt.rc('text', usetex=True)
 # plt.rc('font', family='serif')
-chip=2
-nbins=32
+chip='both'
+nbins=15
 in_brick=0
 
-accu=1.5
+accu=0.5
 if in_brick==1:
     lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
     v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)

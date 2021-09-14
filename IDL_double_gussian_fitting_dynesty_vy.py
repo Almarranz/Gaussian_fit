@@ -53,13 +53,13 @@ rcParams.update({
 # In[5]:
 
 
-chip=3
+chip=2
 
 nbins=15
 
-accu=1.2
+accu=4.9
 
-in_brick=1#slect list in or out brick
+in_brick=0#slect list in or out brick
 
 if in_brick==1:
     if chip =='both':
@@ -93,7 +93,7 @@ elif in_brick==0:
         
     else:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-        v_x,v_y,dvx,dvy=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
+        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
 
 
 select=np.where((dvy<accu) & (dvx<accu) )

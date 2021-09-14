@@ -57,10 +57,10 @@ rcParams.update({
 #There are 3 different lists. 1,2 and 3. Being # 3 the smaller and more 'accured' within the brick
 #This is generated en 13_alig....
 #chip='both'
-chip=3
+chip=2
 in_brick=1 #slect stars on the brick, if =1 or out of brick if =1.
-nbins=21
-accu=1.5 # select stars cutting by uncertainty. With a large value all star are selected
+nbins=20
+accu=1 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':
         v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
