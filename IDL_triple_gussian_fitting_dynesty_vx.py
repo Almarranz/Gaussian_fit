@@ -60,7 +60,7 @@ chip='both'
 nbins=15
 in_brick=0
 
-accu=0.5
+accu=1.1
 if in_brick==1:
     lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
     v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
@@ -68,18 +68,20 @@ elif in_brick==0:
     if chip=='both':
         lst='All '
         v_x10,v_y10,dvx10,dvy10,mh10=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
-        v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
+        #v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
         v_x16,v_y16,dvx16,dvy16,mh16=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
-        v_x=np.r_[v_x16,v_x12,v_x10]
-        v_y=np.r_[v_y16,v_y12,v_y10]
-        dvx=np.r_[dvx16,dvx12,dvx10]
-        dvy=np.r_[dvy16,dvy12,dvy10]
-        mh=np.r_[mh16,mh12,mh10]
-        # v_x=np.r_[v_x16,v_x12]
-        # v_y=np.r_[v_y16,v_y12]
-        # dvx=np.r_[dvx16,dvx12]
-        # dvy=np.r_[dvy16,dvy12]
-        # mh=np.r_[mh16,mh12]
+        
+        # v_x=np.r_[v_x16,v_x12,v_x10]
+        # v_y=np.r_[v_y16,v_y12,v_y10]
+        # dvx=np.r_[dvx16,dvx12,dvx10]
+        # dvy=np.r_[dvy16,dvy12,dvy10]
+        # mh=np.r_[mh16,mh12,mh10]
+        
+        v_x=np.r_[v_x16,v_x10]
+        v_y=np.r_[v_y16,v_y10]
+        dvx=np.r_[dvx16,dvx10]
+        dvy=np.r_[dvy16,dvy10]
+        mh=np.r_[mh16,mh10]
         
     else:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
@@ -293,15 +295,16 @@ plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
 plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
 plt.text(max(x)/2,max(h[0]-0.05),'$amp_{3}=%.3f$'%(mean[8]))
 
-plt.text(min(x),max(h[0]/2),'$logz=%.0f$'%(results['logz'][-1]))
-plt.text(max(x)/2,max(h[0]/2-0.01),'$nbins=%s$'%(nbins))
+plt.text(min(x),max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
+plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}=%.1f\ mas\ a^{-1}$'%(accu),color='b')
+plt.text(max(x)/2,max(h[0]/2)-0.01,'$nbins=%s$'%(nbins),color='b')
 if (chip==2 or chip==3) and in_brick==1:
-    plt.text(max(x)/2,max(h[0]-0.05),'$list = %.0f$'%(lst))
+    plt.text(max(x)/2,max(h[0]-0.005),'$list = %.0f$'%(lst),color='b')
 elif in_brick==0:
     if (chip==2 or chip==3):
-        plt.text(max(x)/2,max(h[0]/2-0.03),'$list =%.0f %s$'%(lst,'out'))
+        plt.text(max(x)/2,max(h[0]/2-0.005),'$list =%.0f %s$'%(lst,'out'),color='b')
     elif chip=='both':
-        plt.text(max(x)/2,max(h[0]/2-0.03),'$list =%s %s$'%(lst,'out'))
+        plt.text(max(x)/2,max(h[0]/2-0.005),'$list =%s %s$'%(lst,'out'),color='b')
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel('v$_{x}$ (mas yr$^{-1}$), IDL') 
