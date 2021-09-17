@@ -53,13 +53,11 @@ rcParams.update({
 
 
 
-chip='both' #can be 1 or 4 (refers to the chip on GNS fields)
-field=3 #fields can be 3 or 20 (refers to GNS fields)
-nbins=15
+chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
+field=3#fields can be 3 or 20 (refers to GNS fields)
+nbins=20
 
-accu=1
-
-
+accu=1.
 
 
 if chip =='both':
@@ -85,12 +83,12 @@ v_x=v_x[select]
 mh_all=mh
 mh=mh[select]
 fig,ax=plt.subplots(1,1)
-sig_h=sigma_clip(v_y,sigma=1000,maxiters=20,cenfunc='mean',masked=True)
-v_y=v_y[sig_h.mask==False]
+# sig_h=sigma_clip(v_y,sigma=1000,maxiters=20,cenfunc='mean',masked=True)
+# v_y=v_y[sig_h.mask==False]
 h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
 ax.axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
-ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
+ax.legend(['Chip=%s, %s, mean= %.4f, std=%.2f'
               %(chip,len(v_y),np.mean(v_y),np.std(v_y))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 y=h[0]#height for each bin
 #yerr = y*0.05
@@ -117,7 +115,7 @@ if accu<5:
 
 
 def gaussian(x, mu, sig, amp):
-    return amp * (1 / (sig * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
+    return amp * (1 / (sig * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.))) 
 
 
 # In[8]:
@@ -138,13 +136,13 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 4 * umu1-2   # scale and shift to [-10., 10.)
-    sigma1 = 5* usigma1   
-    amp1 = 0.5 * uamp1 
+    mu1 = 2 * umu1-1   # scale and shift to [-10., 10.)
+    sigma1 = 3.5* usigma1   
+    amp1 = 1. * uamp1 
 
     
-    mu2 = 4 * umu2-2
-    sigma2 = 5 * usigma2   
+    mu2 = 2 * umu2-1
+    sigma2 = 1.8 * usigma2   
     amp2 = 1.5 * uamp2   
     
 
