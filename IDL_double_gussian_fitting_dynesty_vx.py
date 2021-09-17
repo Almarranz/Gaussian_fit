@@ -57,9 +57,9 @@ rcParams.update({
 #There are 3 different lists. 1,2 and 3. Being # 3 the smaller and more 'accured' within the brick
 #This is generated en 13_alig....
 #chip='both'
-chip='both'
-in_brick=0 #slect stars on the brick, if =1 or out of brick if =1.
-nbins=35
+chip=3
+in_brick=0#slect stars on the brick, if =1 or out of brick if =1.
+nbins=17
 accu=1.1 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':
@@ -69,7 +69,7 @@ if in_brick==1:
         v_y=np.r_[v_y2,v_y3]
         dvx=np.r_[dvx2,dvx3]
         dvy=np.r_[dvy2,dvy3]
-        mh=np.r[mh2,mh3]
+        mh=np.r_[mh2,mh3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
         v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
@@ -93,7 +93,7 @@ elif in_brick==0:
         mh=np.r_[mh16,mh10]
      else:
         lst=3
-        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick16.txt'%(chip),unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
 select=np.where((dvy<accu) & (dvx<accu) )
 v_x=v_x[select]
@@ -156,8 +156,8 @@ def prior_transform(utheta):
     amp1 = uamp1*1
     
     mu2 = 2*umu2-1
-    sigma2 = (usigma2)*3.8
-    amp2 = uamp2*6
+    sigma2 = (usigma2)*4
+    amp2 = uamp2*1
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform
