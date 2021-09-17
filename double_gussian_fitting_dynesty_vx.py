@@ -58,9 +58,9 @@ rcParams.update({
 #This is generated en 13_alig....
 #chip='both'
 chip=3
-in_brick=0 #slect stars on the brick, if =1 or out of brick if =1.
-nbins=20
-accu=10 # select stars cutting by uncertainty. With a large value all star are selected
+in_brick=1 #slect stars on the brick, if =1 or out of brick if =1.
+nbins=22
+accu=100000 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':
         v_x2,v_y2,dvx2,dvy2=np.loadtxt(data+'arcsec_vx_vy_chip2.txt',unpack=True)
@@ -71,7 +71,8 @@ if in_brick==1:
         dvy=np.r_[dvy2,dvy3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'lst_chip%s.txt'%(chip))
-        v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        # v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        v_x,v_y,dvx,dvy=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
     lst=3
     v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)
@@ -83,7 +84,7 @@ h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
 ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
 ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
-              %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=3,handlelength=-0.0)
+              %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 y=h[0]#height for each bin
 #yerr = y*0.05
 #yerr = y*0.01
@@ -125,13 +126,13 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 8*umu1-4   # scale and shift to [-3., 3.)
-    sigma1 = 6*(usigma1)-3
-    amp1 = uamp1*1
+    mu1 = -3*umu1   # scale and shift to [-3., 3.)
+    sigma1 = 3*(usigma1)
+    amp1 = uamp1*2
     
-    mu2 = 2*umu2-1
+    mu2 = 0.1*umu2-0.05
     sigma2 = (usigma2)*3.8
-    amp2 = uamp2*1
+    amp2 = uamp2*2
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform

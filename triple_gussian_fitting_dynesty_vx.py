@@ -56,7 +56,7 @@ rcParams.update({
 # plt.rc('text', usetex=True)
 # plt.rc('font', family='serif')
 chip=3
-nbins=25
+nbins=24
 in_brick=0
 
 accu=10
@@ -124,17 +124,17 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2, umu3, usigma3, uamp3= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 2*umu1   # scale and shift to [-3., 3.)
+    mu1 = 3*umu1   # scale and shift to [-3., 3.)
     sigma1 = (usigma1)*3
-    amp1 = uamp1*1
+    amp1 = uamp1*2
     
-    mu2 = 0.5*umu2
-    sigma2 = (usigma2)*2+2
-    amp2 = uamp2*0.5
+    mu2 = 1*umu2-0.5
+    sigma2 = (usigma2)*3
+    amp2 = uamp2*1
     
-    mu3 =3*umu3-4  # scale and shift to [-3., 3.)
+    mu3 =-2*umu3 # scale and shift to [-3., 3.)
     sigma3 = (usigma3)*4
-    amp3 = uamp3*1
+    amp3 = uamp3*2
     
     
 

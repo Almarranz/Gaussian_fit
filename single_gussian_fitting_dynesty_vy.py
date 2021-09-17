@@ -58,7 +58,7 @@ rcParams.update({
 
 
 chip=3
-nbins=20
+nbins=10
 v_x,v_y=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',usecols=[0,1],unpack=True)
 fig,ax=plt.subplots(1,1)
 h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)

@@ -57,7 +57,7 @@ rcParams.update({
 # plt.rc('text', usetex=True)
 # plt.rc('font', family='serif')
 chip='both'
-nbins=15
+nbins=45
 in_brick=0
 
 accu=1.1
@@ -93,7 +93,7 @@ v_y=v_y[select]
 mh_all=mh
 mh=mh[select]
 fig,ax=plt.subplots(1,1)
-sig_h=sigma_clip(v_x,sigma=100,maxiters=20,cenfunc='mean',masked=True)
+sig_h=sigma_clip(v_x,sigma=60,maxiters=20,cenfunc='mean',masked=True)
 v_x=v_x[sig_h.mask==False]
 h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
@@ -156,17 +156,18 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2, umu3, usigma3, uamp3= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 =2.5*umu1  # scale and shift to [-3., 3.)
-    sigma1 = 2*(usigma1)
-    amp1 = uamp1*0.5
+    mu1 =-3*umu1  # scale and shift to [-3., 3.)
+    sigma1 = 3*(usigma1)
+    amp1 = uamp1*1.5
     
-    mu2 = 1*umu2-0.5
-    sigma2 = 2*(usigma2+1)
-    amp2 = uamp2*0.5
+    mu2 = 2*umu2-1
+    # sigma2 =1.79*(usigma2+1)
+    sigma2 =3.5+(0.30*usigma2-0.15)
+    amp2 = uamp2*1
     
-    mu3 =-4*umu3 # scale and shift to [-3., 3.)
-    sigma3 = 3.2*(usigma3)
-    amp3 = uamp3*0.5
+    mu3 =2*(umu3+1) # scale and shift to [-3., 3.)
+    sigma3 = 2*(usigma3+1)
+    amp3 = uamp3*1.5
     
     
 
@@ -219,10 +220,11 @@ plt.show()
 # fig, axes = dyplot.cornerplot(res, truths=truths, color='blue', show_titles=True, 
 #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
 #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
+#Thsi is the corner plot
 
-fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
-                              title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
-                              fig=plt.subplots(9, 9, figsize=(28, 28)))
+# fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+#                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
+#                               fig=plt.subplots(9, 9, figsize=(28, 28)))
 
 
 plt.show() 
@@ -296,15 +298,16 @@ plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
 plt.text(max(x)/2,max(h[0]-0.05),'$amp_{3}=%.3f$'%(mean[8]))
 
 plt.text(min(x),max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
-plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}=%.1f\ mas\ a^{-1}$'%(accu),color='b')
-plt.text(max(x)/2,max(h[0]/2)-0.01,'$nbins=%s$'%(nbins),color='b')
+if accu<10:
+    plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+plt.text(max(x)/2,max(h[0]/2)-0.005,'$nbins=%s$'%(nbins),color='b')
 if (chip==2 or chip==3) and in_brick==1:
-    plt.text(max(x)/2,max(h[0]-0.005),'$list = %.0f$'%(lst),color='b')
+    plt.text(max(x)/2,max(h[0]-0.01),'$list = %.0f$'%(lst),color='b')
 elif in_brick==0:
     if (chip==2 or chip==3):
-        plt.text(max(x)/2,max(h[0]/2-0.005),'$list =%.0f %s$'%(lst,'out'),color='b')
+        plt.text(max(x)/2,max(h[0]/2-0.01),'$list =%.0f %s$'%(lst,'out'),color='b')
     elif chip=='both':
-        plt.text(max(x)/2,max(h[0]/2-0.005),'$list =%s %s$'%(lst,'out'),color='b')
+        plt.text(max(x)/2,max(h[0]/2-0.01),'$list =%s %s$'%(lst,'out'),color='b')
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel('v$_{x}$ (mas yr$^{-1}$), IDL') 

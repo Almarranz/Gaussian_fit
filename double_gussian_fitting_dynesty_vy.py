@@ -16,7 +16,8 @@ import matplotlib.pyplot as plt
 import emcee
 import corner
 import dynesty
-
+from astropy.stats import sigma_clip
+from astropy.stats import sigma_clipped_stats
 
 # In[3]:
 band='H'
@@ -55,9 +56,11 @@ rcParams.update({
 
 chip=3
 
-nbins=19
+nbins=15
 accu=1000
-in_brick=1
+
+in_brick=0#slect list in or out brick
+
 if in_brick==1:
     if chip =='both':
         v_x2,v_y2,dvx2,dvy2=np.loadtxt(data+'arcsec_vx_vy_chip2.txt',unpack=True)
@@ -68,7 +71,8 @@ if in_brick==1:
         dvy=np.r_[dvy2,dvy3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'lst_chip%s.txt'%(chip))
-        v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        # v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        v_x,v_y,dvx,dvy=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
         lst=3
         v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s_out_Brick.txt'%(chip),unpack=True)        
@@ -77,11 +81,13 @@ elif in_brick==0:
 select=np.where((dvy<accu))
 v_y=v_y[select]
 fig,ax=plt.subplots(1,1)
+sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
+v_y=v_y[sig_h.mask==False]
 h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
 ax.axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
 ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
-              %(chip,len(v_y),np.mean(v_y),np.std(v_y))],fontsize=12,markerscale=0,shadow=True,loc=3,handlelength=-0.0)
+              %(chip,len(v_y),np.mean(v_y),np.std(v_y))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 y=h[0]#height for each bin
 #yerr = y*0.05
 #yerr = y*0.01
@@ -123,12 +129,12 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 2*umu1-1  # scale and shift to [-3., 3.)
-    sigma1 = (usigma1)*4
-    amp1 = uamp1*3
+    mu1 = 2*umu1-1 # scale and shift to [-3., 3.)
+    sigma1 = (usigma1)*3
+    amp1 = uamp1*1.5
     
-    mu2 =2*umu2-1 # scale and shift to [-3., 3.)
-    sigma2 = (usigma2)*8
+    mu2 = 2*umu2-1# scale and shift to [-3., 3.)
+    sigma2 = 3*(usigma2)+2
     amp2 = uamp2*4
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2

@@ -53,13 +53,13 @@ rcParams.update({
 # In[5]:
 
 
-chip='both'
+chip=3
 
-nbins=34
+nbins=17
 
 accu=1.1
 
-in_brick=0#slect list in or out brick
+in_brick=1#slect list in or out brick
 
 if in_brick==1:
     if chip =='both':
@@ -69,7 +69,7 @@ if in_brick==1:
         v_y=np.r_[v_y2,v_y3]
         dvx=np.r_[dvx2,dvx3]
         dvy=np.r_[dvy2,dvy3]
-        mh=np.r[mh2,mh3]
+        mh=np.r_[mh2,mh3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
         # v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
@@ -105,7 +105,7 @@ v_x=v_x[select]
 mh_all=mh
 mh=mh[select]
 fig,ax=plt.subplots(1,1)
-sig_h=sigma_clip(v_y,sigma=500,maxiters=20,cenfunc='mean',masked=True)
+sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
 v_y=v_y[sig_h.mask==False]
 h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
@@ -160,11 +160,12 @@ def prior_transform(utheta):
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
     mu1 = 2*umu1-1 # scale and shift to [-3., 3.)
     sigma1 = (usigma1)*2
-    amp1 = uamp1*2
+    amp1 = uamp1*0.9    
+
     
-    mu2 = 2*umu2-1# scale and shift to [-3., 3.)
-    sigma2 = 4*(usigma2)
-    amp2 = uamp2*1
+    mu2 = 1*umu2-0.5# scale and shift to [-3., 3.)
+    sigma2 = 1.8*(usigma2+1)
+    amp2 = uamp2*0.5
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform
@@ -308,7 +309,7 @@ elif in_brick==0:
         plt.text(max(x)/2,max(h[0]-0.05),'$list =%s %s$'%(lst,'out'),color='b')
 plt.ylabel('$N$')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel('$v_{y} (mas\ yr^{-1}), IDL,\ Chip %s$'%(chip)) 
+plt.xlabel('$v_{y} (mas\ yr^{-1}), IDL,\ Chip \ %s$'%(chip)) 
 
 # #%%
 # # Example data
