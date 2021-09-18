@@ -57,27 +57,47 @@ rcParams.update({
 # plt.rc('text', usetex=True)
 # plt.rc('font', family='serif')
 
-chip=1 #can be 1 or 4 (refers to the chip on GNS fields)
+chip='both' #can be 1 or 4 (refers to the chip on GNS fields)
 field=20 #fields can be 3 or 20 (refers to GNS fields)
 gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
-nbins=25
-accu=1.1
+nbins=21
+accu=1.5
 
-
-
+flds=[3,20,16]
+chips=[1,4]
+v_x=[]
+v_y=[]
+dvx=[]
+dvy=[]
+mh=[]
 
 if chip =='both':
-    v_x1,v_y1,dvx1,dvy1,mh1=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field20_chip1.txt',unpack=True)
-    v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field20_chip4.txt',unpack=True)
-    v_x3,v_y3,dvx3,dvy3,mh3=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field3_chip1.txt',unpack=True)
-    v_x4,v_y4,dvx4,dvy4,mh4=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field3_chip4.txt',unpack=True)
+    for i in range(len(flds)):
+        for j in range(len(chips)):
+            try:
+                print((flds[i],chips[j]))
+                v_x0,v_y0,dvx0,dvy0,mh0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
+                v_x=np.r_[v_x,v_x0]
+                v_y=np.r_[v_y,v_y0]
+                dvx=np.r_[dvx,dvx0]
+                dvy=np.r_[dvy,dvy0]
+                mh=np.r_[mh,mh0]
+            except:
+                print('NO hay lista field%s, chip%s'%(flds[i],chips[j]))
+                pass
+  
+# if chip =='both':
+#     v_x1,v_y1,dvx1,dvy1,mh1=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field20_chip1.txt',unpack=True)
+#     v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field20_chip4.txt',unpack=True)
+#     v_x3,v_y3,dvx3,dvy3,mh3=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field3_chip1.txt',unpack=True)
+#     v_x4,v_y4,dvx4,dvy4,mh4=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field3_chip4.txt',unpack=True)
     
-    v_x=np.r_[v_x1,v_x2,v_x3,v_x4]
-    v_y=np.r_[v_y1,v_y2,v_y3,v_y4]
-    dvx=np.r_[dvx1,dvx2,dvx3,dvx4]
-    dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
-    mh=np.r_[mh1,mh2,mh3,mh4]
+#     v_x=np.r_[v_x1,v_x2,v_x3,v_x4]
+#     v_y=np.r_[v_y1,v_y2,v_y3,v_y4]
+#     dvx=np.r_[dvx1,dvx2,dvx3,dvx4]
+#     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
+#     mh=np.r_[mh1,mh2,mh3,mh4]
 else :
     v_x,v_y,dvx,dvy,mh=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
 
@@ -152,16 +172,16 @@ def prior_transform(utheta):
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
     mu1 =-3*umu1  # scale and shift to [-3., 3.)
     sigma1 = 3*(usigma1)
-    amp1 = uamp1*1.5
+    amp1 = uamp1*1
     
     mu2 = 2*umu2-1
-    sigma2 =1.79*(usigma2+1)
+    sigma2 =4*(usigma2)
     #sigma2 =3.5*usigma2
     amp2 = uamp2*1
     
-    mu3 =3*(umu3+1) # scale and shift to [-3., 3.)
-    sigma3 = 2*(usigma3+0)
-    amp3 = uamp3*1.5
+    mu3 =4*(umu3) # scale and shift to [-3., 3.)
+    sigma3 = 3*(usigma3)
+    amp3 = uamp3*1
     
     
 
