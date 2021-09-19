@@ -56,18 +56,18 @@ rcParams.update({
 
 chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
 field=20#fields can be 3 or 20 (refers to GNS fields)
-nbins=21
-select=1#uses the lists selec form alignment_with_GNS.pro script
+nbins=40
+select=0#uses the lists selec form alignment_with_GNS.pro script
 if select ==0:
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 else:
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/select_'
 
-accu=1.5
-flds=[3,20,16]
+accu=2
+flds=[20,16,7] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
 chips=[1,4,2,3]
-# flds=[16]
-# chips=[3]
+# flds=[7]
+# chips=[1,4]
 v_x=[]
 v_y=[]
 dvx=[]
@@ -77,13 +77,14 @@ if chip =='both':
     for i in range(len(flds)):
         for j in range(len(chips)):
             try:
-                print((flds[i],chips[j]))
+                
                 v_x0,v_y0,dvx0,dvy0,mh0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
                 v_x=np.r_[v_x,v_x0]
                 v_y=np.r_[v_y,v_y0]
                 dvx=np.r_[dvx,dvx0]
                 dvy=np.r_[dvy,dvy0]
                 mh=np.r_[mh,mh0]
+                print((flds[i],chips[j]))
             except:
                 print('NO hay lista field%s, chip%s'%(flds[i],chips[j]))
                 pass

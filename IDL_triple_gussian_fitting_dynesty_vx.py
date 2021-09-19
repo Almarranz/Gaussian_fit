@@ -59,16 +59,16 @@ rcParams.update({
 
 chip='both' #can be 1 or 4 (refers to the chip on GNS fields)
 field=20 #fields can be 3 or 20 (refers to GNS fields)
-select=1
+select=0
 if select ==0:
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 else:
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/select_'
 
-nbins=31
-accu=1.5
+nbins=40
+accu=2
 
-flds=[3,20,16]
+flds=[7,20,16]#I feel that field 10 make things worse for some reason
 chips=[1,2,3,4]
 # flds=[16]
 # chips=[3]
