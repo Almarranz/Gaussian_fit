@@ -59,13 +59,19 @@ rcParams.update({
 
 chip='both' #can be 1 or 4 (refers to the chip on GNS fields)
 field=20 #fields can be 3 or 20 (refers to GNS fields)
-gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
+select=1
+if select ==0:
+    gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
+else:
+    gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/select_'
 
-nbins=21
+nbins=31
 accu=1.5
 
 flds=[3,20,16]
-chips=[1,4]
+chips=[1,2,3,4]
+# flds=[16]
+# chips=[3]
 v_x=[]
 v_y=[]
 dvx=[]
@@ -174,10 +180,10 @@ def prior_transform(utheta):
     sigma1 = 3*(usigma1)
     amp1 = uamp1*1
     
-    mu2 = 2*umu2-1
-    sigma2 =4*(usigma2)
+    mu2 = 4*umu2-2
+    sigma2 =1.6*(usigma2+1)
     #sigma2 =3.5*usigma2
-    amp2 = uamp2*1
+    amp2 = uamp2*0.45
     
     mu3 =4*(umu3) # scale and shift to [-3., 3.)
     sigma3 = 3*(usigma3)
@@ -316,9 +322,9 @@ if accu<10:
     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
 plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
 if chip=='both':
-    plt.text(max(x)/2,max(h[0]-0.05),'$field%s,\ c%s$'%('All',chip),color='b')
+    plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%('All',chip),color='b')
 else:
-    plt.text(max(x)/2,max(h[0]-0.05),'$field%s,\ c%s$'%(field,chip),color='b')
+    plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel('v$_{x}$ (mas yr$^{-1}$), IDL') 

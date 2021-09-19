@@ -24,7 +24,8 @@ folder='im_jitter_NOgains/'
 exptime=10
 data='/Users/amartinez/Desktop/PhD/python/Gaussian_fit/'
 tmp='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'tmp_bs/'
-gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
+
+
 
 
 
@@ -56,10 +57,17 @@ rcParams.update({
 chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
 field=20#fields can be 3 or 20 (refers to GNS fields)
 nbins=21
+select=1#uses the lists selec form alignment_with_GNS.pro script
+if select ==0:
+    gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
+else:
+    gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/select_'
 
-accu=1.1
+accu=1.5
 flds=[3,20,16]
-chips=[1,4]
+chips=[1,4,2,3]
+# flds=[16]
+# chips=[3]
 v_x=[]
 v_y=[]
 dvx=[]
@@ -161,7 +169,7 @@ def prior_transform(utheta):
 
     
     mu2 = 0.4 * umu2-0.2
-    sigma2 = 1.5 * usigma2   
+    sigma2 = 2 * usigma2   
     amp2 = 0.66* uamp2   
     
 
