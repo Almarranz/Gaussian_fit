@@ -63,9 +63,9 @@ if select ==0:
 else:
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/select_'
 
-accu=2
-flds=[20,16,7] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
-chips=[1,4,2,3]
+accu=20
+flds=[16,7] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
+chips=[1,2,3]
 # flds=[7]
 # chips=[1,4]
 v_x=[]
@@ -73,6 +73,8 @@ v_y=[]
 dvx=[]
 dvy=[]
 mh=[]
+af=[]
+bc=[]
 if chip =='both':
     for i in range(len(flds)):
         for j in range(len(chips)):
@@ -85,6 +87,8 @@ if chip =='both':
                 dvy=np.r_[dvy,dvy0]
                 mh=np.r_[mh,mh0]
                 print((flds[i],chips[j]))
+                af.append([flds[i]])
+                bc.append([chips[j]])
             except:
                 print('NO hay lista field%s, chip%s'%(flds[i],chips[j]))
                 pass
@@ -307,9 +311,9 @@ if accu <10:
 plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
 plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
-
 if chip=='both':
-    plt.text(max(x)/2,max(h[0]-0.05),'$field%s,\ c%s$'%('All',chip),color='b')
+    plt.text(max(x)/2,max(h[0]-0.05),'$field%s$'%(af),color='b')
+    plt.text(max(x)/2,max(h[0]-0.06),'$c%s$'%(bc),color='b')
 else:
     plt.text(max(x)/2,max(h[0]-0.05),'$field%s,\ c%s$'%(field,chip),color='b')
 # elif in_brick==0:

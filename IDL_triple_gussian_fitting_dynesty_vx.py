@@ -66,9 +66,9 @@ else:
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/select_'
 
 nbins=40
-accu=2
+accu=20
 
-flds=[7,20,16]#I feel that field 10 make things worse for some reason
+flds=[16,3]#I feel that field 10 make things worse for some reason
 chips=[1,2,3,4]
 # flds=[16]
 # chips=[3]
@@ -77,18 +77,22 @@ v_y=[]
 dvx=[]
 dvy=[]
 mh=[]
-
+af=[]
+bc=[]
 if chip =='both':
     for i in range(len(flds)):
         for j in range(len(chips)):
             try:
-                print((flds[i],chips[j]))
+                
                 v_x0,v_y0,dvx0,dvy0,mh0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
                 v_x=np.r_[v_x,v_x0]
                 v_y=np.r_[v_y,v_y0]
                 dvx=np.r_[dvx,dvx0]
                 dvy=np.r_[dvy,dvy0]
                 mh=np.r_[mh,mh0]
+                print((flds[i],chips[j]))
+                af.append([flds[i]])
+                bc.append([chips[j]])
             except:
                 print('NO hay lista field%s, chip%s'%(flds[i],chips[j]))
                 pass
@@ -178,16 +182,16 @@ def prior_transform(utheta):
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
     mu1 =-3*umu1  # scale and shift to [-3., 3.)
     sigma1 = 3*(usigma1)
-    amp1 = uamp1*1
+    amp1 = uamp1*0.6
     
-    mu2 = 4*umu2-2
-    sigma2 =1.6*(usigma2+1)
+    mu2 = 1*umu2
+    sigma2 =3.7*(usigma2)
     #sigma2 =3.5*usigma2
-    amp2 = uamp2*0.45
+    amp2 = uamp2*0.3
     
     mu3 =4*(umu3) # scale and shift to [-3., 3.)
     sigma3 = 3*(usigma3)
-    amp3 = uamp3*1
+    amp3 = uamp3*0.5
     
     
 
@@ -320,9 +324,10 @@ plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
 plt.text(min(x),max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
 if accu<10:
     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
+plt.text(min(x),max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
 if chip=='both':
-    plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%('All',chip),color='b')
+    plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
+    plt.text(max(x)/2,max(h[0]-0.07),'$chip%s$'%(bc),color='b')
 else:
     plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
 plt.ylabel('N')
