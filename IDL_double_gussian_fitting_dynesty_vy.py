@@ -58,7 +58,7 @@ chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
 field=20#fields can be 3 or 20 (refers to GNS fields)
 nbins=40
 sm=0.5
-
+show_field='no'
 gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
 accu=2
@@ -190,7 +190,7 @@ def prior_transform(utheta):
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
     mu1 = 2* umu1-1  # scale and shift to [-10., 10.)
-    sigma1 = 1.8* (usigma1+1)   
+    sigma1 = 3* (usigma1)   
     amp1 = 1 * uamp1 
 
     
@@ -333,11 +333,12 @@ plt.text(min(x),max(h[0]-0.06),'$diff\ mag < %s$'%(sm),color='b')
 plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
 plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
-if chip=='both':
-    plt.text(max(x)/2,max(h[0]-0.05),'$field%s$'%(af),color='b')
-    plt.text(max(x)/2,max(h[0]-0.06),'$c%s$'%(bc),color='b')
-else:
-    plt.text(max(x)/2,max(h[0]-0.05),'$field%s,\ c%s$'%(field,chip),color='b')
+if show_field=='yes':
+    if chip=='both':
+        plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
+        plt.text(max(x)/2,max(h[0]-0.07),'$chip%s$'%(bc),color='b')
+    else:
+        plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
 # elif in_brick==0:
 #     if (chip==2 or chip==3):
 #         plt.text(max(x)/2,max(h[0]-0.05),'$field%s c%s$'%(field,chip),color='b')

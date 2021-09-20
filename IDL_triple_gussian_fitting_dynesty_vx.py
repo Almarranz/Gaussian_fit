@@ -206,12 +206,12 @@ def prior_transform(utheta):
     amp1 = uamp1*0.6
     
     mu2 = 1*umu2
-    sigma2 =1.8*(usigma2+1)
+    sigma2 =1.5*(usigma2+1)
     #sigma2 =3.5*usigma2
     amp2 = uamp2*0.3
     
-    mu3 =4*(umu3) # scale and shift to [-3., 3.)
-    sigma3 = 3*(usigma3)
+    mu3 =3*(umu3) # scale and shift to [-3., 3.)
+    sigma3 = 3.3*(usigma3)
     amp3 = uamp3*0.5
     
     
