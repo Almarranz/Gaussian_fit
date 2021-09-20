@@ -54,25 +54,26 @@ rcParams.update({
 
 
 
-chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
-field=20#fields can be 3 or 20 (refers to GNS fields)
-nbins=20
-select=0#uses the lists selec form alignment_with_GNS.pro script
-if select ==0:
-    gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
-else:
-    gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/select_'
+show_field='no'
+chip='both' #can be 1 or 4 (refers to the chip on GNS fields)
+field=7 #fields can be 3 or 20 (refers to GNS fields)
+sm=0.5
 
-accu=2.0
-flds=[16,7] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
-chips=[1,2,3]
-# flds=[7]
-# chips=[1,4]
+gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
+
+nbins=40
+accu=2
+
+flds=[16,3]#I feel that field 10 make things worse for some reason
+chips=[1,2,3,4]
+# flds=[16]
+# chips=[3]
 v_x=[]
 v_y=[]
 dvx=[]
 dvy=[]
 mh=[]
+m=[]
 af=[]
 bc=[]
 if chip =='both':
@@ -80,12 +81,13 @@ if chip =='both':
         for j in range(len(chips)):
             try:
                 
-                v_x0,v_y0,dvx0,dvy0,mh0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
+                v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
                 v_x=np.r_[v_x,v_x0]
                 v_y=np.r_[v_y,v_y0]
                 dvx=np.r_[dvx,dvx0]
                 dvy=np.r_[dvy,dvy0]
                 mh=np.r_[mh,mh0]
+                m=np.r_[m,m0]
                 print((flds[i],chips[j]))
                 af.append([flds[i]])
                 bc.append([chips[j]])
@@ -105,22 +107,32 @@ if chip =='both':
 #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
 #     mh=np.r_[mh1,mh2,mh3,mh4]
 else :
-    v_x,v_y,dvx,dvy,mh=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
-
-
-
-select=np.where((dvy<accu) & (dvx<accu) )
-v_y=v_y[select]
-v_x=v_x[select]
+    v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
 mh_all=mh
-mh=mh[select]
+m_all=m
+dvx_all=dvx
+dvy_all=dvy
+
+sel_m=np.where(abs(mh-m)<sm)
+v_x=v_x[sel_m]
+v_y=v_y[sel_m]
+mh=mh[sel_m]
+m=m[sel_m]
+dvx=dvx[sel_m]
+dvy=dvy[sel_m]
+
+sel=np.where((dvx<accu)&(dvy<accu))
+v_x=v_x[sel]
+v_y=v_y[sel]
+mh=mh[sel]
+
 fig,ax=plt.subplots(1,1)
-# sig_h=sigma_clip(v_y,sigma=1000,maxiters=20,cenfunc='mean',masked=True)
-# v_y=v_y[sig_h.mask==False]
+sig_h=sigma_clip(v_x,sigma=60,maxiters=20,cenfunc='mean',masked=True)
+v_x=v_x[sig_h.mask==False]
 h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
-ax.axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
-ax.legend(['Chip=%s, %s, mean= %.4f, std=%.2f'
+ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
+ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
               %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 y=h[0]#height for each bin
 #yerr = y*0.05
@@ -128,19 +140,30 @@ y=h[0]#height for each bin
 yerr=0.0001
 y += yerr
 ax.scatter(x,y,color='g',zorder=3)
-
-
+# In[6]:
+count=0
+for i in range(len(mh)):
+    if abs(mh_all[i]-m_all[i])>sm:
+        count+=1
+print(35*'#'+'\n'+'stars with diff in mag > %s: %s'%(sm,count)+'\n'+35*'#')
 # In[6]:
 
-ejes=[dvx,dvy]
+ejes=[dvx_all,dvy_all]
+no_sel=np.where((dvx_all>accu)&(dvy_all>accu))
+no_m=np.where(abs(mh_all-m_all)>sm)
+ejes_accu=[dvx_all[no_sel],dvy_all[no_sel]]
+ejes_m=[dvx_all[no_m],dvy_all[no_m]]
 names=['x','y']
 if accu<5:
     fig, ax=plt.subplots(1,2,figsize=(20,10))
     for i in range(len(ejes)):
         ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
         ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
         ax[i].set_xlabel('$[H]$',fontsize=20)
         ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
+
 
 
 # In[7]:
