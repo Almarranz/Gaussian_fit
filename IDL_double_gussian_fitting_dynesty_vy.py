@@ -55,32 +55,33 @@ rcParams.update({
 
 chip=3
 
-nbins=17
+nbins=20
 
-accu=1.1
-
+accu=1.5
+sm=10
 in_brick=1#slect list in or out brick
 
 if in_brick==1:
     if chip =='both':
-        v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-        v_x3,v_y3,dvx3,dvy3,mh3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+        v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+        v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
         v_x=np.r_[v_x2,v_x3]
         v_y=np.r_[v_y2,v_y3]
         dvx=np.r_[dvx2,dvx3]
         dvy=np.r_[dvy2,dvy3]
         mh=np.r_[mh2,mh3]
+        m=np.r_[m2,m3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
         # v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
-        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
     if chip=='both':
         lst='All '
         #something was weird with list 12 aligment, it didn't converg... 
-        v_x10,v_y10,dvx10,dvy10,mh10=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
+        v_x10,v_y10,dvx10,dvy10,mh10,m10=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
         # v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
-        v_x16,v_y16,dvx16,dvy16,mh16=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
+        v_x16,v_y16,dvx16,dvy16,mh16,m16=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
         
         # v_x=np.r_[v_x16,v_x12,v_x10]
         # v_y=np.r_[v_y16,v_y12,v_y10]
@@ -93,24 +94,36 @@ elif in_brick==0:
         dvx=np.r_[dvx16,dvx10]
         dvy=np.r_[dvy16,dvy10]
         mh=np.r_[mh16,mh10]
-        
+        m=np.r_[m16,m10]
     else:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
+        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
 
 
-select=np.where((dvy<accu) & (dvx<accu) )
-v_y=v_y[select]
-v_x=v_x[select]
 mh_all=mh
-mh=mh[select]
+m_all=m
+dvx_all=dvx
+dvy_all=dvy
+
+sel_m=np.where(abs(mh-m)<sm)
+v_x=v_x[sel_m]
+v_y=v_y[sel_m]
+mh=mh[sel_m]
+m=m[sel_m]
+dvx=dvx[sel_m]
+dvy=dvy[sel_m]
+
+sel=np.where((dvx<accu)&(dvy<accu))
+v_x=v_x[sel]
+v_y=v_y[sel]
+mh=mh[sel]
 fig,ax=plt.subplots(1,1)
-sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
-v_y=v_y[sig_h.mask==False]
+# sig_h=sigma_clip(v_y,sigma=1000,maxiters=20,cenfunc='mean',masked=True)
+# v_y=v_y[sig_h.mask==False]
 h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
 ax.axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
-ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
+ax.legend(['Chip=%s, %s, mean= %.4f, std=%.2f'
               %(chip,len(v_y),np.mean(v_y),np.std(v_y))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 y=h[0]#height for each bin
 #yerr = y*0.05
@@ -119,15 +132,27 @@ yerr=0.0001
 y += yerr
 ax.scatter(x,y,color='g',zorder=3)
 
+# In[5]:
+count=0
+for i in range(len(mh)):
+    if abs(mh_all[i]-m_all[i])>sm:
+        count+=1
+print(35*'#'+'\n'+'stars with diff in mag > %s: %s'%(sm,count)+'\n'+35*'#')
 
 # In[6]:
 
-ejes=[dvx,dvy]
+ejes=[dvx_all,dvy_all]
+no_sel=np.where((dvx_all>accu)&(dvy_all>accu))
+no_m=np.where(abs(mh_all-m_all)>sm)
+ejes_accu=[dvx_all[no_sel],dvy_all[no_sel]]
+ejes_m=[dvx_all[no_m],dvy_all[no_m]]
 names=['x','y']
-if accu<5:
+if accu<50:
     fig, ax=plt.subplots(1,2,figsize=(20,10))
     for i in range(len(ejes)):
         ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
         ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
         ax[i].set_xlabel('$[H]$',fontsize=20)
         ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
@@ -158,14 +183,14 @@ def prior_transform(utheta):
     umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
 
 #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-    mu1 = 2*umu1-1 # scale and shift to [-3., 3.)
+    mu1 = 0.25*umu1-0.15 # scale and shift to [-3., 3.)
     sigma1 = (usigma1)*2
-    amp1 = uamp1*0.9    
+    amp1 = uamp1*1.5    
 
     
-    mu2 = 1*umu2-0.5# scale and shift to [-3., 3.)
-    sigma2 = 1.8*(usigma2+1)
-    amp2 = uamp2*0.5
+    mu2 = 0.25*umu2-0.15# scale and shift to [-3., 3.)
+    sigma2 = 3.9*(usigma2)
+    amp2 = uamp2*1.5
 
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform

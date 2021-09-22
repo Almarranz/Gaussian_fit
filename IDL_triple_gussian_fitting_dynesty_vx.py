@@ -56,16 +56,26 @@ rcParams.update({
 # from matplotlib import rc
 # plt.rc('text', usetex=True)
 # plt.rc('font', family='serif')
-chip='both'
-nbins=45
-in_brick=0
-
-accu=1.1
+sm=10
+chip=3
+in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
+nbins=20
+accu=1.5 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
-    lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-    v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+    if chip =='both':
+        v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+        v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+        v_x=np.r_[v_x2,v_x3]
+        v_y=np.r_[v_y2,v_y3]
+        dvx=np.r_[dvx2,dvx3]
+        dvy=np.r_[dvy2,dvy3]
+        mh=np.r_[mh2,mh3]
+        m=np.r_[m2,m3]
+    elif chip==2 or chip==3:
+        lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
+        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
-    if chip=='both':
+     if chip=='both':
         lst='All '
         v_x10,v_y10,dvx10,dvy10,mh10=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
         #v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
@@ -82,16 +92,26 @@ elif in_brick==0:
         dvx=np.r_[dvx16,dvx10]
         dvy=np.r_[dvy16,dvy10]
         mh=np.r_[mh16,mh10]
-        
-    else:
-        lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
-
-select=np.where((dvx<accu)&(dvy<accu))
-v_x=v_x[select]
-v_y=v_y[select]
+     else:
+        lst=3
+        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick16.txt'%(chip),unpack=True)
 mh_all=mh
-mh=mh[select]
+m_all=m
+dvx_all=dvx
+dvy_all=dvy
+
+sel_m=np.where(abs(mh-m)<sm)
+v_x=v_x[sel_m]
+v_y=v_y[sel_m]
+mh=mh[sel_m]
+m=m[sel_m]
+dvx=dvx[sel_m]
+dvy=dvy[sel_m]
+
+sel=np.where((dvx<accu)&(dvy<accu))
+v_x=v_x[sel]
+v_y=v_y[sel]
+mh=mh[sel]
 fig,ax=plt.subplots(1,1)
 sig_h=sigma_clip(v_x,sigma=60,maxiters=20,cenfunc='mean',masked=True)
 v_x=v_x[sig_h.mask==False]
@@ -110,21 +130,28 @@ ax.scatter(x,y,color='g',zorder=3)
 
 # In[6]:
 
-
+count=0
+for i in range(len(mh)):
+    if abs(mh_all[i]-m_all[i])>sm:
+        count+=1
+print(35*'#'+'\n'+'stars with diff in mag > %s: %s'%(sm,count)+'\n'+35*'#')
 # In[ ]:
 
-ejes=[dvx,dvy]
+ejes=[dvx_all,dvy_all]
+no_sel=np.where((dvx_all>accu)&(dvy_all>accu))
+no_m=np.where(abs(mh_all-m_all)>sm)
+ejes_accu=[dvx_all[no_sel],dvy_all[no_sel]]
+ejes_m=[dvx_all[no_m],dvy_all[no_m]]
 names=['x','y']
-if accu<5:
+if accu<50:
     fig, ax=plt.subplots(1,2,figsize=(20,10))
     for i in range(len(ejes)):
         ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
         ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
         ax[i].set_xlabel('$[H]$',fontsize=20)
         ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
-
-
-
 # In[7]:
 
 
@@ -161,13 +188,15 @@ def prior_transform(utheta):
     amp1 = uamp1*1.5
     
     mu2 = 2*umu2-1
-    # sigma2 =1.79*(usigma2+1)
-    sigma2 =3.5+(0.30*usigma2-0.15)
-    amp2 = uamp2*1
+    sigma2 = 3.572+ (0.328*usigma2-0.164)
+    # amp2 = 0.4+(0.055*uamp2-0.0275)
+    # amp2 = 0.34+(0.055*uamp2-0.0275)
+    amp2 = uamp2*0.6
     
-    mu3 =2*(umu3+1) # scale and shift to [-3., 3.)
-    sigma3 = 2*(usigma3+1)
-    amp3 = uamp3*1.5
+    mu3 =3.80*(umu3) # scale and shift to [-3., 3.)
+    # sigma3 = 2.4*(usigma3+1)
+    sigma3 = 4.3*(usigma3)
+    amp3 = uamp3*0.5
     
     
 
@@ -302,12 +331,12 @@ if accu<10:
     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
 plt.text(max(x)/2,max(h[0]/2)-0.005,'$nbins=%s$'%(nbins),color='b')
 if (chip==2 or chip==3) and in_brick==1:
-    plt.text(max(x)/2,max(h[0]-0.01),'$list = %.0f$'%(lst),color='b')
+    plt.text(max(x)/2,max(h[0]-0.06),'$list = %.0f$'%(lst),color='b')
 elif in_brick==0:
     if (chip==2 or chip==3):
-        plt.text(max(x)/2,max(h[0]/2-0.01),'$list =%.0f %s$'%(lst,'out'),color='b')
+        plt.text(max(x)/2,max(h[0]/2-0.06),'$list =%.0f %s$'%(lst,'out'),color='b')
     elif chip=='both':
-        plt.text(max(x)/2,max(h[0]/2-0.01),'$list =%s %s$'%(lst,'out'),color='b')
+        plt.text(max(x)/2,max(h[0]/2-0.06),'$list =%s %s$'%(lst,'out'),color='b')
 plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel('v$_{x}$ (mas yr$^{-1}$), IDL') 

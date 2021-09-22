@@ -57,22 +57,24 @@ rcParams.update({
 #There are 3 different lists. 1,2 and 3. Being # 3 the smaller and more 'accured' within the brick
 #This is generated en 13_alig....
 #chip='both'
+sm=10
 chip=3
-in_brick=0#slect stars on the brick, if =1 or out of brick if =1.
-nbins=17
-accu=1.1 # select stars cutting by uncertainty. With a large value all star are selected
+in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
+nbins=20
+accu=1.5 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':
-        v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-        v_x3,v_y3,dvx3,dvy3,mh3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+        v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+        v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
         v_x=np.r_[v_x2,v_x3]
         v_y=np.r_[v_y2,v_y3]
         dvx=np.r_[dvx2,dvx3]
         dvy=np.r_[dvy2,dvy3]
         mh=np.r_[mh2,mh3]
+        m=np.r_[m2,m3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
      if chip=='both':
         lst='All '
@@ -95,11 +97,23 @@ elif in_brick==0:
         lst=3
         v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick16.txt'%(chip),unpack=True)
 # select=np.where((dvx<accu)&(dvy<accu))
-select=np.where((dvy<accu) & (dvx<accu) )
-v_x=v_x[select]
-v_y=v_y[select]
 mh_all=mh
-mh=mh[select]
+m_all=m
+dvx_all=dvx
+dvy_all=dvy
+
+sel_m=np.where(abs(mh-m)<sm)
+v_x=v_x[sel_m]
+v_y=v_y[sel_m]
+mh=mh[sel_m]
+m=m[sel_m]
+dvx=dvx[sel_m]
+dvy=dvy[sel_m]
+
+sel=np.where((dvx<accu)&(dvy<accu))
+v_x=v_x[sel]
+v_y=v_y[sel]
+mh=mh[sel]
 fig,ax=plt.subplots(1,1)
 h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
@@ -115,17 +129,27 @@ ax.scatter(x,y,color='g',zorder=3)
 
 
 # In[6]:
-ejes=[dvx,dvy]
+ejes=[dvx_all,dvy_all]
+no_sel=np.where((dvx_all>accu)&(dvy_all>accu))
+no_m=np.where(abs(mh_all-m_all)>sm)
+ejes_accu=[dvx_all[no_sel],dvy_all[no_sel]]
+ejes_m=[dvx_all[no_m],dvy_all[no_m]]
 names=['x','y']
-if accu<5:
+if accu<50:
     fig, ax=plt.subplots(1,2,figsize=(20,10))
     for i in range(len(ejes)):
         ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
         ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
         ax[i].set_xlabel('$[H]$',fontsize=20)
         ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
-
-
+#%%
+count=0
+for i in range(len(mh)):
+    if abs(mh_all[i]-m_all[i])>sm:
+        count+=1
+print(35*'#'+'\n'+'stars with diff in mag > %s: %s'%(sm,count)+'\n'+35*'#')
 # In[7]:
 
 
@@ -155,10 +179,10 @@ def prior_transform(utheta):
     sigma1 = 3*(usigma1)
     amp1 = uamp1*1
     
-    mu2 = 2*umu2-1
-    sigma2 = (usigma2)*4
-    amp2 = uamp2*1
-
+    mu2 = -2*umu2
+    sigma2 = 3.572+ (0.328*usigma2-0.164)
+    amp2 = 0.4+(0.055*uamp2-0.0275)
+    # amp2 = 0.24+(0.055*uamp2-0.0275)
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform
 # def prior_transform(utheta):
@@ -216,12 +240,12 @@ plt.show()
 #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
 #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
 
-fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
-                              title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
-                              fig=plt.subplots(6, 6, figsize=(28, 28)))
+# fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+#                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
+#                               fig=plt.subplots(6, 6, figsize=(28, 28)))
 
 
-plt.show() 
+# plt.show() 
 
 
 # In[12]:
@@ -289,9 +313,9 @@ plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
 plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
 plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
 if (chip==2 or chip==3) and in_brick==1:
-    plt.text(max(x)/2,max(h[0]-0.03),'$list = %.0f$'%(lst))
+    plt.text(max(x)/2,max(h[0]-0.05),'$list = %.0f$'%(lst))
 elif in_brick==0:
-    plt.text(max(x)/2,max(h[0]-0.03),'$list = %s$'%('out Brick'))
+    plt.text(max(x)/2,max(h[0]-0.05),'$list = %s$'%('out Brick'))
     
     
 plt.ylabel('$N$')
