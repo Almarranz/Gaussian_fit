@@ -56,10 +56,62 @@ rcParams.update({
 
 # In[5]:
 
-
+sm=10
 chip=3
-nbins=10
-v_x,v_y=np.loadtxt(data+'arcsec_vx_vy_chip3.txt',usecols=[0,1],unpack=True)
+in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
+nbins=17
+accu=1.5 # select stars cutting by uncertainty. With a large value all star are selected
+if in_brick==1:
+    if chip =='both':
+        v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+        v_x3,v_y3,dvx3,dvy3,mh3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+        v_x=np.r_[v_x2,v_x3]
+        v_y=np.r_[v_y2,v_y3]
+        dvx=np.r_[dvx2,dvx3]
+        dvy=np.r_[dvy2,dvy3]
+        mh=np.r_[mh2,mh3]
+    elif chip==2 or chip==3:
+        lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
+        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+elif in_brick==0:
+     if chip=='both':
+        lst='All '
+        v_x10,v_y10,dvx10,dvy10,mh10=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
+        #v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
+        v_x16,v_y16,dvx16,dvy16,mh16=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
+        
+        # v_x=np.r_[v_x16,v_x12,v_x10]
+        # v_y=np.r_[v_y16,v_y12,v_y10]
+        # dvx=np.r_[dvx16,dvx12,dvx10]
+        # dvy=np.r_[dvy16,dvy12,dvy10]
+        # mh=np.r_[mh16,mh12,mh10]
+        
+        v_x=np.r_[v_x16,v_x10]
+        v_y=np.r_[v_y16,v_y10]
+        dvx=np.r_[dvx16,dvx10]
+        dvy=np.r_[dvy16,dvy10]
+        mh=np.r_[mh16,mh10]
+     else:
+        lst=3
+        v_x,v_y,dvx,dvy,mh=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick16.txt'%(chip),unpack=True)
+# select=np.where((dvx<accu)&(dvy<accu))
+mh_all=mh
+m_all=m
+dvx_all=dvx
+dvy_all=dvy
+
+sel_m=np.where(abs(mh-m)<sm)
+v_x=v_x[sel_m]
+v_y=v_y[sel_m]
+mh=mh[sel_m]
+m=m[sel_m]
+dvx=dvx[sel_m]
+dvy=dvy[sel_m]
+
+sel=np.where((dvx<accu)&(dvy<accu))
+v_x=v_x[sel]
+v_y=v_y[sel]
+mh=mh[sel]
 fig,ax=plt.subplots(1,1)
 h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
 x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
@@ -76,7 +128,28 @@ ax.scatter(x,y,color='g',zorder=3)
 # In[6]:
 
 
-lst=np.loadtxt(tmp+'lst_chip%s.txt'%(chip))
+# In[6]:
+ejes=[dvx_all,dvy_all]
+no_sel=np.where((dvx_all>accu)&(dvy_all>accu))
+no_m=np.where(abs(mh_all-m_all)>sm)
+ejes_accu=[dvx_all[no_sel],dvy_all[no_sel]]
+ejes_m=[dvx_all[no_m],dvy_all[no_m]]
+names=['x','y']
+if accu<50:
+    fig, ax=plt.subplots(1,2,figsize=(20,10))
+    for i in range(len(ejes)):
+        ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
+        ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
+        ax[i].set_xlabel('$[H]$',fontsize=20)
+        ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
+#%%
+count=0
+for i in range(len(mh)):
+    if abs(mh_all[i]-m_all[i])>sm:
+        count+=1
+print(35*'#'+'\n'+'stars with diff in mag > %s: %s'%(sm,count)+'\n'+35*'#')
 
 
 # In[7]:
