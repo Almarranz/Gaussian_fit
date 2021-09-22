@@ -1,6 +1,6 @@
 # Gaussian_fit
 #########################################
-on branch: iMac
+on branch: NPL058
 ##########################################
 Gaussian fit for proper motion on The Brick
 

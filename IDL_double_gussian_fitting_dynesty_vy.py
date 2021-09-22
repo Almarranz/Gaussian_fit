@@ -111,6 +111,16 @@ m_all=m
 dvx_all=dvx
 dvy_all=dvy
 
+max_M=17.5
+sel_M=np.where(abs(mh)<max_M)
+v_x=v_x[sel_M]
+v_y=v_y[sel_M]
+mh=mh[sel_M]
+m=m[sel_M]
+dvx=dvx[sel_M]
+dvy=dvy[sel_M]
+
+
 sel_m=np.where(abs(mh-m)<sm)
 v_x=v_x[sel_m]
 v_y=v_y[sel_m]
@@ -159,6 +169,7 @@ if accu<50:
         ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
         ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
         ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
+        ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
         ax[i].set_xlabel('$[H]$',fontsize=20)
         ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
 
