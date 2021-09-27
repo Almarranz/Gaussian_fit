@@ -113,7 +113,7 @@ m_all=m
 dvx_all=dvx
 dvy_all=dvy
 
-max_M=17.5
+max_M=21
 sel_M=np.where(abs(mh)<max_M)
 v_x=v_x[sel_M]
 v_y=v_y[sel_M]

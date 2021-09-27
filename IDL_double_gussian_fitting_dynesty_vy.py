@@ -44,14 +44,16 @@ rcParams.update({'ytick.major.width': '1.5'})
 rcParams.update({'ytick.minor.pad': '7.0'})
 rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 30})
-rcParams.update({'figure.figsize':(10,5)})
+rcParams.update({'font.size': 15})
+rcParams.update({'figure.figsize':(10,10)})
+
 rcParams.update({
     "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["Helvetica"]})
+    "font.family": "serif",
+    "font.serif": ['Adobe Arabic']})
 
-
+params = {'mathtext.default': 'regular' }          
+plt.rcParams.update(params)
 
 
 chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
@@ -169,8 +171,8 @@ if accu<50:
         ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
         ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
         ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
-        ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
-        ax[i].set_xlabel('$[H]$',fontsize=20)
+        ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)    
+        ax[i].set_xlabel('[H]',fontsize=20)
         ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
 
 
@@ -205,7 +207,7 @@ def prior_transform(utheta):
     amp1 = 1 * uamp1 
 
     
-    mu2 = 0.4 * umu2-0.2
+    mu2 = 1 * umu2-0.5
     sigma2 = 2 * usigma2   
     amp2 = 0.66* uamp2   
     
@@ -235,19 +237,19 @@ res = sampler.results
 
 
 from dynesty import plotting as dyplot
-rcParams.update({'xtick.major.pad': '7.0'})
-rcParams.update({'xtick.major.size': '7.5'})
-rcParams.update({'xtick.major.width': '1.5'})
-rcParams.update({'xtick.minor.pad': '7.0'})
-rcParams.update({'xtick.minor.size': '3.5'})
-rcParams.update({'xtick.minor.width': '1.0'})
-rcParams.update({'ytick.major.pad': '7.0'})
-rcParams.update({'ytick.major.size': '7.5'})
-rcParams.update({'ytick.major.width': '1.5'})
-rcParams.update({'ytick.minor.pad': '7.0'})
-rcParams.update({'ytick.minor.size': '3.5'})
-rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 25})
+# rcParams.update({'xtick.major.pad': '7.0'})
+# rcParams.update({'xtick.major.size': '7.5'})
+# rcParams.update({'xtick.major.width': '1.5'})
+# rcParams.update({'xtick.minor.pad': '7.0'})
+# rcParams.update({'xtick.minor.size': '3.5'})
+# rcParams.update({'xtick.minor.width': '1.0'})
+# rcParams.update({'ytick.major.pad': '7.0'})
+# rcParams.update({'ytick.major.size': '7.5'})
+# rcParams.update({'ytick.major.width': '1.5'})
+# rcParams.update({'ytick.minor.pad': '7.0'})
+# rcParams.update({'ytick.minor.size': '3.5'})
+# rcParams.update({'ytick.minor.width': '1.0'})
+# rcParams.update({'font.size': 25})
 
 
 # truths = [mu1_true, sigma1_true, amp1_true, mu2_true, sigma2_true, amp2_true]
@@ -296,25 +298,24 @@ print(mean)
 
 
 plt.figure(figsize =(8,8))
-from matplotlib import rcParams
-rcParams.update({'xtick.major.pad': '7.0'})
-rcParams.update({'xtick.major.size': '7.5'})
-rcParams.update({'xtick.major.width': '1.5'})
-rcParams.update({'xtick.minor.pad': '7.0'})
-rcParams.update({'xtick.minor.size': '3.5'})
-rcParams.update({'xtick.minor.width': '1.0'})
-rcParams.update({'ytick.major.pad': '7.0'})
-rcParams.update({'ytick.major.size': '7.5'})
-rcParams.update({'ytick.major.width': '1.5'})
-rcParams.update({'ytick.minor.pad': '7.0'})
-rcParams.update({'ytick.minor.size': '3.5'})
-rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 20})
-rcParams.update({'figure.figsize':(10,5)})
-rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["Helvetica"]})
+# from matplotlib import rcParams
+# rcParams.update({'xtick.major.pad': '7.0'})
+# rcParams.update({'xtick.major.size': '7.5'})
+# rcParams.update({'xtick.major.width': '1.5'})
+# rcParams.update({'xtick.minor.pad': '7.0'})
+# rcParams.update({'xtick.minor.size': '3.5'})
+# rcParams.update({'xtick.minor.width': '1.0'})
+# rcParams.update({'ytick.major.pad': '7.0'})
+# rcParams.update({'ytick.major.size': '7.5'})
+# rcParams.update({'ytick.major.width': '1.5'})
+# rcParams.update({'ytick.minor.pad': '7.0'})
+# rcParams.update({'ytick.minor.size': '3.5'})
+# rcParams.update({'ytick.minor.width': '1.0'})
+# rcParams.update({'font.size': 20})
+# rcParams.update({'figure.figsize':(10,5)})
+# rcParams.update({ "text.usetex": True})
+#     "font.family": "monospace",
+#     "font.serif": ["Cambria"]})
 
 
 
@@ -327,38 +328,38 @@ xplot = np.linspace(min(x), max(x), 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
-plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
 plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
 
 # plt.axvline(mean[0],linestyle='dashed',color='orange')
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
-plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='red')
-plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='red')
-plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='red')
-plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
-plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
-if accu <10:
-    plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-plt.text(min(x),max(h[0]-0.06),'$diff\ mag < %s$'%(sm),color='b')
-plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
-plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
-plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
-if show_field=='yes':
-    if chip=='both':
-        plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
-        plt.text(max(x)/2,max(h[0]-0.07),'$chip%s$'%(bc),color='b')
-    else:
-        plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
+plt.text(min(x),max(h[0]),'$\mu_{1}$=%.3f'%(mean[0]),color='red')
+plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}$=%.3f'%(mean[1]),color='red')
+plt.text(min(x),max(h[0]-0.02),'amp$_{1}=%.3f$'%(mean[2]),color='red')
+plt.text(max(x)/2.5,max(h[0]),'$\mu_{2}$=%.3f'%(mean[3]))
+# plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+# if accu <10:
+#     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+# plt.text(min(x),max(h[0]-0.06),'$diff\ mag < %s$'%(sm),color='b')
+# plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
+plt.text(max(x)/2.5,max(h[0]-0.01),r'$\sigma_{2}$=%.3f'%(mean[4]))
+plt.text(max(x)/2.5,max(h[0]-0.02),'amp$_{2}=%.3f$'%(mean[5]))
+# if show_field=='yes':
+#     if chip=='both':
+#         plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
+#         plt.text(max(x)/2,max(h[0]-0.07),'$chip%s$'%(bc),color='b')
+#     else:
+#         plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
 # elif in_brick==0:
 #     if (chip==2 or chip==3):
 #         plt.text(max(x)/2,max(h[0]-0.05),'$field%s c%s$'%(field,chip),color='b')
 #     elif chip=='both':
 #         plt.text(max(x)/2,max(h[0]-0.05),'$field%s c%s$'%(field,chip),color='b')
-plt.ylabel('$N$')
+plt.ylabel('N',fontweight='bold')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel('$v_{y} (mas\ yr^{-1}), IDL,\ Chip \ %s$'%(chip)) 
-
+plt.xlabel(r'v$_{y}$ (mas\ a$^{-1}$),Bulge and NSD dispersion and mean velocities',weight='bold')#\ Chip \ %s$'%(chip)) 
+plt.savefig('/Users/amartinez/Desktop/PhD/My_papers/brick/vy_out_test1.png')
 # #%%
 # # Example data
 # t = np.arange(0.0, 1.0 + 0.01, 0.01)

@@ -44,12 +44,12 @@ rcParams.update({'ytick.major.width': '1.5'})
 rcParams.update({'ytick.minor.pad': '7.0'})
 rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 30})
+rcParams.update({'font.size': 15})
 rcParams.update({'figure.figsize':(10,5)})
-rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["Helvetica"]})
+# rcParams.update({
+#     "text.usetex": True,
+#     "font.family": "sans-serif",
+#     "font.sans-serif": ["Helvetica"]})
 
 
 # In[5]:
@@ -115,7 +115,7 @@ m_all=m
 dvx_all=dvx
 dvy_all=dvy
 
-max_M=17.5
+max_M=21
 sel_M=np.where(abs(mh)<max_M)
 v_x=v_x[sel_M]
 v_y=v_y[sel_M]
@@ -217,9 +217,9 @@ def prior_transform(utheta):
     amp1 = uamp1*0.6
     
     mu2 = 1*umu2
-    sigma2 =1.5*(usigma2+1)
+    sigma2 =3.+(0.3*usigma2-0.15)
     #sigma2 =3.5*usigma2
-    amp2 = uamp2*0.3
+    amp2 = uamp2*0.4
     
     mu3 =3*(umu3) # scale and shift to [-3., 3.)
     sigma3 = 3.3*(usigma3)
