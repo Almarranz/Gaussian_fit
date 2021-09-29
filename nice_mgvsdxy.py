@@ -57,11 +57,36 @@ ax.legend(['GNS', 'Zoc'],fontsize=20,markerscale=3,shadow=True,loc=2)
 p1.set_alpha(0.3)# toset the alpha of the legend differently, we make the plot and then the legeng (default alpha =1), and then change the alpga for the plots
 p2.set_alpha(0.3)
 plt.ylabel(r'$\sigma_{xy}$ (mas)')
-ax.set_ylim(0,10)
+ax.set_ylim(0,15)
+ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
+ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
+plt.text(13,np.mean(gns_dxy)*1000*0.106 +0.15,r'mean=%.3f'%(np.mean(gns_dxy)*1000*0.106),color='red',fontsize=20)
+plt.text(13,np.mean(zoc_dxy)*1000*0.106 +0.15,r'$\sigma_{2}$=%.3f'%(np.mean(zoc_dxy)*1000*0.106),color='blue',fontsize=20)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
+#%%
+band='H'
+exptime=10
+#chip=1
+folder='im_jitter_NOgains/'
+results='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'/results_bs/'
+name='NPL_054'
+chip=3
+ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b=np.loadtxt(results+name+'_chip%s.txt'%(chip),unpack=True)#header='ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b'
+dxy=np.sqrt((dx)**2+(dy)**2)
+fig, ax =plt.subplots(1,1,figsize=(10,10))
+ax.scatter(mag,dxy*1000,color='blue',s=5, marker='.')
+ax.grid()
+plt.ylabel(r'$\sigma_{xy}$ (mas)')
+ax.set_ylim(0,14)
+ax.set_xlim(12,19)
 
-
+# ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
+# ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
+# plt.text(13,np.mean(gns_dxy)*1000*0.106 +0.15,r'mean=%.3f'%(np.mean(gns_dxy)*1000*0.106),color='red',fontsize=20)
+# plt.text(13,np.mean(zoc_dxy)*1000*0.106 +0.15,r'$\sigma_{2}$=%.3f'%(np.mean(zoc_dxy)*1000*0.106),color='blue',fontsize=20)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 
 
 
