@@ -48,9 +48,9 @@ rcParams.update({'font.size': 15})
 rcParams.update({'figure.figsize':(10,10)})
 
 rcParams.update({
-    "text.usetex": True,
+    "text.usetex": False,
     "font.family": "serif",
-    "font.serif": ['Adobe Arabic']})
+    "font.serif": ["Palatino"]})
 
 params = {'mathtext.default': 'regular' }          
 plt.rcParams.update(params)
@@ -297,7 +297,7 @@ print(mean)
 # In[14]:
 
 
-plt.figure(figsize =(8,8))
+plt.figure(figsize =(10,10))
 # from matplotlib import rcParams
 # rcParams.update({'xtick.major.pad': '7.0'})
 # rcParams.update({'xtick.major.size': '7.5'})
@@ -334,17 +334,18 @@ plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="k", linesty
 
 # plt.axvline(mean[0],linestyle='dashed',color='orange')
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
-plt.text(min(x),max(h[0]),'$\mu_{1}$=%.3f'%(mean[0]),color='red')
-plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}$=%.3f'%(mean[1]),color='red')
-plt.text(min(x),max(h[0]-0.02),'amp$_{1}=%.3f$'%(mean[2]),color='red')
-plt.text(max(x)/2.5,max(h[0]),'$\mu_{2}$=%.3f'%(mean[3]))
+plt.text(-10,max(h[0]),'$\mu_{1}$=%.3f'%(mean[0]),color='red')
+plt.text(-10,max(h[0]-0.01),'$\sigma_{1}$=%.3f'%(mean[1]),color='red')
+plt.text(-10,max(h[0]-0.02),'amp$_{1}=%.3f$'%(mean[2]),color='red')
+plt.text(5,max(h[0]),'$\mu_{2}$=%.3f'%(mean[3]))
 # plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
 # if accu <10:
 #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
 # plt.text(min(x),max(h[0]-0.06),'$diff\ mag < %s$'%(sm),color='b')
 # plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
-plt.text(max(x)/2.5,max(h[0]-0.01),r'$\sigma_{2}$=%.3f'%(mean[4]))
-plt.text(max(x)/2.5,max(h[0]-0.02),'amp$_{2}=%.3f$'%(mean[5]))
+plt.text(5,max(h[0]-0.01),r'$\sigma_{2}$=%.3f'%(mean[4]))
+plt.text(5,max(h[0]-0.02),'amp$_{2}=%.3f$'%(mean[5]))
+plt.xlim(-15,15)
 # if show_field=='yes':
 #     if chip=='both':
 #         plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
@@ -356,9 +357,9 @@ plt.text(max(x)/2.5,max(h[0]-0.02),'amp$_{2}=%.3f$'%(mean[5]))
 #         plt.text(max(x)/2,max(h[0]-0.05),'$field%s c%s$'%(field,chip),color='b')
 #     elif chip=='both':
 #         plt.text(max(x)/2,max(h[0]-0.05),'$field%s c%s$'%(field,chip),color='b')
-plt.ylabel('N',fontweight='bold')
+plt.ylabel('N',fontweight='bold',fontsize=20)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'v$_{y}$ (mas\ a$^{-1}$),Bulge and NSD dispersion and mean velocities',weight='bold')#\ Chip \ %s$'%(chip)) 
+plt.xlabel(r'v$_{y}$ (mas\ a$^{-1}$)',weight='bold',fontsize=20)#\ Chip \ %s$'%(chip),fotsize=20) 
 plt.savefig('/Users/amartinez/Desktop/PhD/My_papers/brick/vy_out_test1.png')
 # #%%
 # # Example data
