@@ -24,7 +24,7 @@ band='H'
 folder='im_jitter_NOgains/'
 exptime=10
 data='/Users/amartinez/Desktop/PhD/python/Gaussian_fit/'
-tmp='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'tmp_bs/'
+tmp='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'tmp_bs/'
 
 # In[4]:
 
@@ -44,12 +44,12 @@ rcParams.update({'ytick.major.width': '1.5'})
 rcParams.update({'ytick.minor.pad': '7.0'})
 rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 30})
+rcParams.update({'font.size': 20})
 rcParams.update({'figure.figsize':(10,5)})
 rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["Helvetica"]})
+    "text.usetex": False,
+    "font.family": "sans",
+    "font.sans-serif": ["Palatino"]})
 
 
 # In[5]:
@@ -64,7 +64,7 @@ sm=0.5
 gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
 nbins=40
-accu=2
+accu=1.5
 
 flds=[16,3]#I feel that field 10 make things worse for some reason
 chips=[1,2,3,4]
@@ -216,10 +216,10 @@ def prior_transform(utheta):
     sigma1 = 3*(usigma1)
     amp1 = uamp1*0.6
     
-    mu2 = 1*umu2
-    sigma2 =1.5*(usigma2+1)
+    mu2 = -0.018+((umu1*0.062)-0.032)
+    sigma2 =2.902+((usigma2*0.15)-0.075)
     #sigma2 =3.5*usigma2
-    amp2 = uamp2*0.3
+    amp2 = uamp2*0.56
     
     mu3 =3*(umu3) # scale and shift to [-3., 3.)
     sigma3 = 3.3*(usigma3)
@@ -306,25 +306,26 @@ print(mean)
 
 
 plt.figure(figsize =(8,8))
-from matplotlib import rcParams
-rcParams.update({'xtick.major.pad': '7.0'})
-rcParams.update({'xtick.major.size': '7.5'})
-rcParams.update({'xtick.major.width': '1.5'})
-rcParams.update({'xtick.minor.pad': '7.0'})
-rcParams.update({'xtick.minor.size': '3.5'})
-rcParams.update({'xtick.minor.width': '1.0'})
-rcParams.update({'ytick.major.pad': '7.0'})
-rcParams.update({'ytick.major.size': '7.5'})
-rcParams.update({'ytick.major.width': '1.5'})
-rcParams.update({'ytick.minor.pad': '7.0'})
-rcParams.update({'ytick.minor.size': '3.5'})
-rcParams.update({'ytick.minor.width': '1.0'})
+# from matplotlib import rcParams
+# rcParams.update({'xtick.major.pad': '7.0'})
+# rcParams.update({'xtick.major.size': '7.5'})
+# rcParams.update({'xtick.major.width': '1.5'})
+# rcParams.update({'xtick.minor.pad': '7.0'})
+# rcParams.update({'xtick.minor.size': '3.5'})
+# rcParams.update({'xtick.minor.width': '1.0'})
+# rcParams.update({'ytick.major.pad': '7.0'})
+# rcParams.update({'ytick.major.size': '7.5'})
+# rcParams.update({'ytick.major.width': '1.5'})
+# rcParams.update({'ytick.minor.pad': '7.0'})
+# rcParams.update({'ytick.minor.size': '3.5'})
+# rcParams.update({'ytick.minor.width': '1.0'})
+# rcParams.update({'font.size': 20})
+# rcParams.update({'figure.figsize':(10,5)})
 rcParams.update({'font.size': 20})
-rcParams.update({'figure.figsize':(10,5)})
 rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["Helvetica"]})
+        "text.usetex": False,
+        "font.family": "sans",
+        "font.sans-serif": ["Palatino"]})
 
 results = sampler.results
 print(results['logz'][-1])
@@ -339,34 +340,34 @@ plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mea
 plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="green", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
-
+plt.xlim(-15,15)
 
 # plt.axvline(mean[0],linestyle='dashed',color='orange')
 # plt.axvline(mean[3],linestyle='dashed',color='orange')
-plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
-plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
-plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='green')
-plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
-plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
-plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
-plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
-plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
-plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
+# plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
+# plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
+# plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='green')
+# plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
+# plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
+# plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
+# plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
+# plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
+# plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
 
 plt.text(min(x),max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
-if accu<10:
-    plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+# if accu<10:
+#     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
 plt.text(min(x),max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
-plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
+# plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
 if show_field=='yes':
     if chip=='both':
         plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
         plt.text(max(x)/2,max(h[0]-0.07),'$chip%s$'%(bc),color='b')
     else:
         plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
-plt.ylabel('N')
+plt.ylabel('$N$')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel('v$_{x}$ (mas yr$^{-1}$), IDL') 
+plt.xlabel('$v_{x}\ (mas a^{-1})$') 
 
 
 #%%
