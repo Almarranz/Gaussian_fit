@@ -305,7 +305,7 @@ print(mean)
 # In[14]:
 
 
-plt.figure(figsize =(8,8))
+plt.figure(figsize =(10,10))
 # from matplotlib import rcParams
 # rcParams.update({'xtick.major.pad': '7.0'})
 # rcParams.update({'xtick.major.size': '7.5'})
@@ -321,11 +321,11 @@ plt.figure(figsize =(8,8))
 # rcParams.update({'ytick.minor.width': '1.0'})
 # rcParams.update({'font.size': 20})
 # rcParams.update({'figure.figsize':(10,5)})
-rcParams.update({'font.size': 20})
-rcParams.update({
-        "text.usetex": False,
-        "font.family": "sans",
-        "font.sans-serif": ["Palatino"]})
+plt.rcParams["font.family"] = "serif"
+plt.rcParams["mathtext.fontset"] = 'dejavuserif'
+plt.rcParams['text.usetex'] = False
+from matplotlib import rc
+rc('font',**{'family':'serif','serif':['Palatino']})
 
 results = sampler.results
 print(results['logz'][-1])
@@ -365,9 +365,9 @@ if show_field=='yes':
         plt.text(max(x)/2,max(h[0]-0.07),'$chip%s$'%(bc),color='b')
     else:
         plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
-plt.ylabel('$N$')
+plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel('$v_{l}\ (mas a^{-1})$') 
+plt.xlabel(r'$\mathrm{v_{b} (mas\ a^{-1})}$') 
 
 
 #%%
