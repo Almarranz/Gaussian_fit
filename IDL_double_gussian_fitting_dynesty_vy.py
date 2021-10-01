@@ -320,7 +320,7 @@ for sloop in range(1, 2):
     rcParams.update({'font.size': 20})
     rcParams.update({
         "text.usetex": False,
-        "font.family": "sans",
+        "font.family": "serif",
         "font.sans-serif": ["Palatino"]})
     
     
@@ -363,9 +363,14 @@ for sloop in range(1, 2):
     #         plt.text(max(x)/2,max(h[0]-0.05),'$field%s c%s$'%(field,chip),color='b')
     #     elif chip=='both':
     #         plt.text(max(x)/2,max(h[0]-0.05),'$field%s c%s$'%(field,chip),color='b')
-    plt.ylabel('$N$')
-    # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-    plt.xlabel('$v_{b}\ (mas\ a^{-1})$' )
+    plt.ylabel('N')
+    # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)')
+    plt.rcParams["font.family"] = "serif"
+    plt.rcParams["mathtext.fontset"] = 'dejavuserif'
+    plt.rcParams['text.usetex'] = False
+    from matplotlib import rc
+    rc('font',**{'family':'serif','serif':['Palatino']})
+    plt.xlabel(r'$\mathrm{v_{b} (mas\ a^{-1})}$')
     
     
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
