@@ -44,12 +44,12 @@ rcParams.update({'ytick.major.width': '1.5'})
 rcParams.update({'ytick.minor.pad': '7.0'})
 rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 30})
+rcParams.update({'font.size': 20})
 rcParams.update({'figure.figsize':(10,5)})
 rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["Helvetica"]})
+    "text.usetex": False,
+    "font.family": "sans",
+    "font.sans-serif": ["Palatino"]})
 
 
 
@@ -57,11 +57,11 @@ rcParams.update({
 chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
 field=20#fields can be 3 or 20 (refers to GNS fields)
 nbins=40
-sm=0.5
+sm=0.5#limit in difference of mag
 show_field='no'
 gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
-accu=2
+accu=1.5
 flds=[16,3] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
 chips=[1,2,3,4]
 # flds=[7]
@@ -166,13 +166,15 @@ if accu<50:
     fig, ax=plt.subplots(1,2,figsize=(20,10))
     for i in range(len(ejes)):
         ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
-        ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
-        ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
+        # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+        ax[i].scatter(mh_all[no_m],ejes_m[i],color='red',alpha=0.7,s=25)
         ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
-        ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
+        # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
+        ax[i].set_xlim(12,19)
+        ax[i].set_ylim(0,8)
         ax[i].set_xlabel('$[H]$',fontsize=20)
         ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
-
+        
 
 
 # In[7]:
@@ -296,25 +298,25 @@ print(mean)
 
 
 plt.figure(figsize =(8,8))
-from matplotlib import rcParams
-rcParams.update({'xtick.major.pad': '7.0'})
-rcParams.update({'xtick.major.size': '7.5'})
-rcParams.update({'xtick.major.width': '1.5'})
-rcParams.update({'xtick.minor.pad': '7.0'})
-rcParams.update({'xtick.minor.size': '3.5'})
-rcParams.update({'xtick.minor.width': '1.0'})
-rcParams.update({'ytick.major.pad': '7.0'})
-rcParams.update({'ytick.major.size': '7.5'})
-rcParams.update({'ytick.major.width': '1.5'})
-rcParams.update({'ytick.minor.pad': '7.0'})
-rcParams.update({'ytick.minor.size': '3.5'})
-rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 20})
-rcParams.update({'figure.figsize':(10,5)})
-rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["Helvetica"]})
+# from matplotlib import rcParams
+# rcParams.update({'xtick.major.pad': '7.0'})
+# rcParams.update({'xtick.major.size': '7.5'})
+# rcParams.update({'xtick.major.width': '1.5'})
+# rcParams.update({'xtick.minor.pad': '7.0'})
+# rcParams.update({'xtick.minor.size': '3.5'})
+# rcParams.update({'xtick.minor.width': '1.0'})
+# rcParams.update({'ytick.major.pad': '7.0'})
+# rcParams.update({'ytick.major.size': '7.5'})
+# rcParams.update({'ytick.major.width': '1.5'})
+# rcParams.update({'ytick.minor.pad': '7.0'})
+# rcParams.update({'ytick.minor.size': '3.5'})
+# rcParams.update({'ytick.minor.width': '1.0'})
+# rcParams.update({'font.size': 20})
+# rcParams.update({'figure.figsize':(10,5)})
+# rcParams.update({
+#     "text.usetex": True,
+#     "font.family": "sans-serif",
+#     "font.sans-serif": ["Helvetica"]})
 
 
 
