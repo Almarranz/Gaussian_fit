@@ -21,11 +21,12 @@ import matplotlib.pyplot as plt
 #     "font.family": "sans-serif",
 #     "font.sans-serif": ["Helvetica"]})
 # for Palatino and other serif fonts use:
-plt.rcParams.update({
-    "text.usetex": False,
-    "font.family": "serif",
-    "font.serif": ["Palatino"],
-})
+plt.rcParams["font.family"] = "serif"
+plt.rcParams["mathtext.fontset"] = 'dejavuserif'
+plt.rcParams['text.usetex'] = False
+from matplotlib import rc
+rc('font',**{'family':'serif','serif':['Palatino']})
+plt.xlabel(r'$\mathrm{v_{b} (mas\ a^{-1})}$')
 from matplotlib import rcParams
 rcParams.update({'xtick.major.pad': '7.0'})
 rcParams.update({'xtick.major.size': '7.5'})
@@ -77,7 +78,7 @@ dxy=np.sqrt((dx)**2+(dy)**2)
 fig, ax =plt.subplots(1,1,figsize=(10,10))
 ax.scatter(mag,dxy*1000,color='blue',s=5, marker='.')
 ax.grid()
-plt.ylabel(r'$\sigma_{xy}$ (mas)')
+plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
 ax.set_ylim(0,14)
 ax.set_xlim(12,19)
 
