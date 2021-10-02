@@ -46,14 +46,15 @@ rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
 rcParams.update({'font.size': 20})
 rcParams.update({'figure.figsize':(10,5)})
-rcParams.update({
-    "text.usetex": False,
-    "font.family": "sans",
-    "font.sans-serif": ["Palatino"]})
+plt.rcParams["font.family"] = "serif"
+plt.rcParams["mathtext.fontset"] = 'dejavuserif'
+plt.rcParams['text.usetex'] = False
+from matplotlib import rc
+rc('font',**{'family':'serif','serif':['Palatino']})
 
 
 
-for sloop in range(1, 2):
+for sloop in range(6, 7):
     chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
     field=20#fields can be 3 or 20 (refers to GNS fields)
     nbins=41-sloop
@@ -172,8 +173,8 @@ for sloop in range(1, 2):
             # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
             ax[i].set_xlim(12,19)
             ax[i].set_ylim(0,8)
-            ax[i].set_xlabel('$[H]$',fontsize=20)
-            ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
+            ax[i].set_xlabel('[H]',fontsize=20)
+            ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {v%s}}(mas)}$'%(names[i]),fontsize=20)
             
     
     
@@ -297,7 +298,7 @@ for sloop in range(1, 2):
     # In[14]:
     
     
-    plt.figure(figsize =(8,8))
+    plt.figure(figsize =(10,10))
     # from matplotlib import rcParams
     # rcParams.update({'xtick.major.pad': '7.0'})
     # rcParams.update({'xtick.major.size': '7.5'})
@@ -328,14 +329,14 @@ for sloop in range(1, 2):
     print(results['logz'][-1])
     
     
-    h=plt.hist(v_y, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_y*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)*-1
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
     
-    plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
     
     # plt.axvline(mean[0],linestyle='dashed',color='orange')
     # plt.axvline(mean[3],linestyle='dashed',color='orange')
@@ -346,6 +347,7 @@ for sloop in range(1, 2):
     # plt.text(max(x)/2,max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
     plt.xlim(-15,15)
+    plt.gca().invert_xaxis()
     # if accu <10:
     #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
     # plt.text(min(x),max(h[0]-0.06),'$diff\ mag < %s$'%(sm),color='b')
