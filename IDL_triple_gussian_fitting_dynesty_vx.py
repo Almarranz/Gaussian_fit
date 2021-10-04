@@ -53,7 +53,7 @@ rcParams.update({
 
 from matplotlib import rc
 # In[5]:
-for sloop in range(1,21):
+for sloop in range(6,7):
     
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
@@ -369,7 +369,7 @@ for sloop in range(1,21):
             plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
     plt.ylabel('N')
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-    plt.xlabel(r'$\mathrm{v_{b} (mas\ a^{-1})}$') 
+    plt.xlabel(r'$\mathrm{v_{l} (mas\ a^{-1})}$') 
 
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 #%%
