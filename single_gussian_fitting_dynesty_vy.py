@@ -59,7 +59,7 @@ rcParams.update({
 sm=10
 chip=3
 in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
-nbins=17
+nbins=25
 accu=1.5 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':

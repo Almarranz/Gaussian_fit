@@ -44,12 +44,13 @@ rcParams.update({'ytick.major.width': '1.5'})
 rcParams.update({'ytick.minor.pad': '7.0'})
 rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 30})
+rcParams.update({'font.size': 20})
 rcParams.update({'figure.figsize':(10,5)})
-rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["Helvetica"]})
+plt.rcParams["font.family"] = "serif"
+plt.rcParams["mathtext.fontset"] = 'dejavuserif'
+plt.rcParams['text.usetex'] = False
+from matplotlib import rc
+rc('font',**{'family':'serif','serif':['Palatino']})
 
 
 # In[5]:
@@ -57,11 +58,11 @@ rcParams.update({
 #There are 3 different lists. 1,2 and 3. Being # 3 the smaller and more 'accured' within the brick
 #This is generated en 13_alig....
 #chip='both'
-sm=10
+sm=0.5
 chip=3
 in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
-nbins=20
-accu=1.5 # select stars cutting by uncertainty. With a large value all star are selected
+nbins=16
+accu=1.5# select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':
         v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
@@ -179,10 +180,10 @@ def prior_transform(utheta):
     sigma1 = 3*(usigma1)
     amp1 = uamp1*1
     
-    mu2 = -2*umu2
-    sigma2 = 3.572+ (0.328*usigma2-0.164)
-    amp2 = 0.4+(0.055*uamp2-0.0275)
-    # amp2 = 0.24+(0.055*uamp2-0.0275)
+    mu2 = 0.018+ (0.162*umu2-0.031)# scale and shift to [-3., 3.)
+    # mu2 = 3.018+ (0.062*umu2-0.031)
+    sigma2 = 2.9+(0.15*usigma2-0.075)
+    amp2 = uamp2*1
     return mu1, sigma1, amp1, mu2, sigma2, amp2
 # prior transform
 # def prior_transform(utheta):
@@ -208,19 +209,7 @@ res = sampler.results
 
 
 from dynesty import plotting as dyplot
-rcParams.update({'xtick.major.pad': '7.0'})
-rcParams.update({'xtick.major.size': '7.5'})
-rcParams.update({'xtick.major.width': '1.5'})
-rcParams.update({'xtick.minor.pad': '7.0'})
-rcParams.update({'xtick.minor.size': '3.5'})
-rcParams.update({'xtick.minor.width': '1.0'})
-rcParams.update({'ytick.major.pad': '7.0'})
-rcParams.update({'ytick.major.size': '7.5'})
-rcParams.update({'ytick.major.width': '1.5'})
-rcParams.update({'ytick.minor.pad': '7.0'})
-rcParams.update({'ytick.minor.size': '3.5'})
-rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 25})
+
 
 
 # truths = [mu1_true, sigma1_true, amp1_true, mu2_true, sigma2_true, amp2_true]
@@ -267,27 +256,9 @@ print(mean)
 # In[14]:
 
 
-plt.figure(figsize =(8,8))
+plt.figure(figsize =(10,10))
 from matplotlib import rcParams
-rcParams.update({'xtick.major.pad': '7.0'})
-rcParams.update({'xtick.major.size': '7.5'})
-rcParams.update({'xtick.major.width': '1.5'})
-rcParams.update({'xtick.minor.pad': '7.0'})
-rcParams.update({'xtick.minor.size': '3.5'})
-rcParams.update({'xtick.minor.width': '1.0'})
-rcParams.update({'ytick.major.pad': '7.0'})
-rcParams.update({'ytick.major.size': '7.5'})
-rcParams.update({'ytick.major.width': '1.5'})
-rcParams.update({'ytick.minor.pad': '7.0'})
-rcParams.update({'ytick.minor.size': '3.5'})
-rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 20})
-rcParams.update({'figure.figsize':(10,5)})
-rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["Helvetica"]})
-
+# 
 results = sampler.results
 print(results['logz'][-1])
 
@@ -317,10 +288,10 @@ if (chip==2 or chip==3) and in_brick==1:
 elif in_brick==0:
     plt.text(max(x)/2,max(h[0]-0.05),'$list = %s$'%('out Brick'))
     
-    
-plt.ylabel('$N$')
+plt.xlim(-15,15)    
+plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$v_{x} (mas\ yr^{-1}), IDL Chip %s$'%(chip)) 
+plt.xlabel(r'$\mathrm{v_{x} (mas\ a^{-1})}$') 
 
 
 #%%

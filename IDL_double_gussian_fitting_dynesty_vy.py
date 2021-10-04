@@ -52,8 +52,8 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 
 
 # In[5]:
-
-for sloop in range(1,27):
+ran=11
+for sloop in range(ran,ran+15):
     chip=3
     
     nbins=41-sloop
@@ -186,12 +186,14 @@ for sloop in range(1,27):
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
         mu1 = 2*umu1-1 # scale and shift to [-3., 3.)
         sigma1 = (usigma1)*3
-        amp1 = uamp1*1.5    
+        amp1 = uamp1*0.6    
     
         
-        mu2 = 2*umu2-1# scale and shift to [-3., 3.)
-        sigma2 = 3.9*(usigma2)
-        amp2 = uamp2*1.5
+        #mu2 = -0.018+ (0.062*umu2-0.031)# scale and shift to [-3., 3.)
+        #sigma2 = 2.9+(0.15*usigma2-0.075)
+        mu2= 0.05*umu2-0.025
+        sigma2=3.5*usigma2
+        amp2 = uamp2*0.6
     
         return mu1, sigma1, amp1, mu2, sigma2, amp2
     # prior transform
@@ -304,15 +306,15 @@ for sloop in range(1,27):
     results = sampler.results
     print(results['logz'][-1])
     
-    
-    h=plt.hist(v_y*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    a=1#to chnge the axix a=-1
+    h=plt.hist(v_y*a, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
     
-    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*a, mean[0], mean[1], mean[2]) + gaussian(xplot*a, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*a, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*a, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
     plt.xlim(-15,15)
     # plt.axvline(mean[0],linestyle='dashed',color='orange')
     # plt.axvline(mean[3],linestyle='dashed',color='orange')
@@ -326,8 +328,8 @@ for sloop in range(1,27):
     plt.text(min(x),max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
     plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
     plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
-    # if (chip==2 or chip==3) and in_brick==1:
-    #     plt.text(max(x)/2,max(h[0]-0.05),'$list = %.0f$'%(lst),color='b')
+    if (chip==2 or chip==3) and in_brick==1:
+        plt.text(max(x)/2,max(h[0]-0.05),'$list = %.0f$'%(lst),color='b')
     # elif in_brick==0:
     #     if (chip==2 or chip==3):
     #         plt.text(max(x)/2,max(h[0]-0.05),'$list =%.0f %s$'%(lst,'out'),color='b')
