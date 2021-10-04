@@ -76,7 +76,7 @@ chip=3
 ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b=np.loadtxt(results+name+'_chip%s.txt'%(chip),unpack=True)#header='ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b'
 dxy=np.sqrt((dx)**2+(dy)**2)
 fig, ax =plt.subplots(1,1,figsize=(10,10))
-ax.scatter(mag,dxy*1000,color='blue',s=5, marker='.')
+ax.scatter(mag,dxy*1000,color='k',s=5, marker='.')
 ax.grid()
 plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
 ax.set_ylim(0,14)
