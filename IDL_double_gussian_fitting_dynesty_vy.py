@@ -24,7 +24,7 @@ folder='im_jitter_NOgains/'
 exptime=10
 data='/Users/amartinez/Desktop/PhD/python/Gaussian_fit/'
 tmp='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'tmp_bs/'
-
+pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 # In[4]:
 
 
@@ -157,7 +157,9 @@ for sloop in range(ran,ran+1):
             ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
             ax[i].set_xlabel('$[H]$',fontsize=20)
             ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
-    
+            if i ==0:
+                np.savetxt(pruebas+'dvx_mag_IN.txt',(mh_all,ejes[i]),fmt='%.4f',header='mh_all,dvx_all')
+                np.savetxt(pruebas+'NO_dvx_mag_IN.txt',(mh_all[no_m],ejes_m[i]),fmt='%.4f',header='mh_all[no_m],dvx_all[no]')
     
     # In[7]:
     
