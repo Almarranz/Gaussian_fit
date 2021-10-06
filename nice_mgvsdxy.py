@@ -21,11 +21,12 @@ import matplotlib.pyplot as plt
 #     "font.family": "sans-serif",
 #     "font.sans-serif": ["Helvetica"]})
 # for Palatino and other serif fonts use:
-plt.rcParams.update({
-    "text.usetex": False,
-    "font.family": "serif",
-    "font.serif": ["Palatino"],
-})
+plt.rcParams["font.family"] = "serif"
+plt.rcParams["mathtext.fontset"] = 'dejavuserif'
+plt.rcParams['text.usetex'] = False
+from matplotlib import rc
+rc('font',**{'family':'serif','serif':['Palatino']})
+plt.xlabel(r'$\mathrm{v_{b} (mas\ a^{-1})}$')
 from matplotlib import rcParams
 rcParams.update({'xtick.major.pad': '7.0'})
 rcParams.update({'xtick.major.size': '7.5'})
@@ -70,14 +71,16 @@ exptime=10
 #chip=1
 folder='im_jitter_NOgains/'
 results='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'/results_bs/'
+pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
+
 name='NPL_054'
 chip=3
 ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b=np.loadtxt(results+name+'_chip%s.txt'%(chip),unpack=True)#header='ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b'
 dxy=np.sqrt((dx)**2+(dy)**2)
 fig, ax =plt.subplots(1,1,figsize=(10,10))
-ax.scatter(mag,dxy*1000,color='blue',s=5, marker='.')
+ax.scatter(mag,dxy*1000,color='k',s=5, marker='.')
 ax.grid()
-plt.ylabel(r'$\sigma_{xy}$ (mas)')
+plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
 ax.set_ylim(0,14)
 ax.set_xlim(12,19)
 
@@ -88,15 +91,36 @@ ax.set_xlim(12,19)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 
+#%%
+
+x_in=np.loadtxt(pruebas+'dvx_mag_IN.txt')#header='mh_all,dvx_all')
+no_x_in=np.loadtxt(pruebas+'NO_dvx_mag_IN.txt')#header='mh_all,dvx_all')
+
+x_out=np.loadtxt(pruebas+'dvx_mag_OUT.txt')#header='mh_all,dvx_all')
+no_x_out=np.loadtxt(pruebas+'NO_dvx_mag_OUT.txt')#header='mh_all,dvx_all')
 
 
+ejes=[x_in[0,:],x_out[0,:]]
+absc=[x_in[1,:],x_out[1,:]]
 
+ejes_no=[no_x_in[0,:],no_x_out[0,:]]
+absc_no=[no_x_in[1,:],no_x_out[1,:]]
 
+zones=['Zone A', 'Zone B']
 
-
-
-
-
+accu=1.5
+fig, ax=plt.subplots(1,2,figsize=(20,10))
+for i in range(len(ejes)):
+    ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
+    # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=25)
+    ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
+    # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
+    ax[i].set_xlim(12,19)
+    ax[i].set_ylim(0,8)
+    ax[i].set_xlabel('[H]',fontsize=20)
+    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=20)
+    ax[i].legend(['%s'%(zones[i])],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 
 
 
