@@ -56,7 +56,7 @@ rcParams.update({
 
 # In[5]:
 
-sm=10
+sm=1
 chip=3
 in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
 nbins=25
@@ -72,7 +72,8 @@ if in_brick==1:
         mh=np.r_[mh2,mh3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+        # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 elif in_brick==0:
      if chip=='both':
         lst='All '
