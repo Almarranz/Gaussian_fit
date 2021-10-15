@@ -64,8 +64,8 @@ for sloop in range(ran,ran+16):
     
     if in_brick==1:
         if chip =='both':
-            v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
             dvx=np.r_[dvx2,dvx3]
@@ -82,9 +82,9 @@ for sloop in range(ran,ran+16):
         if chip=='both':
             lst='All '
             #something was weird with list 12 aligment, it didn't converg... 
-            v_x10,v_y10,dvx10,dvy10,mh10,m10=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
+            v_x10,v_y10,dvx10,dvy10,mh10,m10=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
             # v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
-            v_x16,v_y16,dvx16,dvy16,mh16,m16=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
+            v_x16,v_y16,dvx16,dvy16,mh16,m16=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
             
             # v_x=np.r_[v_x16,v_x12,v_x10]
             # v_y=np.r_[v_y16,v_y12,v_y10]
@@ -100,7 +100,7 @@ for sloop in range(ran,ran+16):
             m=np.r_[m16,m10]
         else:
             lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-            v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
+            v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
     
     
     mh_all=mh
