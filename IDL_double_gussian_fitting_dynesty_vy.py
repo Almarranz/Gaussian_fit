@@ -54,7 +54,7 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 
 
 
-for sloop in range(6, 7):
+for sloop in range(1, 20):
     chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
     field=20#fields can be 3 or 20 (refers to GNS fields)
     nbins=41-sloop
@@ -79,8 +79,8 @@ for sloop in range(6, 7):
         for i in range(len(flds)):
             for j in range(len(chips)):
                 try:
-                    
-                    v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
+                    v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
+                    # v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
                     v_x=np.r_[v_x,v_x0]
                     v_y=np.r_[v_y,v_y0]
                     dvx=np.r_[dvx,dvx0]
@@ -106,13 +106,13 @@ for sloop in range(6, 7):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx
     dvy_all=dvy
     
-    max_M=17.5
+    max_M=170.5
     sel_M=np.where(abs(mh)<max_M)
     v_x=v_x[sel_M]
     v_y=v_y[sel_M]
@@ -207,7 +207,7 @@ for sloop in range(6, 7):
     
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
         mu1 = 2* umu1-1  # scale and shift to [-10., 10.)
-        sigma1 = 3* (usigma1)   
+        sigma1 = 3.5* (usigma1)   
         amp1 = 1 * uamp1 
     
         
@@ -343,20 +343,20 @@ for sloop in range(6, 7):
     
     # plt.axvline(mean[0],linestyle='dashed',color='orange')
     # plt.axvline(mean[3],linestyle='dashed',color='orange')
-    # plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='red')
-    # plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='red')
-    # plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='red')
-    # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
-    # plt.text(max(x)/2,max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
-    # plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
+    plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='red')
+    plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='red')
+    plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='red')
+    plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]))
+    plt.text(max(x)/2,max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
     plt.xlim(-15,15)
     # plt.gca().invert_xaxis()
     # if accu <10:
     #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
     # plt.text(min(x),max(h[0]-0.06),'$diff\ mag < %s$'%(sm),color='b')
     
-    # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
-    # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
+    plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
+    plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]))
     # if show_field=='yes':
     #     if chip=='both':
     #         plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
@@ -383,17 +383,17 @@ for sloop in range(6, 7):
 #%%
 #for file in range(1,4):
     if sloop==1:
-        with open (pruebas+'gauss_var.txt', 'w') as f:
+        with open (pruebas+'vy_gauss_var.txt', 'w') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
     else:
-        with open (pruebas+'gauss_var.txt', 'a') as f:
+        with open (pruebas+'vy_gauss_var.txt', 'a') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
 
 
 #%%
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
-media=np.loadtxt(pruebas+'gauss_var.txt')#,delimiter=',')
+media=np.loadtxt(pruebas+'vy_gauss_var.txt')#,delimiter=',')
 va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
 for i in range(len(va)):
     print('%s = %.4f '%(va[i],np.average(media[:,i])))

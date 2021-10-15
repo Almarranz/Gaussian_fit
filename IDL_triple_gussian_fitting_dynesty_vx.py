@@ -53,7 +53,7 @@ rcParams.update({
 
 from matplotlib import rc
 # In[5]:
-for sloop in range(6,7):
+for sloop in range(1,20):
     
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
@@ -85,7 +85,7 @@ for sloop in range(6,7):
             for j in range(len(chips)):
                 try:
                     
-                    v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
+                    v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
                     v_x=np.r_[v_x,v_x0]
                     v_y=np.r_[v_y,v_y0]
                     dvx=np.r_[dvx,dvx0]
@@ -111,13 +111,13 @@ for sloop in range(6,7):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx
     dvy_all=dvy
     
-    max_M=17.5
+    max_M=22.5
     sel_M=np.where(abs(mh)<max_M)
     v_x=v_x[sel_M]
     v_y=v_y[sel_M]
@@ -218,10 +218,10 @@ for sloop in range(6,7):
         sigma1 = 3*(usigma1)
         amp1 = uamp1*0.6
         
-        mu2 = -0.018+((umu1*0.062)-0.032)
-        sigma2 =2.902+((usigma2*0.15)-0.075)
+        mu2 = 0.0587+((umu1*0.032)-0.016)
+        sigma2 =2.9785+((usigma2*0.06)-0.03)
         #sigma2 =3.5*usigma2
-        amp2 = uamp2*0.56
+        amp2 = uamp2*0.47
         
         mu3 =3*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)
@@ -344,23 +344,23 @@ for sloop in range(6,7):
     plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
     plt.xlim(-15,15)
     plt.gca().invert_xaxis()
-    # plt.axvline(mean[0],linestyle='dashed',color='orange')
-    # plt.axvline(mean[3],linestyle='dashed',color='orange')
-    # plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
-    # plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
-    # plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='green')
-    # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
-    # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
-    # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
-    # plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
-    # plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
-    # plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
+    plt.axvline(mean[0],linestyle='dashed',color='orange')
+    plt.axvline(mean[3],linestyle='dashed',color='orange')
+    plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
+    plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
+    plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='green')
+    plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
+    plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
+    plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
+    plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
+    plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
+    plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
     
-    # plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
-    # # if accu<10:
-    # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    # plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
-    # plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    # if accu<10:
+    #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
+    plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
     if show_field=='yes':
         if chip=='both':
             plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
@@ -375,17 +375,17 @@ for sloop in range(6,7):
 #%%
 #for file in range(1,4):
     if sloop==1:
-        with open (pruebas+'gauss_var.txt', 'w') as f:
+        with open (pruebas+'vx_gauss_var.txt', 'w') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
     else:
-        with open (pruebas+'gauss_var.txt', 'a') as f:
+        with open (pruebas+'vx_gauss_var.txt', 'a') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
 
 
 #%%
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
-media=np.loadtxt(pruebas+'gauss_var.txt')#,delimiter=',')
+media=np.loadtxt(pruebas+'vx_gauss_var.txt')#,delimiter=',')
 va=['mu1','sigma1','amp1','mu2','sigma2','amp2','mu3','sigma3','amp3']
 for i in range(len(va)):
     print('%s = %.4f '%(va[i],np.average(media[:,i])))
@@ -400,6 +400,6 @@ for i in range(len(va)):
 
 # In[ ]:
 
-
+print(sampler.citations)
 
 

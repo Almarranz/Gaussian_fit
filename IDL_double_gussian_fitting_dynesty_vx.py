@@ -81,7 +81,7 @@ if chip =='both':
         for j in range(len(chips)):
             try:
                 
-                v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
+                v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
                 v_x=np.r_[v_x,v_x0]
                 v_y=np.r_[v_y,v_y0]
                 dvx=np.r_[dvx,dvx0]
@@ -107,7 +107,7 @@ if chip =='both':
 #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
 #     mh=np.r_[mh1,mh2,mh3,mh4]
 else :
-    v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
+    v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
 mh_all=mh
 m_all=m
 dvx_all=dvx
