@@ -53,7 +53,7 @@ rcParams.update({
 
 from matplotlib import rc
 # In[5]:
-for sloop in range(1,20):
+for sloop in range(1,2):
     
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
@@ -65,7 +65,7 @@ for sloop in range(1,20):
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
 
-    nbins=41-sloop
+    nbins=36-sloop
     accu=1.5
     
     flds=[16,3]#I feel that field 10 make things worse for some reason
@@ -344,32 +344,33 @@ for sloop in range(1,20):
     plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
     plt.xlim(-15,15)
     plt.gca().invert_xaxis()
-    plt.axvline(mean[0],linestyle='dashed',color='orange')
-    plt.axvline(mean[3],linestyle='dashed',color='orange')
-    plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
-    plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
-    plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='green')
-    plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
-    plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
-    plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
-    plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
-    plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
-    plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
+    # plt.axvline(mean[0],linestyle='dashed',color='orange')
+    # plt.axvline(mean[3],linestyle='dashed',color='orange')
+    # plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
+    # plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
+    # plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='green')
+    # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
+    # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
+    # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
+    # plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
+    # plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
+    # plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
     
-    plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
-    # if accu<10:
-    #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
-    plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
-    if show_field=='yes':
-        if chip=='both':
-            plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
-            plt.text(max(x)/2,max(h[0]-0.07),'$chip%s$'%(bc),color='b')
-        else:
-            plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
+    # plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    # # if accu<10:
+    # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+    # plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
+    # plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
+    # if show_field=='yes':
+    #     if chip=='both':
+    #         plt.text(max(x)/2,max(h[0]-0.06),'$field%s$'%(af),color='b')
+    #         plt.text(max(x)/2,max(h[0]-0.07),'$chip%s$'%(bc),color='b')
+    #     else:
+    #         plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
     plt.ylabel('N')
+    plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-    plt.xlabel(r'$\mathrm{v_{l} (mas\ a^{-1})}$') 
+    plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
 
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 #%%
