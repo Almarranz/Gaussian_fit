@@ -16,7 +16,8 @@ import matplotlib.pyplot as plt
 import emcee
 import corner
 import dynesty
-
+from astropy.stats import sigma_clip
+from astropy.stats import sigma_clipped_stats
 
 # In[3]:
 
@@ -58,17 +59,20 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 #There are 3 different lists. 1,2 and 3. Being # 3 the smaller and more 'accured' within the brick
 #This is generated en 13_alig....
 #chip='both'
-ran=1
-for sloop in range(ran,ran+16):
-    sm=1
+ran=0
+for sloop in range(ran,ran+1):
+    sm=0.5
     chip=3
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
-    nbins=31-sloop
+    nbins=14+sloop
     accu=1.5# select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
-            v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            # v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            # v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
             dvx=np.r_[dvx2,dvx3]
@@ -76,7 +80,8 @@ for sloop in range(ran,ran+16):
             mh=np.r_[mh2,mh3]
             m=np.r_[m2,m3]
         elif chip==2 or chip==3:
-            lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
+            # lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
+            lst=np.loadtxt(tmp+'aa_IDL_lst_chip%s.txt'%(chip))
             # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
             v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
     elif in_brick==0:
@@ -119,6 +124,8 @@ for sloop in range(ran,ran+16):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
+    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
+    v_x=v_x[sig_h.mask==False]
     h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
@@ -183,12 +190,14 @@ for sloop in range(ran,ran+16):
         sigma1 = 3*(usigma1)
         amp1 = uamp1*1
         
-        # mu2 = -0.048+ (0.004*umu2-0.002)# scale and shift to [-3., 3.)
+        
+        #mu2 = -0.16 + (0.16*umu2-0.08)  
         mu2 = 6*umu2-3  
-        sigma2 = 2.954+(0.011*usigma2-0.0052)
+
+        sigma2 = 4 +  (0.3*usigma2-0.15)
         # sigma2=usigma2*5
-        amp2 = uamp2*0.611
-        # amp2 = uamp2
+        # amp2 = 0.41 + (0.05*uamp2-0.025)
+        amp2 = 0.46*uamp2
 
         return mu1, sigma1, amp1, mu2, sigma2, amp2
     # prior transform
@@ -279,33 +288,33 @@ for sloop in range(ran,ran+16):
     
     # plt.axvline(mean[0],linestyle='dashed',color='orange')
     # plt.axvline(mean[3],linestyle='dashed',color='orange')
-    plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='k')
-    plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='k')
-    plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='k')
-    plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
-    plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
-    if accu<10:
-        plt.text(min(x),max(h[0]-0.05),'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
-    plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
-    plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
-    if (chip==2 or chip==3) and in_brick==1:
-        plt.text(max(x)/2,max(h[0]-0.05),'$list = %.0f$'%(lst))
-    elif in_brick==0:
-        plt.text(max(x)/2,max(h[0]-0.05),'$list = %s$'%('out Brick'))
-        
+    # plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='k')
+    # plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='k')
+    # plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='k')
+    # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
+    # plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    # if accu<10:
+    #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+    # plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
+    # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
+    # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
+    # if (chip==2 or chip==3) and in_brick==1:
+    #     plt.text(max(x)/2,max(h[0]-0.05),'$list = %.0f$'%(lst))
+    # elif in_brick==0:
+    #     plt.text(max(x)/2,max(h[0]-0.05),'$list = %s$'%('out Brick'))
+    plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)    
     plt.xlim(-15,15)    
     plt.ylabel('N')
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-    plt.xlabel(r'$\mathrm{v_{x} (mas\ a^{-1})}$') 
+    plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
   
     
     
-    if sloop==1:
-        with open (pruebas+'brick_vy_gauss_var.txt', 'w') as f:
+    if sloop==0:
+        with open (pruebas+'brick_vx_gauss_var.txt', 'w') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
     else:
-        with open (pruebas+'brick_vy_gauss_var.txt', 'a') as f:
+        with open (pruebas+'brick_vx_gauss_var.txt', 'a') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
 
 #%%
