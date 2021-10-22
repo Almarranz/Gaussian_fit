@@ -51,13 +51,16 @@ plt.rcParams["mathtext.fontset"] = 'dejavuserif'
 plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
-
-
-
-for sloop in range(1, 2):
+#%%
+step=np.arange(1,2.25,0.25)
+print(step)
+#%%
+# for sloop in range(ran,ran+1):
+for sloop in range(len(step)):
+    list_bin=np.arange(-15,15+step[sloop],step[sloop])
     chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
     field=20#fields can be 3 or 20 (refers to GNS fields)
-    nbins=36-sloop
+    nbins=len(list_bin)
     sm=0.5#limit in difference of mag
     show_field='no'
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
@@ -383,7 +386,7 @@ for sloop in range(1, 2):
     # f
 #%%
 #for file in range(1,4):
-    if sloop==1:
+    if sloop==0:
         with open (pruebas+'vy_gauss_var.txt', 'w') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
     else:
