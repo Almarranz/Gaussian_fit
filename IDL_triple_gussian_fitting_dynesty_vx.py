@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Oct 22 13:41:58 2021
+
+@author: amartinez
+"""
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -53,8 +60,19 @@ rcParams.update({
 
 from matplotlib import rc
 # In[5]:
-for sloop in range(1,2):
+ran=0
+
+step=np.arange(1,2.25,0.25)
+print(step)
+# print(np.arange(-15,15+step,step))
+
+
+
+#%%
+# for sloop in range(ran,ran+1):
+for sloop in range(len(step)):
     
+    list_bin=np.arange(-15,15+step[sloop],step[sloop])
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
     show_field='no'
@@ -65,7 +83,8 @@ for sloop in range(1,2):
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
 
-    nbins=36-sloop
+    # nbins=25+sloop
+    nbins=len(list_bin)
     accu=1.5
     
     flds=[16,3]#I feel that field 10 make things worse for some reason
@@ -139,11 +158,14 @@ for sloop in range(1,2):
     v_x=v_x[sel]
     v_y=v_y[sel]
     mh=mh[sel]
-    
+#%%
+
     fig,ax=plt.subplots(1,1)
     sig_h=sigma_clip(v_x,sigma=60,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
-    h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
+    # h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
+    h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
+
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
     ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
@@ -216,16 +238,17 @@ for sloop in range(1,2):
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
         mu1 =-3*umu1  # scale and shift to [-3., 3.)
         sigma1 = 3*(usigma1)
-        amp1 = uamp1*0.6
+        amp1 = uamp1
         
-        mu2 = 0.0587+((umu1*0.032)-0.016)
-        sigma2 =2.9785+((usigma2*0.06)-0.03)
-        #sigma2 =3.5*usigma2
-        amp2 = uamp2*0.47
+        mu2 = 0.07+((umu1*0.05)-0.025)
+        sigma2 =3.05+((usigma2*0.055)-0.028)
+        # sigma2 =3.08*usigma2
+        # amp2 = uamp2*0.33                                                          
+        amp2=0.51 +(uamp2*0.02-0.01)
         
-        mu3 =3*(umu3) # scale and shift to [-3., 3.)
+        mu3 =4*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)
-        amp3 = uamp3*0.5
+        amp3 = uamp3
         
         
     
@@ -332,7 +355,9 @@ for sloop in range(1,2):
     results = sampler.results
     print(results['logz'][-1])
     
-    h=plt.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    # h=plt.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_x*-1, bins= list_bin, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
@@ -359,7 +384,7 @@ for sloop in range(1,2):
     # plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # # if accu<10:
     # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    # plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
     # plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
     # if show_field=='yes':
     #     if chip=='both':
@@ -375,7 +400,7 @@ for sloop in range(1,2):
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 #%%
 #for file in range(1,4):
-    if sloop==1:
+    if sloop==0:
         with open (pruebas+'vx_gauss_var.txt', 'w') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
     else:
