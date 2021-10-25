@@ -88,10 +88,10 @@ for sloop in range(len(step)):
     accu=1.5
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
-    flds=[16,3,20]#I feel that field 10 make things worse for some reason
+    flds=[16,3]#I feel that field 10 make things worse for some reason
 
     chips=[1,2,3,4]
-    # flds=[16]
+    # flds=[3]
     # chips=[3]
     v_x=[]
     v_y=[]
@@ -243,11 +243,11 @@ for sloop in range(len(step)):
         amp1 = uamp1
         
         mu2 = 0.056+((umu2*0.05)-0.025)
-        # mu2=2*umu2-1
-        # sigma2 =3.15+((usigma2*0.15)-0.08)
-        sigma2 =3.18*usigma2
-        amp2 = uamp2*0.55                                                   
-        # amp2=0.51 +(uamp2*0.02-0.01)
+        # mu2=0.25*umu2
+        sigma2 =3.15+((usigma2*0.109)-0.055)
+        # sigma2 =3.18*usigma2
+        # amp2 = uamp2*0.37                                                   
+        amp2=0.51 +(uamp2*0.02-0.01)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)
