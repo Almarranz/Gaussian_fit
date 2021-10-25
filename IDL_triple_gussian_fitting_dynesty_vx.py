@@ -77,7 +77,7 @@ for sloop in range(len(step)):
     plt.rc('font', family='serif')
     show_field='no'
     chip='both' #can be 1 or 4 (refers to the chip on GNS fields)
-    field=7 #fields can be 3 or 20 (refers to GNS fields)
+    # field=7 #fields can be 3 or 20 (refers to GNS fields)
     sm=0.5
     
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
@@ -87,7 +87,9 @@ for sloop in range(len(step)):
     nbins=len(list_bin)
     accu=1.5
     
-    flds=[16,3]#I feel that field 10 make things worse for some reason
+    # flds=[16,3,7]#I feel that field 10 make things worse for some reason
+    flds=[16,3,20]#I feel that field 10 make things worse for some reason
+
     chips=[1,2,3,4]
     # flds=[16]
     # chips=[3]
@@ -240,11 +242,12 @@ for sloop in range(len(step)):
         sigma1 = 3*(usigma1)
         amp1 = uamp1
         
-        mu2 = 0.07+((umu1*0.05)-0.025)
-        sigma2 =3.05+((usigma2*0.055)-0.028)
-        # sigma2 =3.08*usigma2
-        # amp2 = uamp2*0.33                                                          
-        amp2=0.51 +(uamp2*0.02-0.01)
+        mu2 = 0.056+((umu2*0.05)-0.025)
+        # mu2=2*umu2-1
+        # sigma2 =3.15+((usigma2*0.15)-0.08)
+        sigma2 =3.18*usigma2
+        amp2 = uamp2*0.55                                                   
+        # amp2=0.51 +(uamp2*0.02-0.01)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)
@@ -384,7 +387,7 @@ for sloop in range(len(step)):
     # plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # # if accu<10:
     # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
+    # plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
     # plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
     # if show_field=='yes':
     #     if chip=='both':
