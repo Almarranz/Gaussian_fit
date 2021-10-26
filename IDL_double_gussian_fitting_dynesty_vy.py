@@ -50,14 +50,17 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 
-
+#%%
+step=np.arange(1.5,2.25,0.25)
+print(step)
+#%%
 # In[5]:
 ran=0
-for sloop in range(ran,ran+1):
+for sloop in range(len(step)):
     chip='both'
+    list_bin=np.arange(-15,15+step[sloop],step[sloop])
     
-    nbins=19+sloop
-    
+    nbins=len(list_bin)
     accu=2
     sm=0.5
     in_brick=1#slect list in or out brick
@@ -320,7 +323,7 @@ for sloop in range(ran,ran+1):
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
     
-    plt.plot(xplot, gaussian(xplot*a, mean[0], mean[1], mean[2]) + gaussian(xplot*a, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*a, mean[0], mean[1], mean[2]) + gaussian(xplot*a, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
     plt.plot(xplot, gaussian(xplot*a, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
     plt.plot(xplot, gaussian(xplot*a, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
     plt.xlim(-15,15)
