@@ -57,19 +57,20 @@ rcParams.update({
 # In[5]:
 
 sm=1
-chip=3
+chip='both'
 in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
-nbins=25
+nbins=21
 accu=1.5 # select stars cutting by uncertainty. With a large value all star are selected
 if in_brick==1:
     if chip =='both':
-        v_x2,v_y2,dvx2,dvy2,mh2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-        v_x3,v_y3,dvx3,dvy3,mh3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+        v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+        v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
         v_x=np.r_[v_x2,v_x3]
         v_y=np.r_[v_y2,v_y3]
         dvx=np.r_[dvx2,dvx3]
         dvy=np.r_[dvy2,dvy3]
         mh=np.r_[mh2,mh3]
+        m=np.r_[m2,m3]
     elif chip==2 or chip==3:
         lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
         v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
