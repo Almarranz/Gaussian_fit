@@ -66,7 +66,7 @@ for sloop in range(len(step)):
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
     
     accu=1.5
-    flds=[16,3] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
+    flds=[16,7] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
     chips=[1,2,3,4]
     # flds=[3]
     # chips=[1,4]

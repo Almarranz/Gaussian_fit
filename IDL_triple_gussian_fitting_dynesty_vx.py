@@ -242,12 +242,12 @@ for sloop in range(len(step)):
         sigma1 = 3*(usigma1)
         amp1 = uamp1
         
-        mu2 = 0.056+((umu2*0.05)-0.025)
+        mu2 = 0.06+((umu2*0.06)-0.03)
         # mu2=0.25*umu2
-        sigma2 =3.15+((usigma2*0.109)-0.055)
+        sigma2 =3.05+((usigma2*0.30)-0.30/2)
         # sigma2 =3.18*usigma2
         # amp2 = uamp2*0.37                                                   
-        amp2=0.51 +(uamp2*0.02-0.01)
+        amp2=0.52 +(uamp2*0.14-0.14/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)
