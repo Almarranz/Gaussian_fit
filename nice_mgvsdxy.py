@@ -40,7 +40,7 @@ rcParams.update({'ytick.major.width': '1.5'})
 rcParams.update({'ytick.minor.pad': '7.0'})
 rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 15})
+rcParams.update({'font.size': 20})
 
 #%%
 # data='/Users/amartinez/Desktop/for_Rainer/same_pix_scale/'
@@ -108,13 +108,13 @@ absc_no=[no_x_in[1,:],no_x_out[1,:]]
 
 zones=['Zone A', 'Zone B']
 
-accu=1.5
+accu=[2,1.5]
 fig, ax=plt.subplots(1,2,figsize=(20,10))
 for i in range(len(ejes)):
     ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
     # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
     ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=25)
-    ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
+    ax[i].axhline(accu[i], color='r', linestyle='dashed', linewidth=3)
     # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
     ax[i].set_xlim(12,19)
     ax[i].set_ylim(0,8)
