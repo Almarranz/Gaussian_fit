@@ -17,9 +17,7 @@ Parametres to edit are:
 2.  IDL_double_gussian_fitting_dynesty_vx.py. Here you have to restric the *sigma and amplitude* parametres of one of the Gaussian to the value previously obtained (on step 1) for the Bulge Gussian. The rest of editable parametres should be equal to step 1. 
 ___
 > ### NOTE
-
 > In principle you can no use a thrid Gaussian here becouse we are no seeing any star from the far side of the NSD, but you can try with
-
 > *  IDL_triple_gussian_fitting_dynesty_vx.py
 
 
