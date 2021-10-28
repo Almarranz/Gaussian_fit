@@ -1,7 +1,6 @@
 # Gaussian_fit
 
 ## on branch: main
-##
 
 
 Gaussian fit for proper motion on __The Brick__
