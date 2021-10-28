@@ -18,8 +18,8 @@ Parametres to edit are:
 ___
 > ### NOTE
 
-In principle you can no use a thrid Gaussian here becouse we are no seeing any star from the far side of the NSD, but you can try with
+> In principle you can no use a thrid Gaussian here becouse we are no seeing any star from the far side of the NSD, but you can try with
 
-*  IDL_triple_gussian_fitting_dynesty_vx.py
+> *  IDL_triple_gussian_fitting_dynesty_vx.py
 
 
