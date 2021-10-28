@@ -2,7 +2,7 @@
 ## on branch: main
 
 
-Gaussian fit for proper motion on __The Brick__
+Gaussian fit for proper motion __ON__ The Brick
 
 1. IDL_double_gussian_fitting_dynesty_vy.py. On vy, the parametres of the Gaussian should be free, the run must coverge by itself to two Gaussian.
 Parametres to edit are:
