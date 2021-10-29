@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import emcee
 import corner
 import dynesty
-
+import sys
 from astropy.stats import sigma_clip
 from astropy.stats import sigma_clipped_stats
 # In[4]:
@@ -25,6 +25,7 @@ folder='im_jitter_NOgains/'
 exptime=10
 data='/Users/amartinez/Desktop/PhD/python/Gaussian_fit/'
 tmp='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'tmp_bs/'
+pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
 # In[4]:
 
@@ -44,7 +45,7 @@ rcParams.update({'ytick.major.width': '1.5'})
 rcParams.update({'ytick.minor.pad': '7.0'})
 rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 30})
+rcParams.update({'font.size': 20})
 rcParams.update({'figure.figsize':(10,5)})
 plt.rcParams["font.family"] = "serif"
 plt.rcParams["mathtext.fontset"] = 'dejavuserif'
@@ -52,20 +53,22 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
-step=np.arange(1.5,2.25,0.25)
+step=np.arange(1,2,0.25)
 print(step)
+list_bin=np.arange(-15,15+step[0],step[0])
+print(list_bin)
 #%%
     # In[5]:
     # from matplotlib import rc
     # plt.rc('text', usetex=True)
     # plt.rc('font', family='serif')
 for sloop in range(len(step)):
-    sm=0.5
+    sm=0.25
     chip='both'
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
     nbins=len(list_bin)
-    accu=1.5 # select stars cutting by uncertainty. With a large value all star are selected
+    accu=2 # select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
             v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
@@ -141,22 +144,22 @@ for sloop in range(len(step)):
             count+=1
     print(35*'#'+'\n'+'stars with diff in mag > %s: %s'%(sm,count)+'\n'+35*'#')
     # In[ ]:
-    
-    ejes=[dvx_all,dvy_all]
-    no_sel=np.where((dvx_all>accu)&(dvy_all>accu))
-    no_m=np.where(abs(mh_all-m_all)>sm)
-    ejes_accu=[dvx_all[no_sel],dvy_all[no_sel]]
-    ejes_m=[dvx_all[no_m],dvy_all[no_m]]
-    names=['x','y']
-    if accu<50:
-        fig, ax=plt.subplots(1,2,figsize=(20,10))
-        for i in range(len(ejes)):
-            ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
-            ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
-            ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
-            ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
-            ax[i].set_xlabel('$[H]$',fontsize=20)
-            ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
+    #----- Uncomment these for dvx vs mag diagrams -----
+    # ejes=[dvx_all,dvy_all]
+    # no_sel=np.where((dvx_all>accu)&(dvy_all>accu))
+    # no_m=np.where(abs(mh_all-m_all)>sm)
+    # ejes_accu=[dvx_all[no_sel],dvy_all[no_sel]]
+    # ejes_m=[dvx_all[no_m],dvy_all[no_m]]
+    # names=['x','y']
+    # if accu<50:
+    #     fig, ax=plt.subplots(1,2,figsize=(20,10))
+    #     for i in range(len(ejes)):
+    #         ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
+    #         ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+    #         ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
+    #         ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
+    #         ax[i].set_xlabel('$[H]$',fontsize=20)
+    #         ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
     # In[7]:
     
     
@@ -190,18 +193,17 @@ for sloop in range(len(step)):
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
         mu1 =-3*umu1  # scale and shift to [-3., 3.)
         sigma1 = 3*(usigma1)
-        amp1 = uamp1*1.5
+        amp1 = uamp1
         
-        mu2 = -0.03 + umu2*0.18-0.09
-        sigma2 = 3.78 +  (0.30*usigma2-0.15)
-        # amp2 = 0.4+(0.055*uamp2-0.0275)
-        # amp2 = 0.34+(0.055*uamp2-0.0275)
-        amp2 = uamp2*0.6
+        mu2 = 3*umu2
+        sigma2 = 3.60 +  (0.26*usigma2-0.13)
+        # sigma2=usigma2*3.78
+        amp2 = 0.42 + (0.08*uamp2-0.04)
         
-        mu3 =3.80*(umu3) # scale and shift to [-3., 3.)
-        # sigma3 = 2.4*(usigma3+1)
-        sigma3 = 4.3*(usigma3)
-        amp3 = uamp3*0.5
+        mu3 =5*(umu3) # scale and shift to [-3., 3.)
+        # sigma3 = 2.0+ (0.4*usigma3-0.2)
+        sigma3 = 2*(usigma3)
+        amp3 = uamp3*1
         
         
     
@@ -223,19 +225,7 @@ for sloop in range(len(step)):
     
     
     from dynesty import plotting as dyplot
-    rcParams.update({'xtick.major.pad': '7.0'})
-    rcParams.update({'xtick.major.size': '7.5'})
-    rcParams.update({'xtick.major.width': '1.5'})
-    rcParams.update({'xtick.minor.pad': '7.0'})
-    rcParams.update({'xtick.minor.size': '3.5'})
-    rcParams.update({'xtick.minor.width': '1.0'})
-    rcParams.update({'ytick.major.pad': '7.0'})
-    rcParams.update({'ytick.major.size': '7.5'})
-    rcParams.update({'ytick.major.width': '1.5'})
-    rcParams.update({'ytick.minor.pad': '7.0'})
-    rcParams.update({'ytick.minor.size': '3.5'})
-    rcParams.update({'ytick.minor.width': '1.0'})
-    rcParams.update({'font.size': 25})
+    
     
     
     # truths = [mu1_true, sigma1_true, amp1_true, mu2_true, sigma2_true, amp2_true]
@@ -284,74 +274,113 @@ for sloop in range(len(step)):
     
     
     plt.figure(figsize =(8,8))
-    from matplotlib import rcParams
-    rcParams.update({'xtick.major.pad': '7.0'})
-    rcParams.update({'xtick.major.size': '7.5'})
-    rcParams.update({'xtick.major.width': '1.5'})
-    rcParams.update({'xtick.minor.pad': '7.0'})
-    rcParams.update({'xtick.minor.size': '3.5'})
-    rcParams.update({'xtick.minor.width': '1.0'})
-    rcParams.update({'ytick.major.pad': '7.0'})
-    rcParams.update({'ytick.major.size': '7.5'})
-    rcParams.update({'ytick.major.width': '1.5'})
-    rcParams.update({'ytick.minor.pad': '7.0'})
-    rcParams.update({'ytick.minor.size': '3.5'})
-    rcParams.update({'ytick.minor.width': '1.0'})
-    rcParams.update({'font.size': 20})
-    rcParams.update({'figure.figsize':(10,5)})
-    rcParams.update({
-        "text.usetex": True,
-        "font.family": "sans-serif",
-        "font.sans-serif": ["Helvetica"]})
     
     results = sampler.results
     print(results['logz'][-1])
     
-    h=plt.hist(v_x, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
     
-    plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5])
-             + gaussian(xplot, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="green", linestyle='dashed', linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
+             + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
+    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
     
     
     # plt.axvline(mean[0],linestyle='dashed',color='orange')
     # plt.axvline(mean[3],linestyle='dashed',color='orange')
-    plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
-    plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
-    plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='green')
-    plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
-    plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
-    plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
-    plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
-    plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
-    plt.text(max(x)/2,max(h[0]-0.05),'$amp_{3}=%.3f$'%(mean[8]))
     
-    plt.text(min(x),max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
-    if accu<10:
-        plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    plt.text(max(x)/2,max(h[0]/2)-0.005,'$nbins=%s$'%(nbins),color='b')
-    if (chip==2 or chip==3) and in_brick==1:
-        plt.text(max(x)/2,max(h[0]-0.06),'$list = %.0f$'%(lst),color='b')
-    elif in_brick==0:
-        if (chip==2 or chip==3):
-            plt.text(max(x)/2,max(h[0]/2-0.06),'$list =%.0f %s$'%(lst,'out'),color='b')
-        elif chip=='both':
-            plt.text(max(x)/2,max(h[0]/2-0.06),'$list =%s %s$'%(lst,'out'),color='b')
+    # plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='green')
+    # plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='green')
+    # plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='green')
+    # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
+    # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
+    # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
+    # plt.text(max(x)/2,max(h[0]-0.03),'$\mu_{3}=%.3f$'%(mean[6]))
+    # plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
+    # plt.text(max(x)/2,max(h[0]-0.05),'$amp_{3}=%.3f$'%(mean[8]))
+    
+    # plt.text(min(x),max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    # if accu<10:
+    #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+    # plt.text(max(x)/2,max(h[0]/2)-0.005,'$nbins=%s$'%(nbins),color='b')
+    # if (chip==2 or chip==3) and in_brick==1:
+    #     plt.text(max(x)/2,max(h[0]-0.06),'$list = %.0f$'%(lst),color='b')
+    # elif in_brick==0:
+    #     if (chip==2 or chip==3):
+    #         plt.text(max(x)/2,max(h[0]/2-0.06),'$list =%.0f %s$'%(lst,'out'),color='b')
+    #     elif chip=='both':
+    #         plt.text(max(x)/2,max(h[0]/2-0.06),'$list =%s %s$'%(lst,'out'),color='b')
+    plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)    
+    plt.xlim(-15,15) 
+    plt.gca().invert_xaxis()
     plt.ylabel('N')
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-    plt.xlabel('v$_{x}$ (mas yr$^{-1}$), IDL') 
+    plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
     
+    pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
+    
+    if sloop==0:
+        with open (pruebas+'brick_vx_gauss_var.txt', 'w') as f:
+            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
+    else:
+        with open (pruebas+'brick_vx_gauss_var.txt', 'a') as f:
+            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
+
 
 #%%
-results = sampler.results
-print(results['logz'][-1])
+#%%
+pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
+media=np.loadtxt(pruebas+'brick_vx_gauss_var.txt')#,delimiter=',')
+va=['mu1','sigma1','amp1','mu2','sigma2','amp2','mu3','sigma3','amp3']
+for i in range(len(va)):
+    print('%s = %.4f '%(va[i],np.average(media[:,i])))
+    print('-'*20)
+for i in range(len(va)):
+    print('+'*20)
+    print('d%s = %.4f'%(va[i],np.std(media[:,i])))
+#%%
+for i in range(len(va)):
+    print('+'*20)
+    print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
 
+# sys.exit()
+#%%
+fig, ax = plt.subplots(1,1, figsize=(10,10))
+h1=ax.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
+xplot1 = np.linspace(min(x), max(x), 100)
+
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,0]), np.average(media[:,1]), np.average(media[:,2])) + gaussian(xplot*-1, np.average(media[:,3]), np.average(media[:,4]), np.average(media[:,5]))
+         + gaussian(xplot*-1, np.average(media[:,6]), np.average(media[:,7]), np.average(media[:,8])), color="darkorange", linewidth=3, alpha=1)
+
+ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,0]), np.average(media[:,1]), np.average(media[:,2]))  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
+ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,3]), np.average(media[:,4]), np.average(media[:,5]))  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,6]), np.average(media[:,7]), np.average(media[:,8])) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
+
+ax.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(np.average(media[:,0])),color='green')
+
+ax.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(np.average(media[:,1])),color='green')
+ax.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(np.average(media[:,2])),color='green')
+ax.text(max(x),max(h[0]),'$\mu_{2}=%.3f$'%(np.average(media[:,3])),color='red')
+ax.text(max(x),max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(np.average(media[:,4])),color='red')
+ax.text(max(x),max(h[0]-0.02),'$amp_{2}=%.3f$'%(np.average(media[:,5])),color='red')
+ax.text(max(x),max(h[0]-0.03),'$\mu_{3}=%.3f$'%(np.average(media[:,6])))
+ax.text(max(x),max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(np.average(media[:,7])))
+ax.text(max(x),max(h[0]-0.05),'$amp_{3}=%.3f$'%(np.average(media[:,8])))  
+
+plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=3,handlelength=-0.0)    
+plt.xlim(-15,15) 
+plt.gca().invert_xaxis()
+plt.ylabel('N')
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
 # In[ ]:
 
 
