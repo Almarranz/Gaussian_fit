@@ -53,8 +53,10 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
-step=np.arange(1.5,2.25,0.25)
+step=np.arange(1,2,0.25)
 print(step)
+list_bin=np.arange(-15,15+step[0],step[0])
+print(list_bin)
 #%%
 
 # In[5]:
@@ -64,11 +66,12 @@ print(step)
 #chip='both'
 ran=0
 for sloop in range(len(step)):
-    sm=0.5
-    chip=3
+    sm=0.25
+    chip='both'
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
     nbins=len(list_bin)
+    # nbins=9
     accu=2# select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
@@ -198,9 +201,9 @@ for sloop in range(len(step)):
         #mu2 = -0.16 + (0.16*umu2-0.08)  
         mu2 = 6*umu2-3  
 
-        sigma2 = 3.78 +  (0.15*usigma2-0.08)
+        sigma2 = 3.60 +  (0.26*usigma2-0.13)
         # sigma2=usigma2*5
-        amp2 = 0.43 + (0.03*uamp2-0.015)
+        amp2 = 0.42 + (0.08*uamp2-0.04)
         # amp2 = 0.43*uamp2
 
         return mu1, sigma1, amp1, mu2, sigma2, amp2
@@ -287,7 +290,7 @@ for sloop in range(len(step)):
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
     
     plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
     plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
     
     # plt.axvline(mean[0],linestyle='dashed',color='orange')

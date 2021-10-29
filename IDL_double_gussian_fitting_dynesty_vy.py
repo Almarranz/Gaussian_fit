@@ -51,7 +51,7 @@ from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 
 #%%
-step=np.arange(1.5,2.25,0.25)
+step=np.arange(1.0,2.0,0.25)
 print(step)
 #%%
 # In[5]:
@@ -61,8 +61,10 @@ for sloop in range(len(step)):
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
     
     nbins=len(list_bin)
+    # nbins=9
+    print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
     accu=2
-    sm=0.5
+    sm=0.25
     in_brick=1#slect list in or out brick
     
     if in_brick==1:
@@ -75,10 +77,12 @@ for sloop in range(len(step)):
             dvy=np.r_[dvy2,dvy3]
             mh=np.r_[mh2,mh3]
             m=np.r_[m2,m3]
+            lst=np.loadtxt(tmp+'aa_IDL_lst_chip3.txt')
+            print(30*'#'+'\n'+'lst=%s'%(lst)+'\n'+30*'#')
         elif chip==2 or chip==3:
             # lst=np.loadtxt(tmp+'aa_IDL_lst_chip%s.txt'%(chip))
             lst=np.loadtxt(tmp+'aa_IDL_lst_chip%s.txt'%(chip))
-
+            print(30*'#'+'\n'+'lst=%s'%(lst)+'\n'+30*'#')
             # v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
             # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
             #add 'aa' in front of the list name to used aa aligned lists
