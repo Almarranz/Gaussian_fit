@@ -62,7 +62,7 @@ from matplotlib import rc
 # In[5]:
 ran=0
 
-step=np.arange(1,2.25,0.25)
+step=np.arange(1,2,0.25)
 print(step)
 # print(np.arange(-15,15+step,step))
 
@@ -78,14 +78,14 @@ for sloop in range(len(step)):
     show_field='no'
     chip='both' #can be 1 or 4 (refers to the chip on GNS fields)
     # field=7 #fields can be 3 or 20 (refers to GNS fields)
-    sm=0.5
+    sm=0.25
     
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
 
     # nbins=25+sloop
     nbins=len(list_bin)
-    accu=1.5
+    accu=2
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
     flds=[16,3]#I feel that field 10 make things worse for some reason
@@ -242,12 +242,12 @@ for sloop in range(len(step)):
         sigma1 = 3*(usigma1)
         amp1 = uamp1
         
-        mu2 = 0.06+((umu2*0.06)-0.03)
-        # mu2=0.25*umu2
-        sigma2 =3.05+((usigma2*0.30)-0.30/2)
-        # sigma2 =3.18*usigma2
-        # amp2 = uamp2*0.37                                                   
-        amp2=0.52 +(uamp2*0.14-0.14/2)
+        # mu2 = 0.12+((umu2*0.06)-0.03)
+        mu2=0.50*umu2-0.25
+        # sigma2 =3.3+((usigma2*0.33)-0.33/2)
+        sigma2 =4*usigma2
+        amp2 = uamp2*0.47                                                   
+        # amp2=0.45 +(uamp2*0.026-0.026/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)

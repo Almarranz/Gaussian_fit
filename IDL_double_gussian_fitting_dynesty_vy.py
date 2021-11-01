@@ -52,7 +52,7 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
-step=np.arange(1,2.25,0.25)
+step=np.arange(1,2.0,0.25)
 print(step)
 #%%
 # for sloop in range(ran,ran+1):
@@ -61,12 +61,12 @@ for sloop in range(len(step)):
     chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
     field=20#fields can be 3 or 20 (refers to GNS fields)
     nbins=len(list_bin)
-    sm=0.5#limit in difference of mag
+    sm=0.25#limit in difference of mag
     show_field='no'
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
     
-    accu=1.5
-    flds=[16,7] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
+    accu=2
+    flds=[16,3] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
     chips=[1,2,3,4]
     # flds=[3]
     # chips=[1,4]
@@ -209,7 +209,7 @@ for sloop in range(len(step)):
         umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
     
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-        mu1 = 2* umu1-1  # scale and shift to [-10., 10.)
+        mu1 = 1* umu1-0.5  # scale and shift to [-10., 10.)
         sigma1 = 3.5* (usigma1)   
         amp1 = 1 * uamp1 
     
