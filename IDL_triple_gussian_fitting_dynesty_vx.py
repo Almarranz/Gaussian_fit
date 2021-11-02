@@ -53,7 +53,7 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
-step=np.arange(1,2,0.25)
+step=np.arange(1,1.75,0.25)
 print(step)
 list_bin=np.arange(-15,15+step[0],step[0])
 print(list_bin)
@@ -203,7 +203,7 @@ for sloop in range(len(step)):
         mu3 =5*(umu3) # scale and shift to [-3., 3.)
         # sigma3 = 2.0+ (0.4*usigma3-0.2)
         sigma3 = 2*(usigma3)
-        amp3 = uamp3*1
+        amp3 = uamp3*0.05
         
         
     
@@ -364,14 +364,14 @@ ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,0]), np.average(media[:,1]
 ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,3]), np.average(media[:,4]), np.average(media[:,5]))  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
 ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,6]), np.average(media[:,7]), np.average(media[:,8])) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
 
-ax.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(np.average(media[:,0])),color='green')
+ax.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(np.average(media[:,0])*-1),color='green')
 
 ax.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(np.average(media[:,1])),color='green')
 ax.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(np.average(media[:,2])),color='green')
-ax.text(max(x),max(h[0]),'$\mu_{2}=%.3f$'%(np.average(media[:,3])),color='red')
+ax.text(max(x),max(h[0]),'$\mu_{2}=%.3f$'%(np.average(media[:,3])*-1),color='red')
 ax.text(max(x),max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(np.average(media[:,4])),color='red')
 ax.text(max(x),max(h[0]-0.02),'$amp_{2}=%.3f$'%(np.average(media[:,5])),color='red')
-ax.text(max(x),max(h[0]-0.03),'$\mu_{3}=%.3f$'%(np.average(media[:,6])))
+ax.text(max(x),max(h[0]-0.03),'$\mu_{3}=%.3f$'%(np.average(media[:,6])*-1))
 ax.text(max(x),max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(np.average(media[:,7])))
 ax.text(max(x),max(h[0]-0.05),'$amp_{3}=%.3f$'%(np.average(media[:,8])))  
 

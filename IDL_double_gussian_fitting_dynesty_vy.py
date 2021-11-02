@@ -51,7 +51,9 @@ from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 
 #%%
-step=np.arange(1.0,2.0,0.25)
+# step=np.arange(1.0,1.75,0.25)#these have worked
+step=np.arange(1.75,2.0,0.25)#also works if running each bing width one by one, for some reason...
+
 print(step)
 #%%
 # In[5]:
@@ -295,7 +297,7 @@ for sloop in range(len(step)):
     # In[14]:
     
     
-    plt.figure(figsize =(10,10))
+    plt.figure(figsize =(8,8))
     # from matplotlib import rcParams
     # rcParams.update({'xtick.major.pad': '7.0'})
     # rcParams.update({'xtick.major.size': '7.5'})
@@ -350,7 +352,7 @@ for sloop in range(len(step)):
     #         plt.text(max(x)/2,max(h[0]-0.05),'$list =%.0f %s$'%(lst,'out'),color='b')
     #     elif chip=='both':
     #         plt.text(max(x)/2,max(h[0]-0.05),'$list =%s %s$'%(lst,'out'),color='b')
-    # plt.ylabel('N')
+    plt.ylabel('N')
     # # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
     plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$') 
     plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0) 

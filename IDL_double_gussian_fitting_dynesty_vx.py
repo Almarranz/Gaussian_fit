@@ -53,7 +53,7 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
-step=np.arange(1,2,0.25)
+step=np.arange(1,1.75,0.25)
 print(step)
 list_bin=np.arange(-15,15+step[0],step[0])
 print(list_bin)
@@ -131,7 +131,7 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
+    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
     v_x=v_x[sig_h.mask==False]
     h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
@@ -278,7 +278,7 @@ for sloop in range(len(step)):
     # In[14]:
     
     
-    plt.figure(figsize =(10,10))
+    plt.figure(figsize =(8,8))
     from matplotlib import rcParams
     # 
     results = sampler.results

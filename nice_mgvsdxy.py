@@ -108,12 +108,12 @@ absc_no=[no_x_in[1,:],no_x_out[1,:]]
 
 zones=['Zone A', 'Zone B']
 
-accu=[2,1.5]
+accu=[2,2]
 fig, ax=plt.subplots(1,2,figsize=(20,10))
 for i in range(len(ejes)):
     ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
     # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
-    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=25)
+    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=10)
     ax[i].axhline(accu[i], color='r', linestyle='dashed', linewidth=3)
     # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
     ax[i].set_xlim(12,19)
