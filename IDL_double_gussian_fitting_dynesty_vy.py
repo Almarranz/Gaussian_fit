@@ -18,6 +18,8 @@ import corner
 import dynesty
 from astropy.stats import sigma_clip
 from astropy.stats import sigma_clipped_stats
+from matplotlib.ticker import FormatStrFormatter
+import scipy.integrate as integrate
 # In[3]:
 band='H'
 folder='im_jitter_NOgains/'
@@ -52,14 +54,14 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 
 #%%
 # step=np.arange(1.0,1.75,0.25)#these have worked
-step=np.arange(1.75,2.0,0.25)#also works if running each bing width one by one, for some reason...
-
+step=np.arange(1.0,2.0,0.25)#also works if running each bing width one by one, for some reason...
+media_amp=[]
 print(step)
 #%%
 # In[5]:
 ran=0
 for sloop in range(len(step)):
-    chip='both'
+    chip=3
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
     
     nbins=len(list_bin)
@@ -71,8 +73,8 @@ for sloop in range(len(step)):
     
     if in_brick==1:
         if chip =='both':
-            v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
             dvx=np.r_[dvx2,dvx3]
@@ -88,7 +90,7 @@ for sloop in range(len(step)):
             # v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
             # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
             #add 'aa' in front of the list name to used aa aligned lists
-            v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+            v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
             # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 
     elif in_brick==0:
@@ -134,7 +136,7 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_y,sigma=500,maxiters=20,cenfunc='mean',masked=True)
     v_y=v_y[sig_h.mask==False]
     h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
@@ -323,6 +325,9 @@ for sloop in range(len(step)):
     results = sampler.results
     print(results['logz'][-1])
     
+    fig, ax = plt.subplots(figsize=(8,8))
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+    
     a=1#to chnge the axix a=-1
     h=plt.hist(v_y*a, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)
@@ -365,12 +370,31 @@ for sloop in range(len(step)):
     else:
         with open (pruebas+'brick_vy_gauss_var.txt', 'a') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
- 
+    fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
+    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    gau1=integrate.quad(fun1,-15,15)
+    
+    fun2= lambda x: (mean[5] * (1 / (mean[4] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[3], 2.) / (2 * np.power(mean[4], 2.))) )
+    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    gau2=integrate.quad(fun2,-15,15)
+    
+    # fun3= lambda x: (mean[8] * (1 / (mean[7] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[6], 2.) / (2 * np.power(mean[7], 2.))) )
+    # # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    # gau3=integrate.quad(fun3,-15,15)
+    media_amp.append(gau1[0])
+    print(gau1[0],gau2[0])
+    # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
+    print(30*'&')
+    print('Area under Gaus1:%.3f'%(gau1[0]))
+    print('Area under Gaus2:%.3f'%(gau2[0]))
+    print('Total area = %.3f'%(gau1[0]+gau2[0]))
+    print(30*'&')
 #%%
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
 media=np.loadtxt(pruebas+'brick_vy_gauss_var.txt')#,delimiter=',')
 va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
+print('Media area broad = %.3f'%np.average(media_amp))
 for i in range(len(va)):
     print('%s = %.4f '%(va[i],np.average(media[:,i])))
     print('-'*20)

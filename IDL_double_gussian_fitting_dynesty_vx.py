@@ -18,6 +18,8 @@ import corner
 import dynesty
 from astropy.stats import sigma_clip
 from astropy.stats import sigma_clipped_stats
+from matplotlib.ticker import FormatStrFormatter
+import scipy.integrate as integrate
 
 # In[3]:
 
@@ -57,6 +59,7 @@ step=np.arange(1,1.75,0.25)
 print(step)
 list_bin=np.arange(-15,15+step[0],step[0])
 print(list_bin)
+media_amp=[]
 #%%
 
 # In[5]:
@@ -67,7 +70,7 @@ print(list_bin)
 ran=0
 for sloop in range(len(step)):
     sm=0.25
-    chip='both'
+    chip=3
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
     nbins=len(list_bin)
@@ -77,8 +80,8 @@ for sloop in range(len(step)):
         if chip =='both':
             # v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
             # v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
-            v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
 
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
@@ -90,7 +93,7 @@ for sloop in range(len(step)):
             # lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
             lst=np.loadtxt(tmp+'aa_IDL_lst_chip%s.txt'%(chip))
             # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
-            v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+            v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
     elif in_brick==0:
          if chip=='both':
             lst='All '
@@ -201,10 +204,10 @@ for sloop in range(len(step)):
         #mu2 = -0.16 + (0.16*umu2-0.08)  
         mu2 = 6*umu2-3  
 
-        sigma2 = 3.60 +  (0.26*usigma2-0.13)
-        # sigma2=usigma2*5
-        amp2 = 0.42 + (0.08*uamp2-0.04)
-        # amp2 = 0.43*uamp2
+        # sigma2 = 3.60 +  (0.26*usigma2-0.13)
+        sigma2=usigma2*4
+        # amp2 = 0.42 + (0.08*uamp2-0.04)
+        amp2 = 0.6*uamp2
 
         return mu1, sigma1, amp1, mu2, sigma2, amp2
     # prior transform
@@ -284,6 +287,9 @@ for sloop in range(len(step)):
     results = sampler.results
     print(results['logz'][-1])
     
+    fig, ax = plt.subplots(figsize=(8,8))
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+    
     h=plt.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)
     
@@ -315,8 +321,26 @@ for sloop in range(len(step)):
     plt.ylabel('N')
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
     plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
-  
     
+    fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
+    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    gau1=integrate.quad(fun1,-15,15)
+    
+    fun2= lambda x: (mean[5] * (1 / (mean[4] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[3], 2.) / (2 * np.power(mean[4], 2.))) )
+    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    gau2=integrate.quad(fun2,-15,15)
+    
+    # fun3= lambda x: (mean[8] * (1 / (mean[7] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[6], 2.) / (2 * np.power(mean[7], 2.))) )
+    # # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    # gau3=integrate.quad(fun3,-15,15)
+    media_amp.append(gau1[0])
+    print(gau1[0],gau2[0])
+    # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
+    print(30*'&')
+    print('Area under Gaus1:%.3f'%(gau1[0]))
+    print('Area under Gaus2:%.3f'%(gau2[0]))
+    print('Total area = %.3f'%(gau1[0]+gau2[0]))
+    print(30*'&')
     
     if sloop==0:
         with open (pruebas+'brick_vx_gauss_var.txt', 'w') as f:
@@ -324,12 +348,13 @@ for sloop in range(len(step)):
     else:
         with open (pruebas+'brick_vx_gauss_var.txt', 'a') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-
+    
 #%%
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
 media=np.loadtxt(pruebas+'brick_vx_gauss_var.txt')#,delimiter=',')
 va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
+print('Media area broad = %.3f'%np.average(media_amp))
 for i in range(len(va)):
     print('%s = %.4f '%(va[i],np.average(media[:,i])))
     print('-'*20)
