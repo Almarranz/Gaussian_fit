@@ -85,14 +85,14 @@ for sloop in range(len(step)):
 
     # nbins=25+sloop
     nbins=len(list_bin)
-    accu=2
+    accu=1.5
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
-    flds=[16,3]#I feel that field 10 make things worse for some reason
+    flds=[16]#I feel that field 10 make things worse for some reason
 
-    chips=[1,2,3,4]
+    # chips=[1,2,3,4]
     # flds=[3]
-    # chips=[3]
+    chips=[3]
     v_x=[]
     v_y=[]
     dvx=[]
@@ -243,11 +243,11 @@ for sloop in range(len(step)):
         amp1 = uamp1
         
         # mu2 = 0.12+((umu2*0.06)-0.03)
-        mu2=0.50*umu2-0.25
+        mu2=0.25*umu2-0.125
         # sigma2 =3.3+((usigma2*0.33)-0.33/2)
-        sigma2 =4*usigma2
-        amp2 = uamp2*0.47                                                   
-        # amp2=0.45 +(uamp2*0.026-0.026/2)
+        sigma2=5*usigma2
+        amp2 = uamp2*0.54                                                   
+        # amp2=0.54 +(uamp2*0.06-0.06/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)
@@ -333,7 +333,7 @@ for sloop in range(len(step)):
     # In[14]:
     
     
-    plt.figure(figsize =(10,10))
+    plt.figure(figsize =(8,8))
     # from matplotlib import rcParams
     # rcParams.update({'xtick.major.pad': '7.0'})
     # rcParams.update({'xtick.major.size': '7.5'})
