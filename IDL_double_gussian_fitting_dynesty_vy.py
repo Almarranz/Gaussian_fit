@@ -46,11 +46,12 @@ rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
 rcParams.update({'font.size': 20})
 rcParams.update({'figure.figsize':(10,5)})
-plt.rcParams["font.family"] = "serif"
-plt.rcParams["mathtext.fontset"] = 'dejavuserif'
-plt.rcParams['text.usetex'] = False
+rcParams.update({
+    "text.usetex": False,
+    "font.family": "sans",
+    "font.sans-serif": ["Palatino"]})
+
 from matplotlib import rc
-rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
 step=np.arange(1,2.0,0.25)
 print(step)
@@ -65,11 +66,11 @@ for sloop in range(len(step)):
     show_field='no'
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
     
-    accu=2
-    flds=[16,3] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
-    chips=[1,2,3,4]
+    accu=1.5
+    flds=[16] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
+    # chips=[1,2,3,4]
     # flds=[3]
-    # chips=[1,4]
+    chips=[3]
     v_x=[]
     v_y=[]
     dvx=[]
@@ -140,7 +141,7 @@ for sloop in range(len(step)):
     fig,ax=plt.subplots(1,1)
     # sig_h=sigma_clip(v_y,sigma=1000,maxiters=20,cenfunc='mean',masked=True)
     # v_y=v_y[sig_h.mask==False]
-    h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
+    h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True,stacked=True)
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
     ax.legend(['Chip=%s, %s, mean= %.4f, std=%.2f'
@@ -256,7 +257,7 @@ for sloop in range(len(step)):
     rcParams.update({'ytick.minor.pad': '7.0'})
     rcParams.update({'ytick.minor.size': '3.5'})
     rcParams.update({'ytick.minor.width': '1.0'})
-    rcParams.update({'font.size': 25})
+    rcParams.update({'font.size': 20})
     
     
     # truths = [mu1_true, sigma1_true, amp1_true, mu2_true, sigma2_true, amp2_true]
@@ -304,7 +305,7 @@ for sloop in range(len(step)):
     # In[14]:
     
     
-    plt.figure(figsize =(10,10))
+    plt.figure(figsize =(8,8))
     # from matplotlib import rcParams
     # rcParams.update({'xtick.major.pad': '7.0'})
     # rcParams.update({'xtick.major.size': '7.5'})
@@ -324,11 +325,11 @@ for sloop in range(len(step)):
     #     "text.usetex": True,
     #     "font.family": "sans-serif",
     #     "font.sans-serif": ["Helvetica"]})
-    rcParams.update({'font.size': 20})
-    rcParams.update({
-        "text.usetex": False,
-        "font.family": "serif",
-        "font.sans-serif": ["Palatino"]})
+    plt.rcParams["font.family"] = "serif"
+    plt.rcParams["mathtext.fontset"] = 'dejavuserif'
+    plt.rcParams['text.usetex'] = False
+    from matplotlib import rc
+    rc('font',**{'family':'serif','serif':['Palatino']})
     
     
     results = sampler.results
