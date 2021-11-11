@@ -18,7 +18,8 @@ import corner
 import dynesty
 from astropy.stats import sigma_clip
 from astropy.stats import sigma_clipped_stats
-
+from matplotlib.ticker import FormatStrFormatter
+import scipy.integrate as integrate
 band='H'
 folder='im_jitter_NOgains/'
 exptime=10
@@ -50,11 +51,12 @@ rcParams.update({
     "text.usetex": False,
     "font.family": "sans",
     "font.sans-serif": ["Palatino"]})
-
+import seaborn as sns
 from matplotlib import rc
 #%%
 step=np.arange(1,2.0,0.25)
 print(step)
+media_amp=[]
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)):
@@ -335,8 +337,11 @@ for sloop in range(len(step)):
     results = sampler.results
     print(results['logz'][-1])
     
+    fig, ax = plt.subplots(figsize=(8,8))
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+    h=ax.hist(v_y, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     
-    h=plt.hist(v_y, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
@@ -382,9 +387,33 @@ for sloop in range(len(step)):
     rc('font',**{'family':'serif','serif':['Palatino']})
     plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')
     
+    #%%
+
+    fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
+    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    gau1=integrate.quad(fun1,-15,15)
+    
+    fun2= lambda x: (mean[5] * (1 / (mean[4] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[3], 2.) / (2 * np.power(mean[4], 2.))) )
+    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    gau2=integrate.quad(fun2,-15,15)
+    
+    # fun3= lambda x: (mean[8] * (1 / (mean[7] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[6], 2.) / (2 * np.power(mean[7], 2.))) )
+    # # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    # gau3=integrate.quad(fun3,-15,15)
+    media_amp.append(gau1[0])
+    print(gau1[0],gau2[0])
+    # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
+    print(30*'&')
+    print('Area under Gaus1:%.3f'%(gau1[0]))
+    print('Area under Gaus2:%.3f'%(gau2[0]))
+    print('Total area = %.3f'%(gau1[0]+gau2[0]))
+    print(30*'&')
+# =============================================================================
+# this make a aproximation ti the pdf of the normaliced histogram, maybe can be used for comparations
+#     sns.distplot(v_y, hist=False, kde=True,norm_hist=True, bins=nbins, color = 'blue',hist_kws={'edgecolor':'black'})               
+# =============================================================================
     
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
-    # f
 #%%
 #for file in range(1,4):
     if sloop==0:
@@ -400,6 +429,7 @@ pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
 media=np.loadtxt(pruebas+'vy_gauss_var.txt')#,delimiter=',')
 va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
+print('Media area broad = %.3f'%np.average(media_amp))
 for i in range(len(va)):
     print('%s = %.4f '%(va[i],np.average(media[:,i])))
     print('-'*20)

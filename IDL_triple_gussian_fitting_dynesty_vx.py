@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 import emcee
 import corner
 import dynesty
-
+import scipy.integrate as integrate
 from astropy.stats import sigma_clip
 from astropy.stats import sigma_clipped_stats
 # In[4]:
@@ -59,13 +59,14 @@ rcParams.update({
     "font.sans-serif": ["Palatino"]})
 
 from matplotlib import rc
+
 # In[5]:
 ran=0
 
 step=np.arange(1,2,0.25)
 print(step)
 # print(np.arange(-15,15+step,step))
-
+media_amp=[]
 
 
 #%%
@@ -243,9 +244,9 @@ for sloop in range(len(step)):
         amp1 = uamp1
         
         # mu2 = 0.12+((umu2*0.06)-0.03)
-        mu2=0.25*umu2-0.125
+        mu2=2*umu2-1
         # sigma2 =3.3+((usigma2*0.33)-0.33/2)
-        sigma2=5*usigma2
+        sigma2=3.5+ (usigma2*0.4-0.2)
         amp2 = uamp2*0.54                                                   
         # amp2=0.54 +(uamp2*0.06-0.06/2)
         
@@ -399,6 +400,29 @@ for sloop in range(len(step)):
     plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
     plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
+    
+    #%%
+    gau1,gau2,gau3=[],[],[]
+    fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
+    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    gau1=integrate.quad(fun1,-15,15)
+    
+    fun2= lambda x: (mean[5] * (1 / (mean[4] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[3], 2.) / (2 * np.power(mean[4], 2.))) )
+    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    gau2=integrate.quad(fun2,-15,15)
+    
+    fun3= lambda x: (mean[8] * (1 / (mean[7] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[6], 2.) / (2 * np.power(mean[7], 2.))) )
+    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    gau3=integrate.quad(fun3,-15,15)
+    print(gau1[0],gau2[0],gau3[0])
+    media_amp.append(gau2[0])
+    # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
+    print(30*'&')
+    print('Area under Gaus1:%.3f'%(gau1[0]))
+    print('Area under Gaus2:%.3f'%(gau2[0]))
+    print('Area under Gaus3:%.3f'%(gau3[0]))
+    print('Total area = %.3f'%(gau1[0]+gau2[0]+gau3[0]))
+    print(30*'&')
 
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 #%%
@@ -416,6 +440,7 @@ pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
 media=np.loadtxt(pruebas+'vx_gauss_var.txt')#,delimiter=',')
 va=['mu1','sigma1','amp1','mu2','sigma2','amp2','mu3','sigma3','amp3']
+print('Media amp broad = %.3f'%np.average(media_amp))
 for i in range(len(va)):
     print('%s = %.4f '%(va[i],np.average(media[:,i])))
     print('-'*20)
@@ -428,7 +453,5 @@ for i in range(len(va)):
     print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
 
 # In[ ]:
-
-print(sampler.citations)
 
 
