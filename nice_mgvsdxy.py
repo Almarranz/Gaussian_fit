@@ -66,6 +66,8 @@ rcParams.update({'font.size': 15})
 # # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 # plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 #%%
+rcParams.update({'font.size': 20})
+
 band='H'
 exptime=10
 #chip=1
@@ -77,7 +79,7 @@ name='NPL_054'
 chip=3
 ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b=np.loadtxt(results+name+'_chip%s.txt'%(chip),unpack=True)#header='ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b'
 dxy=np.sqrt((dx)**2+(dy)**2)
-fig, ax =plt.subplots(1,1,figsize=(10,10))
+fig, ax =plt.subplots(1,1,figsize=(8,8))
 ax.scatter(mag,dxy*1000,color='k',s=5, marker='.')
 ax.grid()
 plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
@@ -107,8 +109,8 @@ ejes_no=[no_x_in[0,:],no_x_out[0,:]]
 absc_no=[no_x_in[1,:],no_x_out[1,:]]
 
 zones=['Zone A', 'Zone B']
-
-accu=1.5
+rcParams.update({'font.size': 40})
+accu=2
 fig, ax=plt.subplots(1,2,figsize=(20,10))
 for i in range(len(ejes)):
     ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
@@ -118,9 +120,9 @@ for i in range(len(ejes)):
     # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
     ax[i].set_xlim(12,19)
     ax[i].set_ylim(0,8)
-    ax[i].set_xlabel('[H]',fontsize=20)
-    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=20)
-    ax[i].legend(['%s'%(zones[i])],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+    ax[i].set_xlabel('[H]',fontsize=40)
+    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=40)
+    ax[i].legend(['%s'%(zones[i])],fontsize=40,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 
 
 
