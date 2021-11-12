@@ -63,23 +63,22 @@ from matplotlib import rc
 # In[5]:
 ran=0
 
-step=np.arange(1,2,0.25)
+step=np.arange(1,1.75,0.25)
 print(step)
 # print(np.arange(-15,15+step,step))
 media_amp=[]
-
+zone=''
 
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)):
-    
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
     show_field='no'
-    chip='both' #can be 1 or 4 (refers to the chip on GNS fields)
-    # field=7 #fields can be 3 or 20 (refers to GNS fields)
-    sm=0.25
+    chip=3 #can be 1 or 4 (refers to the chip on GNS fields)
+    field=16 #fields can be 3 or 20 (refers to GNS fields)
+    sm=0.5
     
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
@@ -133,7 +132,7 @@ for sloop in range(len(step)):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,field,chip),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx
@@ -164,7 +163,7 @@ for sloop in range(len(step)):
 #%%
 
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=60,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
     # h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
     h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
@@ -243,12 +242,12 @@ for sloop in range(len(step)):
         sigma1 = 3*(usigma1)
         amp1 = uamp1
         
-        # mu2 = 0.12+((umu2*0.06)-0.03)
-        mu2=2*umu2-1
-        # sigma2 =3.3+((usigma2*0.33)-0.33/2)
-        sigma2=3.5+ (usigma2*0.4-0.2)
-        amp2 = uamp2*0.54                                                   
-        # amp2=0.54 +(uamp2*0.06-0.06/2)
+        mu2 = 0.0+((umu2*0.06)-0.03)
+        # mu2=4*umu2-4/2
+        sigma2 =5*usigma2
+        # sigma2=3.3+ (usigma2*0.26-0.26/2)
+        amp2 = uamp2                                                  
+        # amp2=0.35 +(uamp2*0.2-0.2/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)
@@ -296,6 +295,7 @@ for sloop in range(len(step)):
     
     fig, axes = dyplot.traceplot(sampler.results,labels=labels,
                                  fig=plt.subplots(9, 2, figsize=(16, 20)))
+    
     plt.show()
     
     
@@ -388,7 +388,7 @@ for sloop in range(len(step)):
     # plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # # if accu<10:
     # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    # plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.020,'nbins=%s'%(nbins),color='b')
     # plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
     # if show_field=='yes':
     #     if chip=='both':
@@ -397,7 +397,7 @@ for sloop in range(len(step)):
     #     else:
     #         plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
     plt.ylabel('N')
-    plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+    plt.legend(['Zone B [%s]'%(zone)],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
     plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
     
@@ -428,17 +428,17 @@ for sloop in range(len(step)):
 #%%
 #for file in range(1,4):
     if sloop==0:
-        with open (pruebas+'vx_gauss_var.txt', 'w') as f:
+        with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'w') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
     else:
-        with open (pruebas+'vx_gauss_var.txt', 'a') as f:
+        with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'a') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
 
 
 #%%
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
-media=np.loadtxt(pruebas+'vx_gauss_var.txt')#,delimiter=',')
+media=np.loadtxt(pruebas+'%s_vx_gauss_var.txt'%(zone))#,delimiter=',')
 va=['mu1','sigma1','amp1','mu2','sigma2','amp2','mu3','sigma3','amp3']
 print('Media amp broad = %.3f'%np.average(media_amp))
 for i in range(len(va)):

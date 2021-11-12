@@ -54,21 +54,22 @@ rcParams.update({
 import seaborn as sns
 from matplotlib import rc
 #%%
-step=np.arange(1,2.0,0.25)
+step=np.arange(1,1.75,0.25)
 print(step)
 media_amp=[]
+zone='Z1'
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)):
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
-    chip='both'#can be 1 or 4 (refers to the chip on GNS fields)
-    field=20#fields can be 3 or 20 (refers to GNS fields)
+    chip=3#can be 1 or 4 (refers to the chip on GNS fields)
+    field=16#fields can be 3 or 20 (refers to GNS fields)
     nbins=len(list_bin)
-    sm=0.25#limit in difference of mag
+    sm=1#limit in difference of mag
     show_field='no'
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
     
-    accu=1.5
+    accu=2
     flds=[16] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
     # chips=[1,2,3,4]
     # flds=[3]
@@ -85,7 +86,7 @@ for sloop in range(len(step)):
         for i in range(len(flds)):
             for j in range(len(chips)):
                 try:
-                    v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
+                    v_x0,v_y0,dvx0,dvy0,mh0,m0,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,flds[i],chips[j]),unpack=True)
                     # v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
                     v_x=np.r_[v_x,v_x0]
                     v_y=np.r_[v_y,v_y0]
@@ -112,7 +113,7 @@ for sloop in range(len(step)):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,field,chip),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx
@@ -141,8 +142,8 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    # sig_h=sigma_clip(v_y,sigma=1000,maxiters=20,cenfunc='mean',masked=True)
-    # v_y=v_y[sig_h.mask==False]
+    sig_h=sigma_clip(v_y,sigma=5000,maxiters=20,cenfunc='mean',masked=True)
+    v_y=v_y[sig_h.mask==False]
     h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True,stacked=True)
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
@@ -379,7 +380,7 @@ for sloop in range(len(step)):
     #         plt.text(max(x)/2,max(h[0]-0.05),'$field%s c%s$'%(field,chip),color='b')
     plt.ylabel('N')
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)')
-    plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+    plt.legend(['Zone B (%s)'%(zone)],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
     plt.rcParams["font.family"] = "serif"
     plt.rcParams["mathtext.fontset"] = 'dejavuserif'
     plt.rcParams['text.usetex'] = False
@@ -417,17 +418,17 @@ for sloop in range(len(step)):
 #%%
 #for file in range(1,4):
     if sloop==0:
-        with open (pruebas+'vy_gauss_var.txt', 'w') as f:
+        with open (pruebas+'%s_vy_gauss_var.txt'%(zone), 'w') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
     else:
-        with open (pruebas+'vy_gauss_var.txt', 'a') as f:
+        with open (pruebas+'%s_vy_gauss_var.txt'%(zone), 'a') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
 
 
 #%%
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
-media=np.loadtxt(pruebas+'vy_gauss_var.txt')#,delimiter=',')
+media=np.loadtxt(pruebas+'%s_vy_gauss_var.txt'%(zone))#,delimiter=',')
 va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
 print('Media area broad = %.3f'%np.average(media_amp))
 for i in range(len(va)):
