@@ -55,7 +55,7 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
-step=np.arange(1,1.75,0.25)
+step=np.arange(1.25,2,0.25)
 print(step)
 list_bin=np.arange(-15,15+step[0],step[0])
 print(list_bin)
@@ -70,7 +70,7 @@ media_amp=[]
 ran=0
 for sloop in range(len(step)):
     sm=0.25
-    chip=3
+    chip='both'
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
     nbins=len(list_bin)
@@ -80,8 +80,8 @@ for sloop in range(len(step)):
         if chip =='both':
             # v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
             # v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
-            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
 
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
@@ -196,7 +196,7 @@ for sloop in range(len(step)):
         umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
     
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-        mu1 = -3*umu1   # scale and shift to [-3., 3.)
+        mu1 = 8*umu1-4   # scale and shift to [-3., 3.)
         sigma1 = 3*(usigma1)
         amp1 = uamp1*1
         
@@ -207,8 +207,8 @@ for sloop in range(len(step)):
         # sigma2 = 3.60 +  (0.26*usigma2-0.13)
         sigma2=usigma2*4
         # amp2 = 0.42 + (0.08*uamp2-0.04)
-        amp2 = 0.6*uamp2
-
+        # amp2 = 0.59 + (0.08*uamp2-0.04)
+        amp2 = uamp2*1
         return mu1, sigma1, amp1, mu2, sigma2, amp2
     # prior transform
     # def prior_transform(utheta):

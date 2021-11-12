@@ -68,15 +68,17 @@ media_amp=[]
     # plt.rc('font', family='serif')
 for sloop in range(len(step)):
     sm=0.25
-    chip='both'
+    chip=3
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
     nbins=len(list_bin)
     accu=2 # select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
-            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            # v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            # v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
             dvx=np.r_[dvx2,dvx3]
@@ -85,7 +87,7 @@ for sloop in range(len(step)):
             m=np.r_[m2,m3]
         elif chip==2 or chip==3:
             lst=np.loadtxt(tmp+'aa_IDL_lst_chip%s.txt'%(chip))
-            v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+            v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
     elif in_brick==0:
          if chip=='both':
             lst='All '
@@ -194,20 +196,21 @@ for sloop in range(len(step)):
         #x *= 10.  # scale to [-10., 10.)
         umu1, usigma1, uamp1,  umu2, usigma2, uamp2, umu3, usigma3, uamp3= utheta
     
-    #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-        mu1 =-3*umu1  # scale and shift to [-3., 3.)
+        #mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
+        mu1 =-6*umu1  # scale and shift to [-3., 3.)
         sigma1 = 3*(usigma1)
-        amp1 = uamp1
+        amp1 = uamp1*1
         
-        mu2 = 3*umu2
-        sigma2 = 3.60 +  (0.26*usigma2-0.13)
-        # sigma2=usigma2*3.78
-        amp2 = 0.42 + (0.08*uamp2-0.04)
+        mu2 = 0.05*umu2-0.025
+        # sigma2 = 3.57 +  (0.26*usigma2-0.13)
+        sigma2=usigma2*5
+        amp2 = 0.59 + (0.08*uamp2-0.04)
+        # amp2=uamp2*1
         
-        mu3 =5*(umu3) # scale and shift to [-3., 3.)
+        mu3 =6*(umu3) # scale and shift to [-3., 3.)
         # sigma3 = 2.0+ (0.4*usigma3-0.2)
-        sigma3 = 2*(usigma3)
-        amp3 = uamp3*0.05
+        sigma3 = 5*(usigma3)
+        amp3 = uamp3*1
         
         
     
@@ -233,7 +236,7 @@ for sloop in range(len(step)):
     
     
     # truths = [mu1_true, sigma1_true, amp1_true, mu2_true, sigma2_true, amp2_true]
-    labels = [r'$mu1$', r'$sigma1$', r'$amp1$', r'$mu2$', r'$sigma2$', r'$amp2$',r'$mu3$', r'$sigma3$', r'$amp3$']
+    labels = [r'mu1', r'sigma1', r'amp1', r'mu2', r'sigma2', r'amp2',r'mu3', r'sigma3', r'amp3']
     # fig, axes = dyplot.traceplot(sampler.results, truths=truths, labels=labels,
     #                              fig=plt.subplots(6, 2, figsize=(16, 27)))
     
@@ -307,7 +310,7 @@ for sloop in range(len(step)):
     # plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
     # plt.text(max(x)/2,max(h[0]-0.05),'$amp_{3}=%.3f$'%(mean[8]))
     
-    # plt.text(min(x),max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    plt.text(min(x),max(h[0]/2)-0.01,'logz=%.0f'%(results['logz'][-1]),color='b')
     # if accu<10:
     #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
     # plt.text(max(x)/2,max(h[0]/2)-0.005,'$nbins=%s$'%(nbins),color='b')
@@ -376,6 +379,7 @@ for i in range(len(va)):
 
 # sys.exit()
 #%%
+
 fig, ax = plt.subplots(1,1, figsize=(10,10))
 h1=ax.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
@@ -390,10 +394,10 @@ ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,0]), np.average(media[:,1]
 ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,3]), np.average(media[:,4]), np.average(media[:,5]))  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
 ax.plot(xplot1, gaussian(xplot*-1, np.average(media[:,6]), np.average(media[:,7]), np.average(media[:,8])) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
 
-ax.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(np.average(media[:,0])*-1),color='green')
+ax.text(min(x),max(h[0]),'mu1=%.3f'%(np.average(media[:,0])*-1),color='green')
 
-ax.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(np.average(media[:,1])),color='green')
-ax.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(np.average(media[:,2])),color='green')
+ax.text(min(x),max(h[0]-0.01),'sigma1=%.3f'%(np.average(media[:,1])),color='green')
+ax.text(min(x),max(h[0]-0.02),'amp1=%.3f'%(np.average(media[:,2])),color='green')
 ax.text(max(x),max(h[0]),'$\mu_{2}=%.3f$'%(np.average(media[:,3])*-1),color='red')
 ax.text(max(x),max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(np.average(media[:,4])),color='red')
 ax.text(max(x),max(h[0]-0.02),'$amp_{2}=%.3f$'%(np.average(media[:,5])),color='red')

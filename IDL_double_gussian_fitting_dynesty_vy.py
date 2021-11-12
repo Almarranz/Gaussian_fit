@@ -61,7 +61,7 @@ print(step)
 # In[5]:
 ran=0
 for sloop in range(len(step)):
-    chip=3
+    chip='both'
     list_bin=np.arange(-15,15+step[sloop],step[sloop])
     
     nbins=len(list_bin)
@@ -73,8 +73,8 @@ for sloop in range(len(step)):
     
     if in_brick==1:
         if chip =='both':
-            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
             dvx=np.r_[dvx2,dvx3]
@@ -136,7 +136,7 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_y,sigma=500,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_y=v_y[sig_h.mask==False]
     h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
