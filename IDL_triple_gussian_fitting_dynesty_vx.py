@@ -62,12 +62,12 @@ from matplotlib import rc
 
 # In[5]:
 ran=0
-
-step=np.arange(1,1.75,0.25)
+# step=np.arange(2,2.50,0.10)
+step=np.arange(1.7,2.50,0.10)
 print(step)
 # print(np.arange(-15,15+step,step))
 media_amp=[]
-zone=''
+zone='Z1'
 
 #%%
 # for sloop in range(ran,ran+1):
@@ -85,6 +85,7 @@ for sloop in range(len(step)):
 
     # nbins=25+sloop
     nbins=len(list_bin)
+    print('number of bins=%s'%(nbins))
     accu=1.5
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
@@ -132,7 +133,8 @@ for sloop in range(len(step)):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,field,chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058__IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,field,chip),unpack=True)
+    print(len(v_x))
     mh_all=mh
     m_all=m
     dvx_all=dvx
@@ -163,7 +165,7 @@ for sloop in range(len(step)):
 #%%
 
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
     # h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
     h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
@@ -242,11 +244,11 @@ for sloop in range(len(step)):
         sigma1 = 3*(usigma1)
         amp1 = uamp1
         
-        mu2 = 0.0+((umu2*0.06)-0.03)
-        # mu2=4*umu2-4/2
-        sigma2 =5*usigma2
-        # sigma2=3.3+ (usigma2*0.26-0.26/2)
-        amp2 = uamp2                                                  
+        # mu2 = 0.0+((umu2*0.06)-0.03)
+        mu2=2*umu2-2/2
+        # sigma2 =3.6*usigma2
+        sigma2=3.6+ (usigma2*0.8-0.8/2)
+        amp2 = uamp2  *0.58                                               
         # amp2=0.35 +(uamp2*0.2-0.2/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
@@ -385,7 +387,7 @@ for sloop in range(len(step)):
     # plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
     # plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
     
-    # plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.01,'logz=%.0f'%(results['logz'][-1]),color='b')
     # # if accu<10:
     # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
     plt.text(max(x)/2,max(h[0]/2)-0.020,'nbins=%s'%(nbins),color='b')
@@ -453,5 +455,24 @@ for i in range(len(va)):
     print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
 
 # In[ ]:
+plt.figure(figsize =(8,8))
+mean=[-1.46	,  1.78,	0.35,	-0.29,	3.58,	0.42,	2.83,	1.78,	0.23]
+h=plt.hist(v_x*-1, bins= 19, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
+xplot = np.linspace(min(x), max(x), 100)
+
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
+         + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
+plt.xlim(-15,15)
+plt.gca().invert_xaxis()
+ 
+plt.ylabel('N')
+plt.legend(['Zone B [%s]'%(zone)],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
 
