@@ -63,7 +63,7 @@ from matplotlib import rc
 # In[5]:
 ran=0
 # step=np.arange(2,2.50,0.10)
-step=np.arange(1.7,2.50,0.10)
+step=np.arange(1.7,2.20,0.10)
 print(step)
 # print(np.arange(-15,15+step,step))
 media_amp=[]
