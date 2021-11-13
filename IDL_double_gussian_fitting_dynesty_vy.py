@@ -54,7 +54,8 @@ rcParams.update({
 import seaborn as sns
 from matplotlib import rc
 #%%
-step=np.arange(1,1.75,0.25)
+# step=np.arange(1,1.75,0.25)
+step=np.arange(1.7,2.2,0.10)
 print(step)
 media_amp=[]
 zone='Z1'
@@ -65,11 +66,11 @@ for sloop in range(len(step)):
     chip=3#can be 1 or 4 (refers to the chip on GNS fields)
     field=16#fields can be 3 or 20 (refers to GNS fields)
     nbins=len(list_bin)
-    sm=1#limit in difference of mag
+    sm=0.5#limit in difference of mag
     show_field='no'
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
     
-    accu=2
+    accu=1.5
     flds=[16] #I feel that field 10 make things worse for some reason and 12 doesnt aligns
     # chips=[1,2,3,4]
     # flds=[3]
@@ -142,7 +143,7 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_y,sigma=5000,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_y=v_y[sig_h.mask==False]
     h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True,stacked=True)
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
