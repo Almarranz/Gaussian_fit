@@ -62,10 +62,11 @@ from matplotlib import rc
 # In[5]:
 ran=0
 
-step=np.arange(1,2,0.25)
+step=np.arange(1.7,2.20,0.10)
 print(step)
 # print(np.arange(-15,15+step,step))
-
+media_amp=[]
+zone='Z1'
 
 
 #%%
@@ -76,15 +77,16 @@ for sloop in range(len(step)):
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
     show_field='no'
-    chip='both' #can be 1 or 4 (refers to the chip on GNS fields)
-    # field=7 #fields can be 3 or 20 (refers to GNS fields)
-    sm=0.25
+    chip=3 #can be 1 or 4 (refers to the chip on GNS fields)
+    field=16 #fields can be 3 or 20 (refers to GNS fields)
+    sm=0.5
     
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
 
     # nbins=25+sloop
     nbins=len(list_bin)
+    print('number of bins=%s'%(nbins))
     accu=1.5
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
@@ -132,7 +134,7 @@ for sloop in range(len(step)):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m=np.loadtxt(gaussian+'aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(field,chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,field,chip),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx
@@ -238,15 +240,15 @@ for sloop in range(len(step)):
         umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
     
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-        mu1 =-3*umu1  # scale and shift to [-3., 3.)
-        sigma1 = 3*(usigma1)
+        mu1 =-5*umu1  # scale and shift to [-3., 3.)
+        sigma1 = 5*(usigma1)
         amp1 = uamp1
         
         # mu2 = 0.12+((umu2*0.06)-0.03)
-        mu2=0.25*umu2-0.125
+        mu2=4*umu2-2
         # sigma2 =3.3+((usigma2*0.33)-0.33/2)
         sigma2=5*usigma2
-        amp2 = uamp2*0.54                                                   
+        amp2 = uamp2*1                                                   
         # amp2=0.54 +(uamp2*0.06-0.06/2)
         
        
@@ -400,17 +402,17 @@ for sloop in range(len(step)):
 #%%
 #for file in range(1,4):
     if sloop==0:
-        with open (pruebas+'vx_gauss_var.txt', 'w') as f:
+        with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'w') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
     else:
-        with open (pruebas+'vx_gauss_var.txt', 'a') as f:
+        with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'a') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
 
 
 #%%
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
-media=np.loadtxt(pruebas+'vx_gauss_var.txt')#,delimiter=',')
+media=np.loadtxt(pruebas+'%s_vx_gauss_var.txt'%(zone))#,delimiter=',')
 va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
 for i in range(len(va)):
     print('%s = %.4f '%(va[i],np.average(media[:,i])))
