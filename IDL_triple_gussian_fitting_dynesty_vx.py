@@ -71,7 +71,7 @@ for sloop in range(len(step)):
     # list_bin=np.arange(-15,15+step[sloop],step[sloop])
     list_bin=np.arange(-15,15,step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
-    nbins=len(list_bin-1)
+    nbins=len(list_bin)-1
     print(list_bin)
     accu=2 # select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:

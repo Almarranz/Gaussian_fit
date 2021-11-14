@@ -64,7 +64,7 @@ for sloop in range(len(step)):
     chip='both'
     list_bin=np.arange(-15,15,step[sloop])
     print(list_bin)
-    nbins=len(list_bin-1)
+    nbins=len(list_bin)-1
     # nbins=9
     print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
     accu=2
