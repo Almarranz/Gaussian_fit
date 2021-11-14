@@ -56,10 +56,8 @@ from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
 # step=np.arange(1.7,2.2,0.1)
-step=np.arange(0.5,1.5,0.5)
-print(step)
-list_bin=np.arange(-15,15,step[1])
-print(list_bin)
+step=np.arange(0.5,2.1,0.1)
+
 media_amp=[]
 
 #%%
@@ -73,7 +71,8 @@ for sloop in range(len(step)):
     # list_bin=np.arange(-15,15+step[sloop],step[sloop])
     list_bin=np.arange(-15,15,step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
-    nbins=len(list_bin)
+    nbins=len(list_bin-1)
+    print(list_bin)
     accu=2 # select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
@@ -295,7 +294,7 @@ for sloop in range(len(step)):
     results = sampler.results
     print(results['logz'][-1])
     
-    h=plt.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_x*-1, bins=list_bin, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)

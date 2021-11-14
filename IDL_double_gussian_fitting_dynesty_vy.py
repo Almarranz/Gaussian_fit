@@ -54,17 +54,17 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 
 #%%
 # step=np.arange(1.0,1.75,0.25)#these have worked
-step=np.arange(1.7,2.2,0.1)#also works if running each bing width one by one, for some reason...
+step=np.arange(0.5,2.1,0.1)#also works if running each bing width one by one, for some reason...
 media_amp=[]
 print(step)
 #%%
 # In[5]:
 ran=0
 for sloop in range(len(step)):
-    chip=3
+    chip='both'
     list_bin=np.arange(-15,15,step[sloop])
-    
-    nbins=len(list_bin)
+    print(list_bin)
+    nbins=len(list_bin-1)
     # nbins=9
     print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
     accu=2
@@ -333,7 +333,7 @@ for sloop in range(len(step)):
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     
     a=1#to chnge the axix a=-1
-    h=plt.hist(v_y*a, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_y*a, bins= list_bin, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
@@ -351,7 +351,7 @@ for sloop in range(len(step)):
     plt.text(min(x),max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # # # if accu <10:
     # # #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    # plt.text(min(x),max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
+    plt.text(min(x),max(h[0]-0.04),'nbins=%s'%(nbins),color='b')
     # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
     # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
     # if (chip==2 or chip==3) and in_brick==1:
@@ -412,9 +412,12 @@ for i in range(len(va)):
     
  
     
- 
-    
- 
+#%%
+step=np.arange(0.5,2.2,0.1)#also works if running each bing width one by one, for some reason...
+media_amp=[]
+print(step) 
+list_bin=np.arange(-15,15,step[0])
+print(list_bin)
     
  
     
