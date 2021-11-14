@@ -54,27 +54,27 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 
 #%%
 # step=np.arange(1.0,1.75,0.25)#these have worked
-step=np.arange(1.0,2.0,0.25)#also works if running each bing width one by one, for some reason...
+step=np.arange(1.7,2.2,0.1)#also works if running each bing width one by one, for some reason...
 media_amp=[]
 print(step)
 #%%
 # In[5]:
 ran=0
 for sloop in range(len(step)):
-    chip='both'
-    list_bin=np.arange(-15,15+step[sloop],step[sloop])
+    chip=3
+    list_bin=np.arange(-15,15,step[sloop])
     
     nbins=len(list_bin)
     # nbins=9
     print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
     accu=2
-    sm=0.25
+    sm=0.5
     in_brick=1#slect list in or out brick
     
     if in_brick==1:
         if chip =='both':
-            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'UP_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
             dvx=np.r_[dvx2,dvx3]
@@ -90,7 +90,11 @@ for sloop in range(len(step)):
             # v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
             # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
             #add 'aa' in front of the list name to used aa aligned lists
-            v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+            if chip==3:
+                v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'UP_aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+            if chip==2:
+                v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+
             # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 
     elif in_brick==0:
@@ -136,9 +140,9 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_y,sigma=500,maxiters=20,cenfunc='mean',masked=True)
     v_y=v_y[sig_h.mask==False]
-    h=ax.hist(v_y,bins=nbins,edgecolor='black',linewidth=2,density=True)
+    h=ax.hist(v_y,bins=list_bin,edgecolor='black',linewidth=2,density=True)
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
     ax.legend(['Chip=%s, %s, mean= %.4f, std=%.2f'
@@ -344,7 +348,7 @@ for sloop in range(len(step)):
     # plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='k')
     # plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='k')
     # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
-    # plt.text(min(x),max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    plt.text(min(x),max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # # # if accu <10:
     # # #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
     # plt.text(min(x),max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')

@@ -55,9 +55,10 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
-step=np.arange(1,1.75,0.25)
+# step=np.arange(1.7,2.2,0.1)
+step=np.arange(0.5,1.5,0.5)
 print(step)
-list_bin=np.arange(-15,15+step[0],step[0])
+list_bin=np.arange(-15,15,step[1])
 print(list_bin)
 media_amp=[]
 
@@ -67,16 +68,17 @@ media_amp=[]
     # plt.rc('text', usetex=True)
     # plt.rc('font', family='serif')
 for sloop in range(len(step)):
-    sm=0.25
-    chip=3
-    list_bin=np.arange(-15,15+step[sloop],step[sloop])
+    sm=0.5
+    chip='both'
+    # list_bin=np.arange(-15,15+step[sloop],step[sloop])
+    list_bin=np.arange(-15,15,step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
     nbins=len(list_bin)
     accu=2 # select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
-            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'UP_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
             # v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
             # v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
             v_x=np.r_[v_x2,v_x3]
@@ -86,8 +88,16 @@ for sloop in range(len(step)):
             mh=np.r_[mh2,mh3]
             m=np.r_[m2,m3]
         elif chip==2 or chip==3:
+            # lst=np.loadtxt(tmp+'aa_IDL_lst_chip%s.txt'%(chip))
             lst=np.loadtxt(tmp+'aa_IDL_lst_chip%s.txt'%(chip))
-            v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+            print(30*'#'+'\n'+'lst=%s'%(lst)+'\n'+30*'#')
+            # v_x,v_y,dvx,dvy=np.loadtxt(data+'arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+            # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+            #add 'aa' in front of the list name to used aa aligned lists
+            if chip==3:
+                v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'UP_aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
+            if chip==2:
+                v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
     elif in_brick==0:
          if chip=='both':
             lst='All '
@@ -127,9 +137,9 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
-    h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
+    h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
     ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
@@ -201,11 +211,11 @@ for sloop in range(len(step)):
         sigma1 = 3*(usigma1)
         amp1 = uamp1*1
         
-        mu2 = 0.05*umu2-0.025
-        # sigma2 = 3.57 +  (0.26*usigma2-0.13)
-        sigma2=usigma2*5
-        amp2 = 0.59 + (0.08*uamp2-0.04)
-        # amp2=uamp2*1
+        mu2 = 2*umu2-1
+        sigma2 = 3.57 +  (0.8*usigma2-0.8/4)
+        # sigma2=usigma2*5
+        # amp2 = 0.59 + (0.08*uamp2-0.04)
+        amp2=uamp2*1
         
         mu3 =6*(umu3) # scale and shift to [-3., 3.)
         # sigma3 = 2.0+ (0.4*usigma3-0.2)
@@ -313,7 +323,7 @@ for sloop in range(len(step)):
     plt.text(min(x),max(h[0]/2)-0.01,'logz=%.0f'%(results['logz'][-1]),color='b')
     # if accu<10:
     #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    # plt.text(max(x)/2,max(h[0]/2)-0.005,'$nbins=%s$'%(nbins),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.005,'nbins=%s'%(nbins),color='b')
     # if (chip==2 or chip==3) and in_brick==1:
     #     plt.text(max(x)/2,max(h[0]-0.06),'$list = %.0f$'%(lst),color='b')
     # elif in_brick==0:
@@ -412,7 +422,29 @@ plt.ylabel('N')
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
 # In[ ]:
+plt.figure(figsize =(8,8))
+mean=[-1.74266,	1.46556,	0.3436,	0.52498,	3.94982,	0.55632,	2.28904,	1.07006,	0.09908,]
+h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
+xplot = np.linspace(min(x), max(x), 100)
 
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
+         + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
+plt.xlim(-15,15)
+plt.gca().invert_xaxis()
+ 
+plt.ylabel('N')
+plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')     
+# In[ ]:
+step=np.arange(0.5,2.2,0.1)
+print(step)
+list_bin=np.arange(-15,15,step[5])
+print(list_bin)
 
