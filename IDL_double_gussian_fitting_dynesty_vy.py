@@ -62,7 +62,7 @@ print(step)
 ran=0
 for sloop in range(len(step)):
     chip='both'
-    list_bin=np.arange(-15,15,step[sloop])
+    list_bin=np.arange(-10,10,step[sloop])
     print(list_bin)
     nbins=len(list_bin)-1
     # nbins=9
@@ -140,18 +140,23 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_y,sigma=500,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_y=v_y[sig_h.mask==False]
     h=ax.hist(v_y,bins=list_bin,edgecolor='black',linewidth=2,density=True)
+    h1=np.histogram(v_y,bins=list_bin,density=False)
+
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_y), color='r', linestyle='dashed', linewidth=3)
     ax.legend(['Chip=%s, %s, mean= %.4f, std=%.2f'
                   %(chip,len(v_y),np.mean(v_y),np.std(v_y))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
-    #yerr = y*0.05
-    #yerr = y*0.01
-    yerr=0.0001
-    y += yerr
+    for yi in range(len(y)):
+        if y[yi]==0:
+            y[yi]+=0.00001
+    yerr = y*0.01
+    # yerr = np.sqrt(h1[0])/(len(v_y)*((step[sloop])))
+    # yerr=0.001
+    # y += yerr
     ax.scatter(x,y,color='g',zorder=3)
     
     # In[5]:
@@ -274,14 +279,14 @@ for sloop in range(len(step)):
     # fig, axes = dyplot.cornerplot(res, truths=truths, color='blue', show_titles=True, 
     #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
     # 
-    #%%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
+    # %%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
     # This is de corner plot
-    # fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
-    #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
-    #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
+    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+                                  title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
+                                  fig=plt.subplots(6, 6, figsize=(28, 28)))
     
     
-    # plt.show() 
+    plt.show() 
     
     
     # In[12]:
@@ -419,12 +424,34 @@ print(step)
 list_bin=np.arange(-15,15,step[0])
 print(list_bin)
     
+#%%
+# plt.figure(figsize =(8,8))
+# fig, ax = plt.subplots(figsize=(8,8))
+# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+# list_bin=np.arange(-15,15,step[6])
+# mean=[-0.0294,	3.22548,	0.62812,	-0.00736,	1.33476,	0.37616]
+# h=plt.hist(v_y*-1, bins= list_bin , color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
+# xplot = np.linspace(min(x), max(x), 100)
+
+# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+# plt.xlim(-15,15)
+# plt.gca().invert_xaxis()
  
+# plt.ylabel('N')
+# plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')   
     
  
-    
- 
-    
+#%%
+# h1=np.histogram(v_y,bins=list_bin,density=False)
+
+print(step[sloop-1])    
  
     
  
