@@ -55,24 +55,34 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
-# step=np.arange(1.7,2.2,0.1)
-step=np.arange(0.5,2.1,0.1)
+# step=np.arange(1.2,1.3,0.1)
+auto='auto'
+if auto =='auto':
+    step=np.arange(0,2,1)#also works if running each bing width one by one, for some reason...
+else:
+    step=np.arange(1.2,1.3,0.1)#also works if running each bing width one by one, for some reason...
+
 
 media_amp=[]
 
-#%%
+#%%-1.75814471  1.46710833  0.2752928   0.33882325  3.48014787  0.68547752 3.05240576  0.50896186  0.03273927
     # In[5]:
     # from matplotlib import rc
     # plt.rc('text', usetex=True)
     # plt.rc('font', family='serif')
-for sloop in range(len(step)):
+for sloop in range(len(step)-1):
     sm=0.5
     chip='both'
     # list_bin=np.arange(-15,15+step[sloop],step[sloop])
-    list_bin=np.arange(-15,15,step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
-    nbins=len(list_bin)-1
-    print(list_bin)
+   
+    if auto != 'auto':
+       list_bin=np.arange(-15,15,step[sloop])
+       auto=list_bin
+       print(list_bin)
+       nbins=len(list_bin)-1
+       print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
+
     accu=2 # select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
@@ -136,21 +146,33 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
-    h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
+    if auto != 'auto':
+        list_bin=np.arange(min(v_x),max(v_x),step[sloop])
+        auto=list_bin
+        print(list_bin)
+        nbins=len(list_bin)-1
+        print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
+    
+    # h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
+    h=ax.hist(v_x,bins=auto,edgecolor='black',linewidth=2,density=True)
+    h1=np.histogram(v_x,bins=auto,density=False)
+    print(35*'-'+'\n'+'The width of the bin is: %.3f'%(h[1][3]-h[1][2])+'\n'+35*'-')
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
     ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
                   %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
-    #yerr = y*0.05
-    #yerr = y*0.01
+    # for yi in range(len(y)):
+    #     if y[yi]==0:
+    #         y[yi]+=0.00001
+    #     yerr = np.sqrt(h1[0][yi])/(len(v_x)*((h1[1][3]-h1[1][2])))
     yerr=0.0001
     y += yerr
     ax.scatter(x,y,color='g',zorder=3)
     
-    
+   
     # In[6]:
     
     count=0
@@ -211,10 +233,10 @@ for sloop in range(len(step)):
         amp1 = uamp1*1
         
         mu2 = 2*umu2-1
-        sigma2 = 3.57 +  (0.8*usigma2-0.8/4)
+        sigma2 = 3.58 +  (0.2*usigma2-0.20/2)
         # sigma2=usigma2*5
-        # amp2 = 0.59 + (0.08*uamp2-0.04)
-        amp2=uamp2*1
+        amp2 = uamp2*1
+        # amp2=0.5 + (uamp2*0.4-0.4/2)
         
         mu3 =6*(umu3) # scale and shift to [-3., 3.)
         # sigma3 = 2.0+ (0.4*usigma3-0.2)
@@ -262,9 +284,9 @@ for sloop in range(len(step)):
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     #Thsi is the corner plot
     
-    # fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
-    #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
-    #                               fig=plt.subplots(9, 9, figsize=(28, 28)))
+    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+                                  title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
+                                  fig=plt.subplots(9, 9, figsize=(28, 28)))
     
     
     plt.show() 
@@ -294,7 +316,7 @@ for sloop in range(len(step)):
     results = sampler.results
     print(results['logz'][-1])
     
-    h=plt.hist(v_x*-1, bins=list_bin, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_x*-1, bins=auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
@@ -322,7 +344,7 @@ for sloop in range(len(step)):
     plt.text(min(x),max(h[0]/2)-0.01,'logz=%.0f'%(results['logz'][-1]),color='b')
     # if accu<10:
     #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    plt.text(max(x)/2,max(h[0]/2)-0.005,'nbins=%s'%(nbins),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.005,'nbins=%s'%(len(h[0])),color='b')
     # if (chip==2 or chip==3) and in_brick==1:
     #     plt.text(max(x)/2,max(h[0]-0.06),'$list = %.0f$'%(lst),color='b')
     # elif in_brick==0:
@@ -422,15 +444,15 @@ plt.ylabel('N')
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
 # In[ ]:
 plt.figure(figsize =(8,8))
-mean=[-1.74266,	1.46556,	0.3436,	0.52498,	3.94982,	0.55632,	2.28904,	1.07006,	0.09908,]
-h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+mean=[-1.78355686666667,	1.38129791333333,	0.284651633333333,	0.310827676666667,	3.61326179,	0.641946646666667,	2.34543842666667,	1.00753976666667,	0.0666934366666667]
+h=plt.hist(v_x*-1, bins= 23 , color='darkblue', alpha = 0.6, density =True)
 
 xplot = np.linspace(min(x), max(x), 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
 plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
-         + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
+          + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
 plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
@@ -446,4 +468,23 @@ step=np.arange(0.5,2.2,0.1)
 print(step)
 list_bin=np.arange(-15,15,step[5])
 print(list_bin)
+#%%
+fig,ax=plt.subplots(1,1)
+sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)
+v_x=v_x[sig_h.mask==False]
+h=ax.hist(v_x,bins='auto',edgecolor='black',linewidth=2,density=True)
+x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
+ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
+ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f bins=%s'
+              %(chip,len(v_x),np.mean(v_x),np.std(v_x),len(h[0]))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+
+
+
+
+
+
+
+
+
+
 

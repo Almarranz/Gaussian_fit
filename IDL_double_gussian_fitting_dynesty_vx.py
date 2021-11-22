@@ -55,11 +55,16 @@ plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
-step=np.arange(1.25,2,0.25)
-print(step)
-list_bin=np.arange(-15,15+step[0],step[0])
-print(list_bin)
-media_amp=[]
+# step=np.arange(1.25,2,0.25)
+# print(step)
+# list_bin=np.arange(-15,15+step[0],step[0])
+# print(list_bin)
+# media_amp=[]
+auto='auto'
+if auto =='auto':
+    step=np.arange(0,1,1)#also works if running each bing width one by one, for some reason...
+else:
+    step=np.arange(2.0,2.1,0.1)#also works if running each bing width one by one, for some reason...
 #%%
 
 # In[5]:
@@ -69,19 +74,25 @@ media_amp=[]
 #chip='both'
 ran=0
 for sloop in range(len(step)):
-    sm=0.25
+    sm=0.5
     chip='both'
-    list_bin=np.arange(-15,15+step[sloop],step[sloop])
+    
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
-    nbins=len(list_bin)
+    
     # nbins=9
+    if auto != 'auto':
+       list_bin=np.arange(-15,15,step[sloop])
+       auto=list_bin
+       print(list_bin)
+       nbins=len(list_bin)-1
+       print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
     accu=2# select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
             # v_x2,v_y2,dvx2,dvy2,mh2,m2=np.loadtxt(data+'IDL_arcsec_vx_vy_chip2.txt',unpack=True)
             # v_x3,v_y3,dvx3,dvy3,mh3,m3=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3.txt',unpack=True)
-            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'UP_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
 
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
@@ -136,14 +147,18 @@ for sloop in range(len(step)):
     fig,ax=plt.subplots(1,1)
     sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
     v_x=v_x[sig_h.mask==False]
-    h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
+    h=ax.hist(v_x,bins=auto,edgecolor='black',linewidth=2,density=True)
+    h1=np.histogram(v_x,bins=auto,density=False)
+    print(35*'-'+'\n'+'The width of the bin is: %.3f'%(h[1][3]-h[1][2])+'\n'+35*'-')
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
     ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
                   %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
-    #yerr = y*0.05
-    #yerr = y*0.01
+    # for yi in range(len(y)):
+    #     if y[yi]==0:
+    #         y[yi]+=0.00001
+    #     yerr = np.sqrt(h1[0][yi])/(len(v_x)*((h1[1][3]-h1[1][2])))
     yerr=0.0001
     y += yerr
     ax.scatter(x,y,color='g',zorder=3)
@@ -196,7 +211,7 @@ for sloop in range(len(step)):
         umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
     
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-        mu1 = 8*umu1-4   # scale and shift to [-3., 3.)
+        mu1 = -4*umu1   # scale and shift to [-3., 3.)
         sigma1 = 3*(usigma1)
         amp1 = uamp1*1
         
@@ -290,7 +305,7 @@ for sloop in range(len(step)):
     fig, ax = plt.subplots(figsize=(8,8))
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     
-    h=plt.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_x*-1, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
@@ -305,10 +320,10 @@ for sloop in range(len(step)):
     # plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='k')
     # plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='k')
     # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
-    # plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # if accu<10:
     #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    # plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
+    plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(len(h[0])),color='b')
     # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
     # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
     # if (chip==2 or chip==3) and in_brick==1:
@@ -333,14 +348,14 @@ for sloop in range(len(step)):
     # fun3= lambda x: (mean[8] * (1 / (mean[7] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[6], 2.) / (2 * np.power(mean[7], 2.))) )
     # # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
     # gau3=integrate.quad(fun3,-15,15)
-    media_amp.append(gau1[0])
-    print(gau1[0],gau2[0])
-    # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
-    print(30*'&')
-    print('Area under Gaus1:%.3f'%(gau1[0]))
-    print('Area under Gaus2:%.3f'%(gau2[0]))
-    print('Total area = %.3f'%(gau1[0]+gau2[0]))
-    print(30*'&')
+    # media_amp.append(gau1[0])
+    # print(gau1[0],gau2[0])
+    # # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
+    # print(30*'&')
+    # print('Area under Gaus1:%.3f'%(gau1[0]))
+    # print('Area under Gaus2:%.3f'%(gau2[0]))
+    # print('Total area = %.3f'%(gau1[0]+gau2[0]))
+    # print(30*'&')
     
     if sloop==0:
         with open (pruebas+'brick_vx_gauss_var.txt', 'w') as f:
