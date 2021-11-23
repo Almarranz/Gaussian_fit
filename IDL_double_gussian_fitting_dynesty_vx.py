@@ -60,20 +60,20 @@ rcParams.update({
 
 from matplotlib import rc
 # In[5]:
-ran=0
-
-step=np.arange(1.7,2.20,0.10)
+auto='auto'
+if auto =='auto':
+    step=np.arange(1.5,2.5,0.5)#
+else:
+    step=np.arange(0.5,0.7,0.1)#also works if running each bing width one by one, for some reason...
 print(step)
-# print(np.arange(-15,15+step,step))
 media_amp=[]
 zone='Z1'
-
 
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)):
     
-    list_bin=np.arange(-15,15+step[sloop],step[sloop])
+    
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
     show_field='no'
@@ -85,9 +85,8 @@ for sloop in range(len(step)):
 
 
     # nbins=25+sloop
-    nbins=len(list_bin)
-    print('number of bins=%s'%(nbins))
-    accu=1.5
+    
+    accu=2
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
     flds=[16]#I feel that field 10 make things worse for some reason
@@ -168,15 +167,26 @@ for sloop in range(len(step)):
     sig_h=sigma_clip(v_x,sigma=60,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
     # h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
-    h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
+    # h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
+    if auto != 'auto':
+        list_bin=np.arange(min(v_x),max(v_x),step[sloop])
+        auto=list_bin
+        print(list_bin)
+        nbins=len(list_bin)-1
+        print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
+    h=ax.hist(v_x,bins=auto,edgecolor='black',linewidth=2,density=True)
+    h1=np.histogram(v_x,bins=auto,density=False)
+    print(35*'-'+'\n'+'The width of the bin is: %.3f'%(h[1][3]-h[1][2])+'\n'+35*'-')
 
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
     ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
                   %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
-    #yerr = y*0.05
-    #yerr = y*0.01
+    # for yi in range(len(y)):
+    #     if y[yi]==0:
+    #         y[yi]+=0.00001
+    #     yerr = np.sqrt(h1[0][yi])/(len(v_y)*((h1[1][3]-h1[1][2])))
     yerr=0.0001
     y += yerr
     ax.scatter(x,y,color='g',zorder=3)
@@ -358,7 +368,7 @@ for sloop in range(len(step)):
     print(results['logz'][-1])
     
     # h=plt.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-    h=plt.hist(v_x*-1, bins= list_bin, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_x*-1, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
     xplot = np.linspace(min(x), max(x), 100)
     
@@ -382,10 +392,10 @@ for sloop in range(len(step)):
     # plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
     # plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
     
-    # plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.01,'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # # if accu<10:
     # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    # plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(nbins),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.020,'$nbins=%s$'%(len(h[0])),color='b')
     # plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
     # if show_field=='yes':
     #     if chip=='both':
