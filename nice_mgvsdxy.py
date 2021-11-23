@@ -124,7 +124,8 @@ for i in range(len(ejes)):
     ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=40)
     ax[i].legend(['%s'%(zones[i])],fontsize=40,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 
-
+#%%
+print(len(x_in[0]))
 
 
 

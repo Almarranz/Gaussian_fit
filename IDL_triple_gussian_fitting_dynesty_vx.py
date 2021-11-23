@@ -59,20 +59,19 @@ rcParams.update({
     "font.sans-serif": ["Palatino"]})
 
 from matplotlib import rc
-
 # In[5]:
-ran=0
-# step=np.arange(2,2.50,0.10)
-step=np.arange(1.7,2.20,0.10)
+auto='auto'
+if auto =='auto':
+    step=np.arange(1.5,2.5,0.5)#
+else:
+    step=np.arange(0.5,0.7,0.1)#also works if running each bing width one by one, for some reason...
 print(step)
-# print(np.arange(-15,15+step,step))
 media_amp=[]
 zone='Z1'
-
 #%%
 # for sloop in range(ran,ran+1):
-for sloop in range(len(step)):
-    list_bin=np.arange(-15,15+step[sloop],step[sloop])
+for sloop in range(len(step)-1):
+    
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
     show_field='no'
@@ -84,9 +83,7 @@ for sloop in range(len(step)):
 
 
     # nbins=25+sloop
-    nbins=len(list_bin)
-    print('number of bins=%s'%(nbins))
-    accu=1.5
+    accu=2
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
     flds=[16]#I feel that field 10 make things worse for some reason
@@ -133,7 +130,7 @@ for sloop in range(len(step)):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058__IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,field,chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,field,chip),unpack=True)
     print(len(v_x))
     mh_all=mh
     m_all=m
@@ -168,19 +165,28 @@ for sloop in range(len(step)):
     sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
     # h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
-    h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
-
+    if auto != 'auto':
+        list_bin=np.arange(min(v_x),max(v_x),step[sloop])
+        auto=list_bin
+        print(list_bin)
+        nbins=len(list_bin)-1
+        print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
+    h=ax.hist(v_x,bins=auto,edgecolor='black',linewidth=2,density=True)
+    h1=np.histogram(v_x,bins=auto,density=False)
+    print(35*'-'+'\n'+'The width of the bin is: %.3f'%(h[1][3]-h[1][2])+'\n'+35*'-')
+    
     x=[h[1][i]+(h[1][1]-h[1][0])/2 for i in range(len(h[0]))]#middle value for each bin
     ax.axvline(np.mean(v_x), color='r', linestyle='dashed', linewidth=3)
     ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
                   %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
-    #yerr = y*0.05
-    #yerr = y*0.01
+    # for yi in range(len(y)):
+    #     if y[yi]==0:
+    #         y[yi]+=0.00001
+    #     yerr = np.sqrt(h1[0][yi])/(len(v_y)*((h1[1][3]-h1[1][2])))
     yerr=0.0001
     y += yerr
     ax.scatter(x,y,color='g',zorder=3)
-    
     
     # In[6]:
     count=0
@@ -247,8 +253,8 @@ for sloop in range(len(step)):
         # mu2 = 0.0+((umu2*0.06)-0.03)
         mu2=2*umu2-2/2
         # sigma2 =3.6*usigma2
-        sigma2=3.6+ (usigma2*0.8-0.8/2)
-        amp2 = uamp2  *0.58                                               
+        sigma2=3.37+ (usigma2*1-1/2)
+        amp2 = uamp2  *1                                             
         # amp2=0.35 +(uamp2*0.2-0.2/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
@@ -309,9 +315,9 @@ for sloop in range(len(step)):
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     #Thsi is the corner plot
     
-    # fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
-    #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
-    #                               fig=plt.subplots(9, 9, figsize=(28, 28)))
+    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+                                  title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
+                                  fig=plt.subplots(9, 9, figsize=(28, 28)))
     
     
     plt.show() 
@@ -355,14 +361,14 @@ for sloop in range(len(step)):
     plt.rcParams["font.family"] = "serif"
     plt.rcParams["mathtext.fontset"] = 'dejavuserif'
     plt.rcParams['text.usetex'] = False
-    from matplotlib import rc
+   
     rc('font',**{'family':'serif','serif':['Palatino']})
     
     results = sampler.results
     print(results['logz'][-1])
     
     # h=plt.hist(v_x*-1, bins= nbins, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-    h=plt.hist(v_x*-1, bins= list_bin, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_x*-1, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
     xplot = np.linspace(min(x), max(x), 100)
     
@@ -390,7 +396,7 @@ for sloop in range(len(step)):
     plt.text(max(x)/2,max(h[0]/2)-0.01,'logz=%.0f'%(results['logz'][-1]),color='b')
     # # if accu<10:
     # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    plt.text(max(x)/2,max(h[0]/2)-0.020,'nbins=%s'%(nbins),color='b')
+    plt.text(max(x)/2,max(h[0]/2)-0.020,'nbins=%s'%(len(h[0])),color='b')
     # plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
     # if show_field=='yes':
     #     if chip=='both':
@@ -404,75 +410,76 @@ for sloop in range(len(step)):
     plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
     
     #%%
-    gau1,gau2,gau3=[],[],[]
-    fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
-    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
-    gau1=integrate.quad(fun1,-15,15)
+    # gau1,gau2,gau3=[],[],[]
+    # fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
+    # # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    # gau1=integrate.quad(fun1,-15,15)
     
-    fun2= lambda x: (mean[5] * (1 / (mean[4] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[3], 2.) / (2 * np.power(mean[4], 2.))) )
-    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
-    gau2=integrate.quad(fun2,-15,15)
+    # fun2= lambda x: (mean[5] * (1 / (mean[4] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[3], 2.) / (2 * np.power(mean[4], 2.))) )
+    # # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    # gau2=integrate.quad(fun2,-15,15)
     
-    fun3= lambda x: (mean[8] * (1 / (mean[7] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[6], 2.) / (2 * np.power(mean[7], 2.))) )
-    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
-    gau3=integrate.quad(fun3,-15,15)
-    print(gau1[0],gau2[0],gau3[0])
-    media_amp.append(gau2[0])
-    # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
-    print(30*'&')
-    print('Area under Gaus1:%.3f'%(gau1[0]))
-    print('Area under Gaus2:%.3f'%(gau2[0]))
-    print('Area under Gaus3:%.3f'%(gau3[0]))
-    print('Total area = %.3f'%(gau1[0]+gau2[0]+gau3[0]))
-    print(30*'&')
+    # fun3= lambda x: (mean[8] * (1 / (mean[7] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[6], 2.) / (2 * np.power(mean[7], 2.))) )
+    # # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+    # gau3=integrate.quad(fun3,-15,15)
+    # print(gau1[0],gau2[0],gau3[0])
+    # media_amp.append(gau2[0])
+    # # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
+    # print(30*'&')
+    # print('Area under Gaus1:%.3f'%(gau1[0]))
+    # print('Area under Gaus2:%.3f'%(gau2[0]))
+    # print('Area under Gaus3:%.3f'%(gau3[0]))
+    # print('Total area = %.3f'%(gau1[0]+gau2[0]+gau3[0]))
+    # print(30*'&')
 
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 #%%
-#for file in range(1,4):
-    if sloop==0:
-        with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'w') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
-    else:
-        with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'a') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
+# #for file in range(1,4):
+#     if sloop==0:
+#         with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'w') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
+#     else:
+#         with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'a') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
 
 
 #%%
-pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
+# pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
-media=np.loadtxt(pruebas+'%s_vx_gauss_var.txt'%(zone))#,delimiter=',')
-va=['mu1','sigma1','amp1','mu2','sigma2','amp2','mu3','sigma3','amp3']
-print('Media amp broad = %.3f'%np.average(media_amp))
-for i in range(len(va)):
-    print('%s = %.4f '%(va[i],np.average(media[:,i])))
-    print('-'*20)
-for i in range(len(va)):
-    print('+'*20)
-    print('d%s = %.4f'%(va[i],np.std(media[:,i])))
-#%%
-for i in range(len(va)):
-    print('+'*20)
-    print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
+# media=np.loadtxt(pruebas+'%s_vx_gauss_var.txt'%(zone))#,delimiter=',')
+# va=['mu1','sigma1','amp1','mu2','sigma2','amp2','mu3','sigma3','amp3']
+# print('Media amp broad = %.3f'%np.average(media_amp))
+# for i in range(len(va)):
+#     print('%s = %.4f '%(va[i],np.average(media[:,i])))
+#     print('-'*20)
+# for i in range(len(va)):
+#     print('+'*20)
+#     print('d%s = %.4f'%(va[i],np.std(media[:,i])))
+# #%%
+# for i in range(len(va)):
+#     print('+'*20)
+#     print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
 
 # In[ ]:
+#This plot the mean gaussian, put values of the gaussian in mean[]
 plt.figure(figsize =(8,8))
-mean=[-1.46	,  1.78,	0.35,	-0.29,	3.58,	0.42,	2.83,	1.78,	0.23]
-h=plt.hist(v_x*-1, bins= 19, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+mean=[-1.61451044333333,	1.80582627,	0.364061513333333,	-0.17527995,	3.72998235,	0.411194643333333,	2.81206634,	1.59523092666667,	0.22914364]
+h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(min(x), max(x), 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
 plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
-         + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
+          + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
 plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
 plt.xlim(-15,15)
 plt.gca().invert_xaxis()
- 
+  
 plt.ylabel('N')
-plt.legend(['Zone B [%s]'%(zone)],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
 
