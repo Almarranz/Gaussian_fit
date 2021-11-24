@@ -64,7 +64,7 @@ auto='auto'
 if auto =='auto':
     step=np.arange(1.5,2.5,0.5)#
 else:
-    step=np.arange(0.5,0.7,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(1,1.1,0.1)#also works if running each bing width one by one, for some reason...
 print(step)
 media_amp=[]
 zone='Z1'
@@ -180,10 +180,20 @@ for sloop in range(len(step)-1):
     ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
                   %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
-    # for yi in range(len(y)):
-    #     if y[yi]==0:
-    #         y[yi]+=0.00001
-    #     yerr = np.sqrt(h1[0][yi])/(len(v_y)*((h1[1][3]-h1[1][2])))
+   # Two different way of adding yerr of the bins
+# =============================================================================
+#     y1=h1[0]
+#     yerr=[]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
+# =============================================================================
+# =============================================================================
+#     yerr=[]
+#     y=np.where(y==0,0.001,y)
+#     y1=h1[0]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = y*np.sqrt(1/y1+1/len(v_x))
+# =============================================================================
     yerr=0.0001
     y += yerr
     ax.scatter(x,y,color='g',zorder=3)
@@ -254,7 +264,7 @@ for sloop in range(len(step)-1):
         mu2=2*umu2-2/2
         # sigma2 =3.6*usigma2
         sigma2=3.37+ (usigma2*1-1/2)
-        amp2 = uamp2  *1                                             
+        amp2 = uamp2  *  1                                       
         # amp2=0.35 +(uamp2*0.2-0.2/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
@@ -466,7 +476,7 @@ plt.figure(figsize =(8,8))
 mean=[-1.61451044333333,	1.80582627,	0.364061513333333,	-0.17527995,	3.72998235,	0.411194643333333,	2.81206634,	1.59523092666667,	0.22914364]
 h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
-xplot = np.linspace(min(x), max(x), 100)
+xplot = np.linspace(-12, max(x), 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
