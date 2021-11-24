@@ -476,7 +476,7 @@ plt.gca().invert_xaxis()
 plt.ylabel('N')
 plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
     
  
 #%%
@@ -489,24 +489,24 @@ plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')
 #%%
 
 #%%
-y1=h1[0]
-yerr=[]
-y1=np.where(y1==0,0.001,y1)
-yerr = [np.sqrt(y1[yi])/(len(v_y)*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
-#%%
-print(y1)
-err=np.sqrt(y1)
-print(err)
-#%%
-hi2=np.histogram(err,bins=auto,density=True)
-print('#########################')
-print(hi2[0])
-print('#########################')
-print(yerr)
+# y1=h1[0]
+# yerr=[]
+# y1=np.where(y1==0,0.001,y1)
+# yerr = [np.sqrt(y1[yi])/(len(v_y)*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
+# #%%
+# print(y1)
+# err=np.sqrt(y1)
+# print(err)
+# #%%
+# hi2=np.histogram(err,bins=auto,density=True)
+# print('#########################')
+# print(hi2[0])
+# print('#########################')
+# print(yerr)
     
-#%%
-print(len(hi2[0]),len(yerr))
-print(hi2[0][10]) 
-print(yerr[10])     
+# #%%
+# print(len(hi2[0]),len(yerr))
+# print(hi2[0][10]) 
+# print(yerr[10])     
  
     

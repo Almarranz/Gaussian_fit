@@ -168,6 +168,13 @@ for sloop in range(len(step)-1):
 #     y1=np.where(y1==0,0.001,y1)
 #     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
 # =============================================================================
+# =============================================================================
+#     yerr=[]
+#     y=np.where(y==0,0.001,y)
+#     y1=h1[0]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = y*np.sqrt(1/y1+1/len(v_x))
+# =============================================================================
     yerr=[]
     y=np.where(y==0,0.0001,y)
     y1=h1[0]
@@ -457,28 +464,26 @@ for sloop in range(len(step)-1):
 # plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
 # =============================================================================
 # In[ ]:
-# =============================================================================
-# plt.figure(figsize =(8,8))
-# mean=[-1.78355686666667,	1.38129791333333,	0.284651633333333,	0.310827676666667,	3.61326179,	0.641946646666667,	2.34543842666667,	1.00753976666667,	0.0666934366666667]
-# h=plt.hist(v_x*-1, bins= 20 , color='darkblue', alpha = 0.6, density =True)
-# 
-# xplot = np.linspace(min(x), max(x), 100)
-# 
-# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
-# 
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
-#           + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.xlim(-15,15)
-# plt.gca().invert_xaxis()
-#  
-# plt.ylabel('N')
-# plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
-# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')     
-# =============================================================================
+plt.figure(figsize =(8,8))
+mean=[-1.78355686666667,	1.38129791333333,	0.284651633333333,	0.310827676666667,	3.61326179,	0.641946646666667,	2.34543842666667,	1.00753976666667,	0.0666934366666667]
+h=plt.hist(v_x*-1, bins= 20 , color='darkblue', alpha = 0.6, density =True)
+
+xplot = np.linspace(min(x), 13, 100)
+
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
+          + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
+plt.xlim(-15,15)
+plt.gca().invert_xaxis()
+ 
+plt.ylabel('N')
+plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')     
 # In[ ]:
 
 #%%
