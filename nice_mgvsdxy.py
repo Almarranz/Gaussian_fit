@@ -129,7 +129,7 @@ print(len(x_in[0]))
 #%%
 brick='/Users/amartinez/Desktop/PhD/My_papers/brick/'
 im1 = plt.imread(brick+'1_vy_in.png')
-im2 = plt.imread(brick+'1_vy_in.png')
+im2 = plt.imread(brick+'2_vx_in.png')
 im3 = plt.imread(brick+'3_vy_out.png')
 im4 = plt.imread(brick+'4_vx_out.png')
 ims=[[im1,im2],[im3,im4]]
