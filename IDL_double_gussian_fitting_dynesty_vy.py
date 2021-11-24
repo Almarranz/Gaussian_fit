@@ -59,7 +59,7 @@ auto='auto'
 if auto =='auto':
     step=np.arange(0,2,1)#
 else:
-    step=np.arange(1,1.1,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(1.5,1.6,0.1)#also works if running each bing width one by one, for some reason...
 
 media_amp=[]
 print(step)
@@ -170,10 +170,19 @@ for sloop in range(len(step)-1):
     ax.legend(['Chip=%s, %s, mean= %.4f, std=%.2f'
                   %(chip,len(v_y),np.mean(v_y),np.std(v_y))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
-    # for yi in range(len(y)):
-    #     if y[yi]==0:
-    #         y[yi]+=0.00001
-    #     yerr = np.sqrt(h1[0][yi])/(len(v_y)*((h1[1][3]-h1[1][2])))
+# =============================================================================
+#     y1=h1[0]
+#     yerr=[]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = [np.sqrt(y1[yi])/(len(v_y)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
+# =============================================================================
+# =============================================================================
+#     yerr=[]
+#     y=np.where(y==0,0.001,y)
+#     y1=h1[0]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = y*np.sqrt(1/y1+1/len(v_y))
+# =============================================================================
     yerr=0.0001
     y += yerr
     ax.scatter(x,y,color='g',zorder=3)
@@ -392,31 +401,33 @@ for sloop in range(len(step)-1):
     # # #%%
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
     
-    if sloop==0:
-        with open (pruebas+'brick_vy_gauss_var.txt', 'w') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-    else:
-        with open (pruebas+'brick_vy_gauss_var.txt', 'a') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-    fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
-    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
-    gau1=integrate.quad(fun1,-15,15)
-    
-    fun2= lambda x: (mean[5] * (1 / (mean[4] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[3], 2.) / (2 * np.power(mean[4], 2.))) )
-    # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
-    gau2=integrate.quad(fun2,-15,15)
-    
-    # fun3= lambda x: (mean[8] * (1 / (mean[7] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[6], 2.) / (2 * np.power(mean[7], 2.))) )
-    # # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
-    # gau3=integrate.quad(fun3,-15,15)
-    media_amp.append(gau1[0])
-    print(gau1[0],gau2[0])
-    # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
-    print(30*'&')
-    print('Area under Gaus1:%.3f'%(gau1[0]))
-    print('Area under Gaus2:%.3f'%(gau2[0]))
-    print('Total area = %.3f'%(gau1[0]+gau2[0]))
-    print(30*'&')
+# =============================================================================
+#     if sloop==0:
+#         with open (pruebas+'brick_vy_gauss_var.txt', 'w') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
+#     else:
+#         with open (pruebas+'brick_vy_gauss_var.txt', 'a') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
+#     fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
+#     # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+#     gau1=integrate.quad(fun1,-15,15)
+#     
+#     fun2= lambda x: (mean[5] * (1 / (mean[4] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[3], 2.) / (2 * np.power(mean[4], 2.))) )
+#     # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+#     gau2=integrate.quad(fun2,-15,15)
+#     
+#     # fun3= lambda x: (mean[8] * (1 / (mean[7] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[6], 2.) / (2 * np.power(mean[7], 2.))) )
+#     # # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
+#     # gau3=integrate.quad(fun3,-15,15)
+#     media_amp.append(gau1[0])
+#     print(gau1[0],gau2[0])
+#     # print(30*'&'+'\n'+'Area under Gaus1:%s'%(gau1[0])+'\n'+'Area under Gaus2:%s'(gau2[0])+'\n'+30*'&',)
+#     print(30*'&')
+#     print('Area under Gaus1:%.3f'%(gau1[0]))
+#     print('Area under Gaus2:%.3f'%(gau2[0]))
+#     print('Total area = %.3f'%(gau1[0]+gau2[0]))
+#     print(30*'&')
+# =============================================================================
 #%%
 
 # pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
@@ -445,46 +456,57 @@ list_bin=np.arange(-15,15,step[0])
 print(list_bin)
     
 #%%
-# plt.figure(figsize =(8,8))
-# fig, ax = plt.subplots(figsize=(8,8))
-# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-# list_bin=np.arange(-15,15,step[6])
-# mean=[-0.0294,	3.22548,	0.62812,	-0.00736,	1.33476,	0.37616]
-# h=plt.hist(v_y*-1, bins= list_bin , color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+#This plot the mean gaussian, put values of the gaussian in mean[]
+fig, ax = plt.subplots(figsize=(8,8))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+mean=[-0.0112947266666667,	1.52403177,	0.503273866666667,	-0.00513169666666667,	3.58441010666667,	0.496824623333333]
+h=plt.hist(v_y*-1, bins= 30, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
-# xplot = np.linspace(min(x), max(x), 100)
+xplot = np.linspace(min(x), max(x), 100)
 
-# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.xlim(-15,15)
-# plt.gca().invert_xaxis()
- 
-# plt.ylabel('N')
-# plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
-# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')   
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.xlim(-15,15)
+plt.gca().invert_xaxis()
+  
+plt.ylabel('N')
+plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
     
  
 #%%
 # h1=np.histogram(v_y,bins=list_bin,density=False)
 
-print(h1[1][3]-h1[1][2])
-print(h1)
+# print(h1[1][3]-h1[1][2])
+# print(h1)
  
     
 #%%
-step=np.arange(0.9,1,0.1)
-print(len(step))
-list_bin=np.arange(-15,15,step[0])    
-print(list_bin)
- 
+
+#%%
+y1=h1[0]
+yerr=[]
+y1=np.where(y1==0,0.001,y1)
+yerr = [np.sqrt(y1[yi])/(len(v_y)*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
+#%%
+print(y1)
+err=np.sqrt(y1)
+print(err)
+#%%
+hi2=np.histogram(err,bins=auto,density=True)
+print('#########################')
+print(hi2[0])
+print('#########################')
+print(yerr)
     
- 
-    
- 
-    
+#%%
+print(len(hi2[0]),len(yerr))
+print(hi2[0][10]) 
+print(yerr[10])     
  
     
