@@ -126,6 +126,34 @@ for i in range(len(ejes)):
 
 #%%
 print(len(x_in[0]))
+#%%
+brick='/Users/amartinez/Desktop/PhD/My_papers/brick/'
+im1 = plt.imread(brick+'1_vy_in.png')
+im2 = plt.imread(brick+'1_vy_in.png')
+im3 = plt.imread(brick+'3_vy_out.png')
+im4 = plt.imread(brick+'4_vx_out.png')
+ims=[[im1,im2],[im3,im4]]
+fig, ax = plt.subplots(2,2,figsize=(40,40))
+for i in range(2):
+    for j in range(2):
+        ax[i,j].imshow(ims[i][j])
+        ax[i,j].axis('off')
+plt.subplots_adjust(wspace=-0.005, hspace=0)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 
