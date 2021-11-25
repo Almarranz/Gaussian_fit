@@ -60,11 +60,11 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 # list_bin=np.arange(-15,15+step[0],step[0])
 # print(list_bin)
 # media_amp=[]
-auto='auto'
+auto='no'
 if auto =='auto':
     step=np.arange(0,1,1)#also works if running each bing width one by one, for some reason...
 else:
-    step=np.arange(2.0,2.1,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(1.2,1.3,0.1)#also works if running each bing width one by one, for some reason...
 #%%
 
 # In[5]:
@@ -219,8 +219,8 @@ for sloop in range(len(step)):
         #mu2 = -0.16 + (0.16*umu2-0.08)  
         mu2 = 6*umu2-3  
 
-        # sigma2 = 3.60 +  (0.26*usigma2-0.13)
-        sigma2=usigma2*4
+        sigma2 = 3.60 +  (0.26*usigma2-0.13)
+        # sigma2=usigma2*4
         # amp2 = 0.42 + (0.08*uamp2-0.04)
         # amp2 = 0.59 + (0.08*uamp2-0.04)
         amp2 = uamp2*1
@@ -357,29 +357,53 @@ for sloop in range(len(step)):
     # print('Total area = %.3f'%(gau1[0]+gau2[0]))
     # print(30*'&')
     
-    if sloop==0:
-        with open (pruebas+'brick_vx_gauss_var.txt', 'w') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-    else:
-        with open (pruebas+'brick_vx_gauss_var.txt', 'a') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
+# =============================================================================
+#     if sloop==0:
+#         with open (pruebas+'brick_vx_gauss_var.txt', 'w') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
+#     else:
+#         with open (pruebas+'brick_vx_gauss_var.txt', 'a') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
+# =============================================================================
     
 #%%
-pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
-
-media=np.loadtxt(pruebas+'brick_vx_gauss_var.txt')#,delimiter=',')
-va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
-print('Media area broad = %.3f'%np.average(media_amp))
-for i in range(len(va)):
-    print('%s = %.4f '%(va[i],np.average(media[:,i])))
-    print('-'*20)
-for i in range(len(va)):
-    print('+'*20)
-    print('d%s = %.4f'%(va[i],np.std(media[:,i])))
+# =============================================================================
+# pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
+# 
+# media=np.loadtxt(pruebas+'brick_vx_gauss_var.txt')#,delimiter=',')
+# va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
+# print('Media area broad = %.3f'%np.average(media_amp))
+# for i in range(len(va)):
+#     print('%s = %.4f '%(va[i],np.average(media[:,i])))
+#     print('-'*20)
+# for i in range(len(va)):
+#     print('+'*20)
+#     print('d%s = %.4f'%(va[i],np.std(media[:,i])))
+# =============================================================================
 #%%
 # for i in range(len(va)):
 #     print('+'*20)
 #     print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
     
- 
+fig, ax = plt.subplots(figsize=(8,8))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
+h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
+xplot = np.linspace(min(x), max(x), 100)
+
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.xlim(-15,15)
+plt.ylim(-0,0.15)
+plt.gca().invert_xaxis()
+  
+plt.ylabel('N')
+plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
 

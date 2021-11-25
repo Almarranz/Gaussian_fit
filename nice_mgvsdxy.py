@@ -92,7 +92,7 @@ ax.set_xlim(12,19)
 plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 
 #%%
-
+rcParams.update({'font.size': 30})
 x_in=np.loadtxt(pruebas+'dvx_mag_IN.txt')#header='mh_all,dvx_all')
 no_x_in=np.loadtxt(pruebas+'NO_dvx_mag_IN.txt')#header='mh_all,dvx_all')
 
@@ -113,14 +113,14 @@ fig, ax=plt.subplots(1,2,figsize=(20,10))
 for i in range(len(ejes)):
     ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
     # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
-    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=10)
+    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=1,s=30)
     ax[i].axhline(accu[i], color='r', linestyle='dashed', linewidth=3)
     # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
     ax[i].set_xlim(12,19)
     ax[i].set_ylim(0,8)
-    ax[i].set_xlabel('[H]',fontsize=20)
-    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=20)
-    ax[i].legend(['%s'%(zones[i])],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+    ax[i].set_xlabel('[H]',fontsize=40)
+    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas\ a^{-1})}$',fontsize=30)
+    ax[i].legend(['%s'%(zones[i])],fontsize=30,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 
 
 

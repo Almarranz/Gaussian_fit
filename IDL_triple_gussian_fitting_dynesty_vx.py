@@ -179,9 +179,9 @@ for sloop in range(len(step)-1):
     y=np.where(y==0,0.0001,y)
     y1=h1[0]
     y1=np.where(y1==0,0.001,y1)
-    yerr = y*np.sqrt(1/y1+1/len(v_x))*0.1
-    # yerr=0.0001
-    # y += yerr
+    # yerr = y*np.sqrt(1/y1+1/len(v_x))
+    yerr=0.0001
+    y += yerr
     # ax.scatter(x,y,color='g',zorder=3)
    
     
@@ -478,6 +478,8 @@ plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow",
 plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
 plt.xlim(-15,15)
+plt.ylim(0,0.15)
+
 plt.gca().invert_xaxis()
  
 plt.ylabel('N')
