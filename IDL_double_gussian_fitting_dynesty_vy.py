@@ -474,11 +474,13 @@ for i in range(len(va)):
 #%%
 
 #This plot the mean gaussian, put values of the gaussian in mean[]
-plt.figure(figsize =(8,8))
+fig, ax = plt.subplots(figsize=(8,8))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+
 mean=[0.23411959,	3.08824046666667,	0.57060933,	-0.08345804,	1.1865944,	0.427011126666667]
 # mean=[0.03,	3.37,	0.55,	0.00,	1.40,	0.46]
 
-h=plt.hist(v_y*-1, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+h=plt.hist(v_y*-1, bins= 30, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(-13, 11                                 , 100)
 
@@ -489,6 +491,8 @@ plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-
 plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
 plt.xlim(-15,15)
+plt.ylim(-0,0.22)
+
 plt.gca().invert_xaxis()
   
 plt.ylabel('N')

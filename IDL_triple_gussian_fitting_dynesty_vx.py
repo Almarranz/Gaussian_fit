@@ -64,7 +64,7 @@ auto='auto'
 if auto =='auto':
     step=np.arange(1.5,2.5,0.5)#
 else:
-    step=np.arange(1,1.1,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(1.3,2.0,0.1)#also works if running each bing width one by one, for some reason...
 print(step)
 media_amp=[]
 zone='Z1'
@@ -187,16 +187,18 @@ for sloop in range(len(step)-1):
 #     y1=np.where(y1==0,0.001,y1)
 #     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
 # =============================================================================
+    yerr=[]
+    y=np.where(y==0,0.001,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.001,y1)
+    # yerr = y*np.sqrt(1/y1+1/len(v_x))*0.5
+    yerr = y*np.sqrt(1/y1)*0.5
+
 # =============================================================================
-#     yerr=[]
-#     y=np.where(y==0,0.001,y)
-#     y1=h1[0]
-#     y1=np.where(y1==0,0.001,y1)
-#     yerr = y*np.sqrt(1/y1+1/len(v_x))
+#     yerr=0.0001
+#     y += yerr
+#     ax.scatter(x,y,color='g',zorder=3)
 # =============================================================================
-    yerr=0.0001
-    y += yerr
-    ax.scatter(x,y,color='g',zorder=3)
     
     # In[6]:
     count=0
@@ -263,7 +265,7 @@ for sloop in range(len(step)-1):
         # mu2 = 0.0+((umu2*0.06)-0.03)
         mu2=2*umu2-2/2
         # sigma2 =3.6*usigma2
-        sigma2=3.37+ (usigma2*1-1/2)
+        sigma2=3.5+ (usigma2*1-1/2)
         amp2 = uamp2  *  1                                       
         # amp2=0.35 +(uamp2*0.2-0.2/2)
         
@@ -472,24 +474,27 @@ for sloop in range(len(step)-1):
 
 # In[ ]:
 #This plot the mean gaussian, put values of the gaussian in mean[]
-plt.figure(figsize =(8,8))
-mean=[-1.61451044333333,	1.80582627,	0.364061513333333,	-0.17527995,	3.72998235,	0.411194643333333,	2.81206634,	1.59523092666667,	0.22914364]
-h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-
-xplot = np.linspace(-12, max(x), 100)
-
-# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
-
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
-          + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
-plt.xlim(-15,15)
-plt.gca().invert_xaxis()
-  
-plt.ylabel('N')
-plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
-# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+# =============================================================================
+# plt.figure(figsize =(8,8))
+# mean=[-1.61451044333333,	1.80582627,	0.364061513333333,	-0.17527995,	3.72998235,	0.411194643333333,	2.81206634,	1.59523092666667,	0.22914364]
+# h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+# 
+# xplot = np.linspace(-12, max(x), 100)
+# 
+# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
+#           + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
+# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+# plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
+# plt.xlim(-15,15)
+# plt.ylim(0,0.15)
+# plt.gca().invert_xaxis()
+#   
+# plt.ylabel('N')
+# plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+# =============================================================================
 
