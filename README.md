@@ -3,6 +3,22 @@
 
 
 Gaussian fit for proper motion __OUT__ The Brick
+1. vy_OUT_bins_probability.py
+
+n vy, the parametres of the Gaussian should be free, the run must coverge by itself to two Gaussian.
+Parametres to edit are:
+*zone='Z1'. The are out of the brick. Check where it is in Aladin
+* in_brick=0. This __SHOULD__ be 0 in this script. It means you are working out of the Brick area
+* fled=16. Field you want to use
+* chip = 3. Chooses the chips. 
+* sm=0.25. Absolute difference in magnitud with GNS
+* acu=2. Max uncertainty in componet vy and vx velocities.
+* steo ='auto or step=np.arange(1.5,2.25,0.25). The width of the bins
+
+
+
+
+#OLD
 
 1. IDL_double_gussian_fitting_dynesty_vy.py. On vy, the parametres of the Gaussian should be free, the run must coverge by itself to two Gaussian.
 Parametres to edit are:

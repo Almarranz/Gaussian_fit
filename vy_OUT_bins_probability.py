@@ -251,7 +251,7 @@ for sloop in range(len(step)-1):
     # 
     #%%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
     # This is de corner plot
-    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, 
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
     
@@ -312,15 +312,15 @@ for sloop in range(len(step)-1):
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     # h=ax.hist(v_y, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     x=np.array(x)
-    ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.bar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.3,color='blue')
-    xplot = np.linspace(min(x), max(x), 100)
-    
+    # ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
+    ax.bar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.5,color='royalblue')
+    xplot = np.linspace(min(x)-2, max(x)+2, 100)
+    # ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])),color='darkblue',fmt='none',capsize=3,alpha=0.5)
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
     
     plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-    plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+    plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
     
     # plt.axvline(mean[0],linestyle='dashed',color='orange')
     # plt.axvline(mean[3],linestyle='dashed',color='orange')
@@ -331,6 +331,7 @@ for sloop in range(len(step)-1):
     # plt.text(max(x)/2,max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
     plt.xlim(-15,15)
+    plt.ylim(-0,0.24)
     # plt.gca().invert_xaxis()
     # if accu <10:
     #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
@@ -351,7 +352,7 @@ for sloop in range(len(step)-1):
     #         plt.text(max(x)/2,max(h[0]-0.05),'$field%s c%s$'%(field,chip),color='b')
     plt.ylabel('N')
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)')
-    plt.legend(['Zone B (%s)'%(zone)],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+    plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
     plt.rcParams["font.family"] = "serif"
     plt.rcParams["mathtext.fontset"] = 'dejavuserif'
     plt.rcParams['text.usetex'] = False
