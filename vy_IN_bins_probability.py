@@ -72,7 +72,7 @@ for sloop in range(len(step)-1):
     #     print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
 
     # nbins=9
-    accu=1.5
+    accu=2
     sm=0.5
     in_brick=1#slect list in or out brick
     
@@ -141,12 +141,20 @@ for sloop in range(len(step)-1):
                   %(chip,len(v_y),np.mean(v_y),np.std(v_y))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
     w=h[1]
-    pij=np.empty([len(v_y),len(h[0])])
-    for b in range(len(y)):
-        for v in range(len(v_y)):
-            # snd = stats.norm(v_y[v],dvy[v])
-            pij[v,b]=norm(v_y[v],dvy[v]).cdf(w[b+1])-norm(v_y[v],dvy[v]).cdf(w[b])
+# =============================================================================
+#     pij=np.empty([len(v_y),len(h[0])])
+#     for b in range(len(y)):
+#         for v in range(len(v_y)):
+#             # snd = stats.norm(v_y[v],dvy[v])
+#             pij[v,b]=norm(v_y[v],dvy[v]).cdf(w[b+1])-norm(v_y[v],dvy[v]).cdf(w[b])
+#     pij=array(pij)
+#     np.savetxt(pruebas+'vy_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip),pij)
+# =============================================================================
+    pij = np.loadtxt(pruebas+'vy_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip))
     vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
+    
+    
+    
     sj=np.sqrt(vj)   
     sj_n=sj/(len(v_y)*(h[1][1]-h[1][0]))
     yerr=sj_n
@@ -164,8 +172,8 @@ for sloop in range(len(step)-1):
     ax.hist(v_y,bins=auto,edgecolor='black',linewidth=2,density=True,alpha=0.5)
     ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])))
     
-    np.savetxt(pruebas+'vy_in_pij_accu%s_sm%s.txt'%(accu,sm),pij)
-    # pij=np.loadtxt(pruebas+'vx_in_pij_accu%s_sm%s.txt'%(accu,sm))
+    
+   
 #%%
     y= vy_p/(len(v_y)*(h[1][1]-h[1][0]))   
     
@@ -261,7 +269,7 @@ for sloop in range(len(step)-1):
     # 
     # %%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
     # This is de corner plot
-    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, 
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
     
@@ -320,26 +328,28 @@ for sloop in range(len(step)-1):
     a=1#to chnge the axix a=-1
     # h=plt.hist(v_y*a, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     x=np.array(x)
-    ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.bar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.3,color='blue')
-    xplot = np.linspace(min(x), max(x), 100)
+    # ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
+    ax.bar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.5,color='royalblue')
+    xplot = np.linspace(min(x)-2, max(x)+2, 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
     
     plt.plot(xplot, gaussian(xplot*a, mean[0], mean[1], mean[2]) + gaussian(xplot*a, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-    plt.plot(xplot, gaussian(xplot*a, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot*a, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*a, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
+    plt.plot(xplot, gaussian(xplot*a, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+    ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])),color='darkblue',fmt='none',capsize=3,alpha=0.5)
     plt.xlim(-15,15)
+    plt.ylim(0,0.20)
     # plt.axvline(mean[0],linestyle='dashed',color='orange')
     # plt.axvline(mean[3],linestyle='dashed',color='orange')
     # plt.text(min(x),max(h[0]),'$\mu_{1}=%.3f$'%(mean[0]),color='k')
     # plt.text(min(x),max(h[0]-0.01),'$\sigma_{1}=%.3f$'%(mean[1]),color='k')
     # plt.text(min(x),max(h[0]-0.02),'$amp_{1}=%.3f$'%(mean[2]),color='k')
     # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
-    plt.text(min(x),max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
+    # plt.text(min(x),max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # # # if accu <10:
     # # #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    plt.text(min(x),max(h[0]-0.04),'nbins=%s'%(len(h[0])),color='b')
+    # plt.text(min(x),max(h[0]-0.04),'nbins=%s'%(len(h[0])),color='b')
     # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
     # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
     # if (chip==2 or chip==3) and in_brick==1:
@@ -353,3 +363,14 @@ for sloop in range(len(step)-1):
     # # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
     plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$') 
     plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0) 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

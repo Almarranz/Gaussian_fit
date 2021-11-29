@@ -153,16 +153,16 @@ for sloop in range(len(step)-1):
 # %%
     w=h[1]
     pij=np.empty([len(v_x),len(h[0])])
-# =============================================================================
-#     for b in range(len(y)):
-#         for v in range(len(v_x)):
-#             # snd = stats.norm(v_x[v],dvx[v])
-#             pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
-#     pij=np.array(pij)
-#     np.savetxt(pruebas+'vx_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip),pij)
-# =============================================================================
+    for b in range(len(y)):
+        for v in range(len(v_x)):
+            # snd = stats.norm(v_x[v],dvx[v])
+            pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
+    pij=np.array(pij)
+    np.savetxt(pruebas+'vx_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip),pij)
     
-    pij=np.loadtxt(pruebas+'vx_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip))
+# =============================================================================
+#     pij=np.loadtxt(pruebas+'vx_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip))
+# =============================================================================
     vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
     sj=np.sqrt(vj)   
     sj_n=sj/(len(v_x)*(h[1][1]-h[1][0]))
@@ -274,7 +274,7 @@ for sloop in range(len(step)-1):
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     #Thsi is the corner plot
     
-    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, 
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
     
@@ -329,17 +329,18 @@ for sloop in range(len(step)-1):
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     # h=ax.hist(v_x*-1, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     x=np.array(x)
-    ax.scatter(x*-1,vx_p/(len(v_x)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.bar(x*-1,vx_p/(len(v_x)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.3,color='blue')
-
-    # xplot = np.linspace(min(x), max(x), 100)
-    xplot = np.linspace(-15, 15, 100)
+    # ax.scatter(x*-1,vx_p/(len(v_x)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
+    ax.bar(x*-1,vx_p/(len(v_x)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.5,color='royalblue')
+    # ax.errorbar(x*-1,vx_p/(len(v_x)*(h[1][1]-h[1][0])),sj/(len(v_x)*(h[1][1]-h[1][0])),color='darkblue',fmt='none',capsize=3,alpha=0.5)
+    xplot = np.linspace(min(x)-2, max(x)+2, 100)
+    # xplot = np.linspace(-15, 15, 100)
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
     
     plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+    plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
     plt.xlim(-15,15)
+    plt.ylim(0,0.15)
     plt.gca().invert_xaxis()
     # plt.axvline(mean[0],linestyle='dashed',color='orange')
     # plt.axvline(mean[3],linestyle='dashed',color='orange')
@@ -353,10 +354,10 @@ for sloop in range(len(step)-1):
     # plt.text(max(x)/2,max(h[0]-0.04),'$\sigma_{3}=%.3f$'%(mean[7]))
     # plt.text(max(x)/2,max(h[0]-0.045),'$amp_{3}=%.3f$'%(mean[8]))
     
-    plt.text(max(x)/2,max(h[0]/2)-0.01,'logz=%.0f'%(results['logz'][-1]),color='b')
+    # plt.text(max(x)/2,max(h[0]/2)-0.01,'logz=%.0f'%(results['logz'][-1]),color='b')
     # # if accu<10:
     # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
-    plt.text(max(x)/2,max(h[0]/2)-0.020,'nbins=%s'%(len(h[0])),color='b')
+    # plt.text(max(x)/2,max(h[0]/2)-0.020,'nbins=%s'%(len(h[0])),color='b')
     # plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
     # if show_field=='yes':
     #     if chip=='both':
