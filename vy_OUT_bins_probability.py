@@ -331,7 +331,7 @@ for sloop in range(len(step)-1):
     # plt.text(max(x)/2,max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(nbins),color='b')
     plt.xlim(-15,15)
-    plt.ylim(-0,0.24)
+    plt.ylim(-0,)
     # plt.gca().invert_xaxis()
     # if accu <10:
     #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')

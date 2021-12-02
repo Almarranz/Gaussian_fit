@@ -140,16 +140,16 @@ for sloop in range(len(step)-1):
 # %%
     w=h[1]
     pij=np.empty([len(v_x),len(h[0])])
-# =============================================================================
-#     for b in range(len(y)):
-#         for v in range(len(v_x)):
-#             # snd = stats.norm(v_x[v],dvx[v])
-#             pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
-#     pij=np.array(pij)
-#     np.savetxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
-# =============================================================================
+    for b in range(len(y)):
+        for v in range(len(v_x)):
+            # snd = stats.norm(v_x[v],dvx[v])
+            pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
+    pij=np.array(pij)
+    np.savetxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
     
-    pij=np.loadtxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm))
+# =============================================================================
+#     pij=np.loadtxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm))
+# =============================================================================
     vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
     sj=np.sqrt(vj)   
     sj_n=sj/(len(v_x)*(h[1][1]-h[1][0]))
@@ -203,7 +203,7 @@ for sloop in range(len(step)-1):
         mu2=2*umu2-2/2
         sigma2 =4.5*usigma2
         # sigma2=3.25+ (usigma2*0.4-0.4/2)
-        amp2 = uamp2  * .55                
+        amp2 = uamp2  * 0.55              
         # amp2=0.35 +(uamp2*0.2-0.2/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
@@ -329,7 +329,7 @@ for sloop in range(len(step)-1):
     
     plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
              + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=4, alpha=1)
-    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=1)
+    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
     plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
     plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=2, alpha=1)
     plt.xlim(-15,15)
