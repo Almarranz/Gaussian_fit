@@ -64,7 +64,7 @@ auto='no'
 if auto =='auto':
     step=np.arange(0,1,1)#also works if running each bing width one by one, for some reason...
 else:
-    step=np.arange(1.2,1.3,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(1.0,1.1,0.1)#also works if running each bing width one by one, for some reason...
 #%%
 
 # In[5]:
@@ -155,14 +155,30 @@ for sloop in range(len(step)):
     ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
                   %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
-    # for yi in range(len(y)):
-    #     if y[yi]==0:
-    #         y[yi]+=0.00001
-    #     yerr = np.sqrt(h1[0][yi])/(len(v_x)*((h1[1][3]-h1[1][2])))
-    yerr=0.0001
-    y += yerr
-    ax.scatter(x,y,color='g',zorder=3)
-    
+    # These are two different way of computing the error for the normalized bins. None of then seem to work very well
+# =============================================================================
+#     y1=h1[0]
+#     yerr=[]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
+# =============================================================================
+    yerr=[]
+    y=np.where(y==0,0.001,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.001,y1)
+    yerr = y*np.sqrt(1/y1+1/len(v_x))
+    # yerr = y*np.sqrt(1/y1)
+# =============================================================================
+#     yerr=[]
+#     y=np.where(y==0,0.0001,y)
+#     y1=h1[0]
+#     y1=np.where(y1==0,0.001,y1)
+#     # yerr = y*np.sqrt(1/y1+1/len(v_x))
+#     yerr=0.0001
+#     y += yerr
+#     # ax.scatter(x,y,color='g',zorder=3)
+#    
+# =============================================================================
     
     # In[6]:
     ejes=[dvx_all,dvy_all]
@@ -219,8 +235,8 @@ for sloop in range(len(step)):
         #mu2 = -0.16 + (0.16*umu2-0.08)  
         mu2 = 6*umu2-3  
 
-        sigma2 = 3.60 +  (0.26*usigma2-0.13)
-        # sigma2=usigma2*4
+        # sigma2 = 3.60 +  (0.26*usigma2-0.13)
+        sigma2=usigma2*4
         # amp2 = 0.42 + (0.08*uamp2-0.04)
         # amp2 = 0.59 + (0.08*uamp2-0.04)
         amp2 = uamp2*1
@@ -269,12 +285,12 @@ for sloop in range(len(step)):
     #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     
-    # fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
-    #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
-    #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
+    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+                                  title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
+                                  fig=plt.subplots(6, 6, figsize=(28, 28)))
     
     
-    # plt.show() 
+    plt.show() 
     
     
     # In[12]:
@@ -385,25 +401,27 @@ for sloop in range(len(step)):
 #     print('+'*20)
 #     print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
     
-fig, ax = plt.subplots(figsize=(8,8))
-ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
-h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-
-xplot = np.linspace(min(x), max(x), 100)
-
-# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
-
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.xlim(-15,15)
-plt.ylim(-0,0.15)
-plt.gca().invert_xaxis()
-  
-plt.ylabel('N')
-plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
-# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
-
+# =============================================================================
+# fig, ax = plt.subplots(figsize=(8,8))
+# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+# mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
+# h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+# 
+# xplot = np.linspace(min(x), max(x), 100)
+# 
+# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
+# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+# plt.xlim(-15,15)
+# plt.ylim(-0,0.15)
+# plt.gca().invert_xaxis()
+#   
+# plt.ylabel('N')
+# plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+# plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
+# 
+# =============================================================================

@@ -52,11 +52,11 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
 # step=np.arange(1.0,1.75,0.25)#these have worked
 # auto='auto'
-auto='auto'
+auto='no'
 if auto =='auto':
     step=np.arange(0,2,1)#
 else:
-    step=np.arange(1.5,1.6,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(.7,.8,0.1)#also works if running each bing width one by one, for some reason...
 
 media_amp=[]
 print(step)
@@ -141,42 +141,73 @@ for sloop in range(len(step)-1):
                   %(chip,len(v_y),np.mean(v_y),np.std(v_y))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
     w=h[1]
+    # TPOSSION error method. hese are two different way of computing the error for the normalized bins. None of then seem to work very well
 # =============================================================================
-#     pij=np.empty([len(v_y),len(h[0])])
-#     for b in range(len(y)):
-#         for v in range(len(v_y)):
-#             # snd = stats.norm(v_y[v],dvy[v])
-#             pij[v,b]=norm(v_y[v],dvy[v]).cdf(w[b+1])-norm(v_y[v],dvy[v]).cdf(w[b])
-#     pij=array(pij)
-#     np.savetxt(pruebas+'vy_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip),pij)
+#     y1=h1[0]
+#     yerr=[]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
 # =============================================================================
-    pij = np.loadtxt(pruebas+'vy_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip))
-    vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
+    yerr=[]
+    y=np.where(y==0,0.001,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.001,y1)
+    yerr = y*np.sqrt(1/y1+1/len(v_y))
+    # yerr = y*np.sqrt(1/y1)
+# =============================================================================
+#     yerr=[]
+#     y=np.where(y==0,0.0001,y)
+#     y1=h1[0]
+#     y1=np.where(y1==0,0.001,y1)
+#     # yerr = y*np.sqrt(1/y1+1/len(v_x))
+#     yerr=0.0001
+#     y += yerr
+#     # ax.scatter(x,y,color='g',zorder=3)
+#    
+# =============================================================================   
     
     
-    
-    sj=np.sqrt(vj)   
-    sj_n=sj/(len(v_y)*(h[1][1]-h[1][0]))
-    yerr=sj_n
-    vy_p=[np.sum(pij[:,i]) for i in range(len(h1[1])-1)]
-    fig,ax=plt.subplots(1,1)
-    ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.hist(v_y,bins=auto,edgecolor='black',linewidth=2,density=True,alpha=0.5)
-    ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])))
-    
-    
-    #%%
-    vy_p=[np.sum(pij[:,i]) for i in range(len(h1[1])-1)]
-    fig,ax=plt.subplots(1,1)
-    ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.hist(v_y,bins=auto,edgecolor='black',linewidth=2,density=True,alpha=0.5)
-    ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])))
-    
-    
-   
-#%%
-    y= vy_p/(len(v_y)*(h[1][1]-h[1][0]))   
-    
+# =============================================================================
+# #My method of calculating the propbabbiliti of each value in each bin
+# =============================================================================
+# =============================================================================
+# # =============================================================================
+# #     pij=np.empty([len(v_y),len(h[0])])
+# #     for b in range(len(y)):
+# #         for v in range(len(v_y)):
+# #             # snd = stats.norm(v_y[v],dvy[v])
+# #             pij[v,b]=norm(v_y[v],dvy[v]).cdf(w[b+1])-norm(v_y[v],dvy[v]).cdf(w[b])
+# #     pij=array(pij)
+# #     np.savetxt(pruebas+'vy_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip),pij)
+# # =============================================================================
+#     pij = np.loadtxt(pruebas+'vy_in_pij_accu%s_sm%s_chip%s.txt'%(accu,sm,chip))
+#     vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
+#     
+#     
+#     
+#     sj=np.sqrt(vj)   
+#     sj_n=sj/(len(v_y)*(h[1][1]-h[1][0]))
+#     yerr=sj_n
+#     vy_p=[np.sum(pij[:,i]) for i in range(len(h1[1])-1)]
+#     fig,ax=plt.subplots(1,1)
+#     ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
+#     ax.hist(v_y,bins=auto,edgecolor='black',linewidth=2,density=True,alpha=0.5)
+#     ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])))
+#     
+#     
+#     #%%
+#     vy_p=[np.sum(pij[:,i]) for i in range(len(h1[1])-1)]
+#     fig,ax=plt.subplots(1,1)
+#     ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
+#     ax.hist(v_y,bins=auto,edgecolor='black',linewidth=2,density=True,alpha=0.5)
+#     ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])))
+#     
+#     
+#    
+# #%%
+#     y= vy_p/(len(v_y)*(h[1][1]-h[1][0]))   
+#     
+# =============================================================================
 #%%   
     def gaussian(x, mu, sig, amp):
         return amp * (1 / (sig * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
@@ -326,10 +357,10 @@ for sloop in range(len(step)-1):
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     
     a=1#to chnge the axix a=-1
-    # h=plt.hist(v_y*a, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_y*a, bins= auto, color='royalblue', alpha = 0.5, density =True, histtype = 'stepfilled')
     x=np.array(x)
     # ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.bar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.5,color='royalblue')
+    # ax.bar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.5,color='royalblue')
     xplot = np.linspace(min(x)-2, max(x)+2, 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
@@ -338,6 +369,8 @@ for sloop in range(len(step)-1):
     plt.plot(xplot, gaussian(xplot*a, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
     plt.plot(xplot, gaussian(xplot*a, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
     # ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])),color='darkblue',fmt='none',capsize=3,alpha=0.5)
+    ax.errorbar(x,h[0],yerr,color='royalblue',fmt='none',capsize=3,alpha=0.5)
+
     plt.xlim(-15,15)
     plt.ylim(0,)
     # plt.axvline(mean[0],linestyle='dashed',color='orange')

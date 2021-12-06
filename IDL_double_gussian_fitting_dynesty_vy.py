@@ -55,11 +55,11 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
 # step=np.arange(1.0,1.75,0.25)#these have worked
 # auto='auto'
-auto='auto'
+auto='no'
 if auto =='auto':
-    step=np.arange(0,2,1)#
+    step=np.arange(1,2,1)#
 else:
-    step=np.arange(1.5,1.6,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(1.0,1.1,0.1)#also works if running each bing width one by one, for some reason...
 
 media_amp=[]
 print(step)
@@ -176,16 +176,18 @@ for sloop in range(len(step)-1):
 #     y1=np.where(y1==0,0.001,y1)
 #     yerr = [np.sqrt(y1[yi])/(len(v_y)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
 # =============================================================================
+    yerr=[]
+    y=np.where(y==0,0.001,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.001,y1)
+    # yerr = y*np.sqrt(1/y1+1/len(v_y))
+    yerr = y*np.sqrt(1/y1)
+
 # =============================================================================
-#     yerr=[]
-#     y=np.where(y==0,0.001,y)
-#     y1=h1[0]
-#     y1=np.where(y1==0,0.001,y1)
-#     yerr = y*np.sqrt(1/y1+1/len(v_y))
+#     yerr=0.0001
+#     y += yerr
+#     ax.scatter(x,y,color='g',zorder=3)
 # =============================================================================
-    yerr=0.0001
-    y += yerr
-    ax.scatter(x,y,color='g',zorder=3)
     
     # In[5]:
     count=0
@@ -457,29 +459,31 @@ print(list_bin)
     
 #%%
 #This plot the mean gaussian, put values of the gaussian in mean[]
-fig, ax = plt.subplots(figsize=(8,8))
-ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-mean=[-0.0112947266666667,	1.52403177,	0.503273866666667,	-0.00513169666666667,	3.58441010666667,	0.496824623333333]
-h=plt.hist(v_y*-1, bins= 30, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-
-xplot = np.linspace(min(x), max(x), 100)
-
-# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
-
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.xlim(-15,15)
-plt.ylim(0,0.22)
-
-plt.gca().invert_xaxis()
-  
-plt.ylabel('N')
-plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
-# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
-    
+# =============================================================================
+# fig, ax = plt.subplots(figsize=(8,8))
+# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+# mean=[-0.0112947266666667,	1.52403177,	0.503273866666667,	-0.00513169666666667,	3.58441010666667,	0.496824623333333]
+# h=plt.hist(v_y*-1, bins= 30, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+# 
+# xplot = np.linspace(min(x), max(x), 100)
+# 
+# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
+# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+# plt.xlim(-15,15)
+# plt.ylim(0,0.22)
+# 
+# plt.gca().invert_xaxis()
+#   
+# plt.ylabel('N')
+# plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+# plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
+#     
+# =============================================================================
  
 #%%
 # h1=np.histogram(v_y,bins=list_bin,density=False)

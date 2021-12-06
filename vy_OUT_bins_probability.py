@@ -136,27 +136,57 @@ for sloop in range(len(step)-1):
     ax.set_ylim(0,0.02)
     ax.set_xlim(0,2)
     y=h[0]#height for each bin
-    w=h[1]
-    pij=np.empty([len(v_y),len(h[0])])
-    for b in range(len(y)):
-        for v in range(len(v_y)):
-            # snd = stats.norm(v_y[v],dvy[v])
-            pij[v,b]=norm(v_y[v],dvy[v]).cdf(w[b+1])-norm(v_y[v],dvy[v]).cdf(w[b])
-    vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
-    sj=np.sqrt(vj)   
-    sj_n=sj/(len(v_y)*(h[1][1]-h[1][0]))
-    yerr=sj_n
-    vy_p=[np.sum(pij[:,i]) for i in range(len(h1[1])-1)]
-    fig,ax=plt.subplots(1,1)
-    ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.hist(v_y,bins=auto,edgecolor='black',linewidth=2,density=True,alpha=0.5)
-    ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])))
     
-    np.savetxt(pruebas+'vy_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
-    # pij=np.loadtxt(pruebas+'vy_out_pij_accu%s_sm%s.txt'%(accu,sm))
-#%%
-    y= vy_p/(len(v_y)*(h[1][1]-h[1][0]))   
-    
+    # TPOSSION error method. hese are two different way of computing the error for the normalized bins. None of then seem to work very well
+# =============================================================================
+#     y1=h1[0]
+#     yerr=[]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
+# =============================================================================
+    yerr=[]
+    y=np.where(y==0,0.001,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.001,y1)
+    yerr = y*np.sqrt(1/y1+1/len(v_y))
+    # yerr = y*np.sqrt(1/y1)
+# =============================================================================
+#     yerr=[]
+#     y=np.where(y==0,0.0001,y)
+#     y1=h1[0]
+#     y1=np.where(y1==0,0.001,y1)
+#     # yerr = y*np.sqrt(1/y1+1/len(v_x))
+#     yerr=0.0001
+#     y += yerr
+#     # ax.scatter(x,y,color='g',zorder=3)
+#    
+# =============================================================================   
+# =============================================================================
+#     My method of calculating the propbabbiliti of each value in each bin
+# =============================================================================
+# =============================================================================
+#     w=h[1]
+#     pij=np.empty([len(v_y),len(h[0])])
+#     for b in range(len(y)):
+#         for v in range(len(v_y)):
+#             # snd = stats.norm(v_y[v],dvy[v])
+#             pij[v,b]=norm(v_y[v],dvy[v]).cdf(w[b+1])-norm(v_y[v],dvy[v]).cdf(w[b])
+#     vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
+#     sj=np.sqrt(vj)   
+#     sj_n=sj/(len(v_y)*(h[1][1]-h[1][0]))
+#     yerr=sj_n
+#     vy_p=[np.sum(pij[:,i]) for i in range(len(h1[1])-1)]
+#     fig,ax=plt.subplots(1,1)
+#     ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
+#     ax.hist(v_y,bins=auto,edgecolor='black',linewidth=2,density=True,alpha=0.5)
+#     ax.errorbar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),sj/(len(v_y)*(h[1][1]-h[1][0])))
+#     
+#     np.savetxt(pruebas+'vy_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
+#     # pij=np.loadtxt(pruebas+'vy_out_pij_accu%s_sm%s.txt'%(accu,sm))
+# #%%
+#     y= vy_p/(len(v_y)*(h[1][1]-h[1][0]))   
+#     
+# =============================================================================
 #%
         # In[7]:
     
@@ -310,10 +340,10 @@ for sloop in range(len(step)-1):
     
     fig, ax = plt.subplots(figsize=(8,8))
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    # h=ax.hist(v_y, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=ax.hist(v_y, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     x=np.array(x)
-    ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.bar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.3,color='blue')
+    # ax.scatter(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
+    # 1ax.bar(x,vy_p/(len(v_y)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.3,color='blue')
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)

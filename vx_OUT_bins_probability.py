@@ -137,35 +137,68 @@ for sloop in range(len(step)-1):
     # ax.set_ylim(0,0.02)
     # ax.set_xlim(0,2)
     y=h[0]#height for each bin
+    
+     # TPOSSION error method. hese are two different way of computing the error for the normalized bins. None of then seem to work very well
+# =============================================================================
+#     y1=h1[0]
+#     yerr=[]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
+# =============================================================================
+    yerr=[]
+    y=np.where(y==0,0.01,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.01,y1)
+    yerr = y*np.sqrt(1/y1+1/len(v_x))
+    # yerr = y*np.sqrt(1/y1)
+# =============================================================================
+#     yerr=[]
+#     y=np.where(y==0,0.0001,y)
+#     y1=h1[0]
+#     y1=np.where(y1==0,0.001,y1)
+#     # yerr = y*np.sqrt(1/y1+1/len(v_x))
+#     yerr=0.0001
+#     y += yerr
+#     # ax.scatter(x,y,color='g',zorder=3)
+#    
+# =============================================================================     
+
+    
+    
+# =============================================================================
+#  My method of calculating the propbabbiliti of each value in each bin
+# =============================================================================
 # %%
-    w=h[1]
 # =============================================================================
-#     pij=np.empty([len(v_x),len(h[0])])
-#     for b in range(len(y)):
-#         for v in range(len(v_x)):
-#             # snd = stats.norm(v_x[v],dvx[v])
-#             pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
-#     pij=np.array(pij)
-#     np.savetxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
+#     w=h[1]
+# # =============================================================================
+# #     pij=np.empty([len(v_x),len(h[0])])
+# #     for b in range(len(y)):
+# #         for v in range(len(v_x)):
+# #             # snd = stats.norm(v_x[v],dvx[v])
+# #             pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
+# #     pij=np.array(pij)
+# #     np.savetxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
+# # =============================================================================
+#     
+#     pij=np.loadtxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm))
+#     vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
+#     sj=np.sqrt(vj)   
+#     sj_n=sj/(len(v_x)*(h[1][1]-h[1][0]))
+#     yerr=sj_n
+#     
+#     
+#     
+# #%%
+#     vx_p=[np.sum(pij[:,i]) for i in range(len(h1[1])-1)]
+#     fig,ax=plt.subplots(1,1)
+#     ax.scatter(x,vx_p/(len(v_x)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
+#     ax.hist(v_x,bins=auto,edgecolor='black',linewidth=2,density=True,alpha=0.5)
+#     ax.errorbar(x,vx_p/(len(v_x)*(h[1][1]-h[1][0])),sj/(len(v_x)*(h[1][1]-h[1][0])))
+# #%%
+#     y= vx_p/(len(v_x)*(h[1][1]-h[1][0]))   
+#     
 # =============================================================================
-    
-    pij=np.loadtxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm))
-    vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
-    sj=np.sqrt(vj)   
-    sj_n=sj/(len(v_x)*(h[1][1]-h[1][0]))
-    yerr=sj_n
-    
-    
-    
-#%%
-    vx_p=[np.sum(pij[:,i]) for i in range(len(h1[1])-1)]
-    fig,ax=plt.subplots(1,1)
-    ax.scatter(x,vx_p/(len(v_x)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.hist(v_x,bins=auto,edgecolor='black',linewidth=2,density=True,alpha=0.5)
-    ax.errorbar(x,vx_p/(len(v_x)*(h[1][1]-h[1][0])),sj/(len(v_x)*(h[1][1]-h[1][0])))
-#%%
-    y= vx_p/(len(v_x)*(h[1][1]-h[1][0]))   
-    
 #%%   
     def gaussian(x, mu, sig, amp):
         return amp * (1 / (sig * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
@@ -197,18 +230,18 @@ for sloop in range(len(step)-1):
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
         mu1 =-3*umu1  # scale and shift to [-3., 3.)
         sigma1 = 3*(usigma1)
-        amp1 = uamp1*1.5
+        amp1 = uamp1*1.2
         
         # mu2 = 0.0+((umu2*0.06)-0.03)
-        mu2=2*umu2-2/2
+        mu2=1*umu2-1/2
         sigma2 =4*usigma2
         # sigma2=3.25+ (usigma2*0.4-0.4/2)
-        amp2 = uamp2  * 1                  
-        # amp2=0.35 +(uamp2*0.2-0.2/2)
+        # amp2 = uamp2  * 1
+        amp2=0.5 +(uamp2*0.7-0.7/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)
-        amp3 = uamp3
+        amp3 = uamp3*1
         
         
     
@@ -218,7 +251,7 @@ for sloop in range(len(step)-1):
     # In[8]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=200,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=600,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -317,10 +350,10 @@ for sloop in range(len(step)-1):
     print(results['logz'][-1])
     fig, ax = plt.subplots(figsize=(8,8))
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    # h=ax.hist(v_x*-1, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=ax.hist(v_x*-1, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
     x=np.array(x)
-    ax.scatter(x*-1,vx_p/(len(v_x)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
-    ax.bar(x*-1,vx_p/(len(v_x)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.3,color='blue')
+    # ax.scatter(x*-1,vx_p/(len(v_x)*(h[1][1]-h[1][0])),alpha=0.3,color='red')
+    # ax.bar(x*-1,vx_p/(len(v_x)*(h[1][1]-h[1][0])),width=h[1][1]-h[1][0],alpha=0.3,color='blue')
 
     xplot = np.linspace(min(x), max(x), 100)
     
