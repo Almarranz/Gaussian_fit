@@ -60,7 +60,7 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 # list_bin=np.arange(-15,15+step[0],step[0])
 # print(list_bin)
 # media_amp=[]
-auto='no'
+auto='auto'
 if auto =='auto':
     step=np.arange(0,1,1)#also works if running each bing width one by one, for some reason...
 else:
@@ -74,7 +74,7 @@ else:
 #chip='both'
 ran=0
 for sloop in range(len(step)):
-    sm=0.5
+    sm=0.25
     chip='both'
     
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
@@ -145,7 +145,7 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
+    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
     v_x=v_x[sig_h.mask==False]
     h=ax.hist(v_x,bins=auto,edgecolor='black',linewidth=2,density=True)
     h1=np.histogram(v_x,bins=auto,density=False)
@@ -166,8 +166,8 @@ for sloop in range(len(step)):
     y=np.where(y==0,0.001,y)
     y1=h1[0]
     y1=np.where(y1==0,0.001,y1)
-    yerr = y*np.sqrt(1/y1+1/len(v_x))
-    # yerr = y*np.sqrt(1/y1)
+    # yerr = y*np.sqrt(1/y1+1/len(v_x))
+    yerr = y*np.sqrt(1/y1)
 # =============================================================================
 #     yerr=[]
 #     y=np.where(y==0,0.0001,y)
@@ -177,8 +177,8 @@ for sloop in range(len(step)):
 #     yerr=0.0001
 #     y += yerr
 #     # ax.scatter(x,y,color='g',zorder=3)
-#    
 # =============================================================================
+   
     
     # In[6]:
     ejes=[dvx_all,dvy_all]
@@ -236,7 +236,7 @@ for sloop in range(len(step)):
         mu2 = 6*umu2-3  
 
         # sigma2 = 3.60 +  (0.26*usigma2-0.13)
-        sigma2=usigma2*4
+        sigma2=usigma2*5
         # amp2 = 0.42 + (0.08*uamp2-0.04)
         # amp2 = 0.59 + (0.08*uamp2-0.04)
         amp2 = uamp2*1
@@ -255,7 +255,7 @@ for sloop in range(len(step)):
     # In[9]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=200,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=300,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -285,10 +285,11 @@ for sloop in range(len(step)):
     #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     
-    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, 
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
-    
+    plt.legend(['Zone A, $\mu_{l}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
+
     
     plt.show() 
     
@@ -321,14 +322,14 @@ for sloop in range(len(step)):
     fig, ax = plt.subplots(figsize=(8,8))
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
     
-    h=plt.hist(v_x*-1, bins= auto, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+    h=plt.hist(v_x*-1, bins= auto, color='royalblue', alpha = 0.5, density =True, histtype = 'stepfilled')
     xplot = np.linspace(min(x), max(x), 100)
     
     # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
     
     plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
-    plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
+    plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+    plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
     
     # plt.axvline(mean[0],linestyle='dashed',color='orange')
     # plt.axvline(mean[3],linestyle='dashed',color='orange')
@@ -401,27 +402,25 @@ for sloop in range(len(step)):
 #     print('+'*20)
 #     print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
     
-# =============================================================================
-# fig, ax = plt.subplots(figsize=(8,8))
-# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+fig, ax = plt.subplots(figsize=(8,8))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
-# h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-# 
-# xplot = np.linspace(min(x), max(x), 100)
-# 
-# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
-# 
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-# 
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.xlim(-15,15)
+h=plt.hist(v_x*-1, bins= 18, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
+xplot = np.linspace(-15, 15, 100)
+
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+plt.xlim(-15,15)
 # plt.ylim(-0,0.15)
-# plt.gca().invert_xaxis()
-#   
-# plt.ylabel('N')
-# plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
-# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-# plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
-# 
-# =============================================================================
+plt.gca().invert_xaxis()
+  
+plt.ylabel('N')
+plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+

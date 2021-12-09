@@ -55,9 +55,9 @@ rc('font',**{'family':'serif','serif':['Palatino']})
 #%%
 # step=np.arange(1.0,1.75,0.25)#these have worked
 # auto='auto'
-auto='no'
+auto='auto'
 if auto =='auto':
-    step=np.arange(1,2,1)#
+    step=np.arange(1,3,1)#
 else:
     step=np.arange(1.0,1.1,0.1)#also works if running each bing width one by one, for some reason...
 
@@ -78,7 +78,7 @@ for sloop in range(len(step)-1):
 
     # nbins=9
     accu=2
-    sm=0.5
+    sm=0.25
     in_brick=1#slect list in or out brick
     
     if in_brick==1:
@@ -107,31 +107,7 @@ for sloop in range(len(step)-1):
 
             # v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'IDL_arcsec_vx_vy_chip%s.txt'%(chip),unpack=True)
 
-    elif in_brick==0:
-        if chip=='both':
-            lst='All '
-            #something was weird with list 12 aligment, it didn't converg... 
-            v_x10,v_y10,dvx10,dvy10,mh10,m10=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip2_out_Brick10.txt',unpack=True)
-            # v_x12,v_y12,dvx12,dvy12,mh12=np.loadtxt(data+'IDL_arcsec_vx_vy_chip3_out_Brick12.txt',unpack=True)
-            v_x16,v_y16,dvx16,dvy16,mh16,m16=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip3_out_Brick16.txt',unpack=True)
-            
-            # v_x=np.r_[v_x16,v_x12,v_x10]
-            # v_y=np.r_[v_y16,v_y12,v_y10]
-            # dvx=np.r_[dvx16,dvx12,dvx10]
-            # dvy=np.r_[dvy16,dvy12,dvy10]
-            # mh=np.r_[mh16,mh12,mh10]
-            
-            v_x=np.r_[v_x16,v_x10]
-            v_y=np.r_[v_y16,v_y10]
-            dvx=np.r_[dvx16,dvx10]
-            dvy=np.r_[dvy16,dvy10]
-            mh=np.r_[mh16,mh10]
-            m=np.r_[m16,m10]
-        else:
-            lst=np.loadtxt(tmp+'IDL_lst_chip%s.txt'%(chip))
-            v_x,v_y,dvx,dvy,mh,m=np.loadtxt(data+'aa_IDL_arcsec_vx_vy_chip%s_out_Brick%.0f.txt'%(chip,lst),unpack=True)        
-    
-    
+   
     mh_all=mh
     m_all=m
     dvx_all=dvx
@@ -153,7 +129,7 @@ for sloop in range(len(step)-1):
     sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_y=v_y[sig_h.mask==False]
     # h=ax.hist(v_y,bins=list_bin,edgecolor='black',linewidth=2,density=True)
-    if auto != 'auto':
+    if auto == 'no':
         list_bin=np.arange(min(v_y),max(v_y),step[sloop])
         auto=list_bin
         print(list_bin)
@@ -250,7 +226,7 @@ for sloop in range(len(step)-1):
         # mu2 = -0.018+ (0.062*umu2-0.031)# scale and shift to [-3., 3.)
         # sigma2 = 2.9+(0.15*usigma2-0.075)
         mu2= 2*umu2-1
-        sigma2=6*usigma2
+        sigma2=4*usigma2
         amp2 = uamp2
     
         return mu1, sigma1, amp1, mu2, sigma2, amp2
@@ -268,7 +244,7 @@ for sloop in range(len(step)-1):
     # In[9]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=200,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=800,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -311,11 +287,11 @@ for sloop in range(len(step)-1):
     # 
     # %%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
     # This is de corner plot
-    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, 
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
-    
-    
+    plt.legend(['Zone A, $\mu_{b}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
+    # plt.legend(['1'], loc=4)
     plt.show() 
     
     
@@ -459,31 +435,29 @@ print(list_bin)
     
 #%%
 #This plot the mean gaussian, put values of the gaussian in mean[]
-# =============================================================================
-# fig, ax = plt.subplots(figsize=(8,8))
-# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+fig, ax = plt.subplots(figsize=(8,8))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[-0.0112947266666667,	1.52403177,	0.503273866666667,	-0.00513169666666667,	3.58441010666667,	0.496824623333333]
-# h=plt.hist(v_y*-1, bins= 30, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-# 
-# xplot = np.linspace(min(x), max(x), 100)
-# 
-# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
-# 
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-# 
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.xlim(-15,15)
-# plt.ylim(0,0.22)
-# 
-# plt.gca().invert_xaxis()
-#   
-# plt.ylabel('N')
-# plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
-# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-# plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
-#     
-# =============================================================================
+h=plt.hist(v_y*-1, bins= 29, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
+xplot = np.linspace(min(x)-2, max(x), 100)
+
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+plt.xlim(-15,15)
+plt.ylim(0,0.22)
+
+plt.gca().invert_xaxis()
+  
+plt.ylabel('N')
+plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
+    
  
 #%%
 # h1=np.histogram(v_y,bins=list_bin,density=False)
