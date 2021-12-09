@@ -63,6 +63,7 @@ else:
 
 media_amp=[]
 zone='Z1'
+degree=3
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)-1):
@@ -91,7 +92,7 @@ for sloop in range(len(step)-1):
         for i in range(len(flds)):
             for j in range(len(chips)):
                 try:
-                    v_x0,v_y0,dvx0,dvy0,mh0,m0,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,flds[i],chips[j]),unpack=True)
+                    v_x0,v_y0,dvx0,dvy0,mh0,m0,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,flds[i],chips[j],degree),unpack=True)
                     # v_x0,v_y0,dvx0,dvy0,mh0,m0=np.loadtxt(gaussian+'NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(flds[i],chips[j]),unpack=True)
                     v_x=np.r_[v_x,v_x0]
                     v_y=np.r_[v_y,v_y0]
@@ -118,7 +119,7 @@ for sloop in range(len(step)-1):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,field,chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx
@@ -173,17 +174,18 @@ for sloop in range(len(step)-1):
 #     y1=np.where(y1==0,0.001,y1)
 #     yerr = [np.sqrt(y1[yi])/(len(v_y)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
 # =============================================================================
+    yerr=[]
+    y=np.where(y==0,0.001,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.001,y1)
+    yerr = y*np.sqrt(1/y1)
+    # yerr = y*np.sqrt(1/y1+1/len(v_y))
 # =============================================================================
-#     yerr=[]
-#     y=np.where(y==0,0.001,y)
-#     y1=h1[0]
-#     y1=np.where(y1==0,0.001,y1)
-#     yerr = y*np.sqrt(1/y1+1/len(v_y))
+#     yerr=0.0001
+#     # y=np.where(y==0,0.0001,y)
+#     y+=yerr
+#     ax.scatter(x,y,color='g',zorder=3)
 # =============================================================================
-    yerr=0.0001
-    # y=np.where(y==0,0.0001,y)
-    y+=yerr
-    ax.scatter(x,y,color='g',zorder=3)
     
     #%%
     count=0
