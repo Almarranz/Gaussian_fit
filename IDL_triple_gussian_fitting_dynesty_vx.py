@@ -64,7 +64,7 @@ auto='no'
 if auto =='auto':
     step=np.arange(1.5,2.5,0.5)#
 else:
-    step=np.arange(0.62,1.23,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(0.7,1.21,0.1)#also works if running each bing width one by one, for some reason...
 print(step)
 media_amp=[]
 zone='Z1'
@@ -188,18 +188,18 @@ for sloop in range(len(step)-1):
 #     y1=np.where(y1==0,0.001,y1)
 #     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
 # =============================================================================
-# =============================================================================
-#     yerr=[]
-#     y=np.where(y==0,0.001,y)
-#     y1=h1[0]
-#     y1=np.where(y1==0,0.001,y1)
-#     # yerr = y*np.sqrt(1/y1+1/len(v_x))
-#     yerr = y*np.sqrt(1/y1)
-# =============================================================================
+    yerr=[]
+    y=np.where(y==0,0.001,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.001,y1)
+    # yerr = y*np.sqrt(1/y1+1/len(v_x))
+    yerr = y*np.sqrt(1/y1)
 
-    yerr=0.0001
-    y += yerr
-    ax.scatter(x,y,color='g',zorder=3)
+# =============================================================================
+#     yerr=0.0001
+#     y += yerr
+#     ax.scatter(x,y,color='g',zorder=3)
+# =============================================================================
     
     # In[6]:
     count=0
@@ -258,7 +258,7 @@ for sloop in range(len(step)-1):
         #x *= 10.  # scale to [-10., 10.)
         umu1, usigma1, uamp1,  umu2, usigma2, uamp2, umu3, usigma3, uamp3= utheta
     
-    #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
+     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
         mu1 =-3*umu1  # scale and shift to [-3., 3.)
         sigma1 = 3*(usigma1)
         amp1 = uamp1
@@ -267,12 +267,13 @@ for sloop in range(len(step)-1):
         mu2=2*umu2-2/2
         # sigma2 =3.6*usigma2
         sigma2=3.37+ (usigma2*1-1/2)
-        amp2 = uamp2  *1                                 
+        amp2 = uamp2  * 1                                          
         # amp2=0.35 +(uamp2*0.2-0.2/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
         sigma3 = 3.3*(usigma3)
         amp3 = uamp3
+        
         
         
     
@@ -282,7 +283,7 @@ for sloop in range(len(step)-1):
     # In[8]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=200,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=500,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -314,7 +315,7 @@ for sloop in range(len(step)-1):
     # fig, axes = dyplot.traceplot(sampler.results, truths=truths, labels=labels,
     #                              fig=plt.subplots(6, 2, figsize=(16, 27)))
     
-    fig, axes = dyplot.traceplot(sampler.results,labels=labels,
+    fig, axes = dyplot.traceplot(sampler.results,labels=labels,show_titles=True,
                                  fig=plt.subplots(9, 2, figsize=(16, 20)))
     
     plt.show()
@@ -327,12 +328,12 @@ for sloop in range(len(step)-1):
     #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     #Thsi is the corner plot
-    
-    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+    sp=np.ones(9)*0.68
+    fig, axes = dyplot.cornerplot(res, color='royalblue' ,show_titles=True, quantiles_2d=[0.025, 0.5, 0.975],
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(9, 9, figsize=(28, 28)))
     
-    
+    plt.legend(['Zone B, $\mu_{l}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1.2,9.8),handlelength=-0.0)
     plt.show() 
     
     
@@ -450,10 +451,10 @@ for sloop in range(len(step)-1):
 #for file in range(1,4):
     if sloop==0:
         with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'w') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
+            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],len(h[0]))+'\n')
     else:
         with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'a') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],nbins)+'\n')
+            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],mean[6], mean[7], mean[8],results['logz'][-1],len(h[0]))+'\n')
 
 
 #%%
@@ -475,27 +476,25 @@ for sloop in range(len(step)-1):
 
 # In[ ]:
 #This plot the mean gaussian, put values of the gaussian in mean[]
-# =============================================================================
-# plt.figure(figsize =(8,8))
-# mean=[-1.61451044333333,	1.80582627,	0.364061513333333,	-0.17527995,	3.72998235,	0.411194643333333,	2.81206634,	1.59523092666667,	0.22914364]
-# h=plt.hist(v_x*-1, bins= 20, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-# 
-# xplot = np.linspace(-12, max(x), 100)
-# 
-# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
-# 
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
-#           + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
-# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=3, alpha=0.6)
-# plt.xlim(-15,15)
+plt.figure(figsize =(8,8))
+mean=[-1.6043,	1.86713333333333,	0.360133333333333,	-0.4019,	3.41566666666667,	0.375,	2.78246666666667,	1.79223333333333,	0.257133333333333,]
+h=plt.hist(v_x*-1, bins= 20, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
+xplot = np.linspace(-12, max(x), 100)
+
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
+          + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8]) , color='black', linestyle='dashed', linewidth=2, alpha=1)
+plt.xlim(-15,15)
 # plt.ylim(0,0.15)
-# plt.gca().invert_xaxis()
-#   
-# plt.ylabel('N')
-# plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
-# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
-# =============================================================================
+plt.gca().invert_xaxis()
+  
+plt.ylabel('N')
+plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
 
