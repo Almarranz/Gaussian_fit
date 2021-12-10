@@ -60,11 +60,11 @@ rcParams.update({
 
 from matplotlib import rc
 # In[5]:
-auto='auto'
+auto='no'
 if auto =='auto':
     step=np.arange(1.5,2.5,0.5)#
 else:
-    step=np.arange(0.5,0.7,0.1)#also works if running each bing width one by one, for some reason...
+   step=np.arange(0.7,1.21,0.1)#also works if running each bing width one by one, for some reason...
 print(step)
 media_amp=[]
 zone='Z1'
@@ -183,14 +183,25 @@ for sloop in range(len(step)):
     ax.legend(['Chip=%s, %s, mean= %.2f, std=%.2f'
                   %(chip,len(v_x),np.mean(v_x),np.std(v_x))],fontsize=12,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     y=h[0]#height for each bin
-    # for yi in range(len(y)):
-    #     if y[yi]==0:
-    #         y[yi]+=0.00001
-    #     yerr = np.sqrt(h1[0][yi])/(len(v_y)*((h1[1][3]-h1[1][2])))
-    yerr=0.0001
-    y += yerr
-    ax.scatter(x,y,color='g',zorder=3)
-    
+    # Two different way of adding yerr of the bins
+# =============================================================================
+#     y1=h1[0]
+#     yerr=[]
+#     y1=np.where(y1==0,0.001,y1)
+#     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
+# =============================================================================
+    yerr=[]
+    y=np.where(y==0,0.001,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.001,y1)
+    # yerr = y*np.sqrt(1/y1+1/len(v_x))
+    yerr = y*np.sqrt(1/y1)
+
+# =============================================================================
+#     yerr=0.0001
+#     y += yerr
+#     ax.scatter(x,y,color='g',zorder=3)
+# =============================================================================
     
     # In[6]:
     count=0
@@ -250,7 +261,7 @@ for sloop in range(len(step)):
         umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
     
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-        mu1 =-5*umu1  # scale and shift to [-3., 3.)
+        mu1 =6*umu1-6/3  # scale and shift to [-3., 3.)
         sigma1 = 5*(usigma1)
         amp1 = uamp1
         
@@ -315,9 +326,9 @@ for sloop in range(len(step)):
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     #Thsi is the corner plot
     
-    # fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
-    #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
-    #                               fig=plt.subplots(9, 9, figsize=(28, 28)))
+    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+                                  title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
+                                  fig=plt.subplots(6, 6, figsize=(28, 28)))
     
     
     plt.show() 
@@ -412,10 +423,10 @@ for sloop in range(len(step)):
 #%%
 #for file in range(1,4):
     if sloop==0:
-        with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'w') as f:
+        with open (pruebas+'%s_vx_2gauss_var.txt'%(zone), 'w') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
     else:
-        with open (pruebas+'%s_vx_gauss_var.txt'%(zone), 'a') as f:
+        with open (pruebas+'%s_vx2gauss_var.txt'%(zone), 'a') as f:
             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
 
 

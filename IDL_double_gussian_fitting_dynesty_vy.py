@@ -55,11 +55,11 @@ import seaborn as sns
 from matplotlib import rc
 #%%
 # step=np.arange(1,1.75,0.25)
-auto='auto'
+auto='no'
 if auto =='auto':
     step=np.arange(0,2,1)#
 else:
-    step=np.arange(1,1.1,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(0.23,0.74,0.1)#also works if running each bing width one by one, for some reason...
 
 media_amp=[]
 zone='Z1'
@@ -293,16 +293,20 @@ for sloop in range(len(step)-1):
     rcParams.update({'ytick.minor.width': '1.0'})
     rcParams.update({'font.size': 20})
     
-    
+#%%
+    rcParams.update({'font.size': 10})
     # truths = [mu1_true, sigma1_true, amp1_true, mu2_true, sigma2_true, amp2_true]
     labels = [r'$mu1$', r'$sigma1$', r'$amp1$', r'$mu2$', r'$sigma2$', r'$amp2$']
     # fig, axes = dyplot.traceplot(sampler.results, truths=truths, labels=labels,
     #                              fig=plt.subplots(6, 2, figsize=(16, 27)))
     
-    fig, axes = dyplot.traceplot(sampler.results,labels=labels,
-                                 fig=plt.subplots(6, 2, figsize=(16, 20)))
-    plt.show()
+    fig, axes = dyplot.traceplot(sampler.results,labels=labels,show_titles=True,
+                                 fig=plt.subplots(6, 2, figsize=(20, 16)))
     
+    
+
+    plt.show()
+    rcParams.update({'font.size': 20})
     
     # In[11]:
     
@@ -312,10 +316,10 @@ for sloop in range(len(step)-1):
     # 
     #%%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
     # This is de corner plot
-    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, 
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
-    
+    plt.legend(['Zone B, $\mu_{b}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
     
     plt.show() 
     
@@ -479,10 +483,10 @@ for i in range(len(va)):
 fig, ax = plt.subplots(figsize=(8,8))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 
-mean=[0.23411959,	3.08824046666667,	0.57060933,	-0.08345804,	1.1865944,	0.427011126666667]
+mean=[0.236233333333333,	2.9802,	0.5134,	-0.0537,	1.1566,	0.451833333333333]
 # mean=[0.03,	3.37,	0.55,	0.00,	1.40,	0.46]
 
-h=plt.hist(v_y*-1, bins= 30, color='darkblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+h=plt.hist(v_y*-1, bins= 29, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(-13, 11                                 , 100)
 
@@ -490,10 +494,10 @@ xplot = np.linspace(-13, 11                                 , 100)
 
 plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
 
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=3, alpha=0.6)
-plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=3, alpha=0.6)
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
 plt.xlim(-15,15)
-plt.ylim(-0,0.22)
+# plt.ylim(-0,0.22)
 
 plt.gca().invert_xaxis()
   
