@@ -59,7 +59,7 @@ auto='auto'
 if auto =='auto':
     step=np.arange(1,3,1)#
 else:
-    step=np.arange(1.0,1.1,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(0.42,0.9201,0.1)#also works if running each bing width one by one, for some reason...
 
 media_amp=[]
 print(step)
@@ -69,16 +69,11 @@ ran=0
 for sloop in range(len(step)-1):
     chip='both'
     
-    # if auto != 'auto':
-    #     list_bin=np.arange(-15,15,step[sloop])
-    #     auto=list_bin
-    #     print(list_bin)
-    #     nbins=len(list_bin)-1
-    #     print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
+   
 
     # nbins=9
     accu=2
-    sm=0.25
+    sm=0.5
     in_brick=1#slect list in or out brick
     
     if in_brick==1:
@@ -129,7 +124,7 @@ for sloop in range(len(step)-1):
     sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_y=v_y[sig_h.mask==False]
     # h=ax.hist(v_y,bins=list_bin,edgecolor='black',linewidth=2,density=True)
-    if auto == 'no':
+    if auto != 'auto':
         list_bin=np.arange(min(v_y),max(v_y),step[sloop])
         auto=list_bin
         print(list_bin)
@@ -379,13 +374,13 @@ for sloop in range(len(step)-1):
     # # #%%
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
     
+    if sloop==0:
+        with open (pruebas+'brick_vy_gauss_var.txt', 'w') as f:
+            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],len(h[0]))+'\n')
+    else:
+        with open (pruebas+'brick_vy_gauss_var.txt', 'a') as f:
+            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],len(h[0]))+'\n')
 # =============================================================================
-#     if sloop==0:
-#         with open (pruebas+'brick_vy_gauss_var.txt', 'w') as f:
-#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-#     else:
-#         with open (pruebas+'brick_vy_gauss_var.txt', 'a') as f:
-#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
 #     fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
 #     # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
 #     gau1=integrate.quad(fun1,-15,15)
@@ -435,28 +430,30 @@ print(list_bin)
     
 #%%
 #This plot the mean gaussian, put values of the gaussian in mean[]
-fig, ax = plt.subplots(figsize=(8,8))
-ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-# mean=[-0.0112947266666667,	1.52403177,	0.503273866666667,	-0.00513169666666667,	3.58441010666667,	0.496824623333333]
-h=plt.hist(v_y*-1, bins= 29, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-
-xplot = np.linspace(min(x)-2, max(x), 100)
-
-# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
-
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
-plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
-plt.xlim(-15,15)
-plt.ylim(0,0.22)
-
-plt.gca().invert_xaxis()
-  
-plt.ylabel('N')
-plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
-# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
+# =============================================================================
+# fig, ax = plt.subplots(figsize=(8,8))
+# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+# # mean=[-0.0112947266666667,	1.52403177,	0.503273866666667,	-0.00513169666666667,	3.58441010666667,	0.496824623333333]
+# h=plt.hist(v_y*-1, bins= 29, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+# 
+# xplot = np.linspace(min(x)-2, max(x), 100)
+# 
+# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
+# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+# plt.xlim(-15,15)
+# plt.ylim(0,0.22)
+# 
+# plt.gca().invert_xaxis()
+#   
+# plt.ylabel('N')
+# plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+# plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
+# =============================================================================
     
  
 #%%
@@ -467,6 +464,21 @@ plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')
  
     
 #%%
+
+samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+mean, cov = dyfunc.mean_and_cov(samples, weights)
+# print(mean)
+quantiles = [dyfunc.quantile(samps, [0.34,.64], weights=weights)
+             for samps in samples.T]
+
+for i in range(6):
+    print(mean[i],quantiles[i])
+    
+#%%
+
+for i in range(6):
+    print('mean %.2f +- %2f %2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1])))
+
 
 #%%
 # y1=h1[0]

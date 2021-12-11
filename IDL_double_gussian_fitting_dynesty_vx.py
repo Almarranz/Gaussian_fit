@@ -64,7 +64,7 @@ auto='auto'
 if auto =='auto':
     step=np.arange(0,1,1)#also works if running each bing width one by one, for some reason...
 else:
-    step=np.arange(1.0,1.1,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(0.79,1.0901,0.1)#also works if running each bing width one by one, for some reason...
 #%%
 
 # In[5]:
@@ -80,12 +80,7 @@ for sloop in range(len(step)):
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
     
     # nbins=9
-    if auto != 'auto':
-       list_bin=np.arange(-15,15,step[sloop])
-       auto=list_bin
-       print(list_bin)
-       nbins=len(list_bin)-1
-       print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
+    
     accu=2# select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
@@ -145,8 +140,17 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
+    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
     v_x=v_x[sig_h.mask==False]
+    if auto != 'auto':
+        list_bin=np.arange(min(v_y),max(v_y),step[sloop])
+        auto=list_bin
+        print(list_bin)
+        nbins=len(list_bin)-1
+        print(30*'#'+'\n'+'nbins=%s'%(nbins)+'\n'+30*'#')
+    
+    
+    
     h=ax.hist(v_x,bins=auto,edgecolor='black',linewidth=2,density=True)
     h1=np.histogram(v_x,bins=auto,density=False)
     print(35*'-'+'\n'+'The width of the bin is: %.3f'%(h[1][3]-h[1][2])+'\n'+35*'-')
@@ -235,8 +239,8 @@ for sloop in range(len(step)):
         #mu2 = -0.16 + (0.16*umu2-0.08)  
         mu2 = 6*umu2-3  
 
-        # sigma2 = 3.60 +  (0.26*usigma2-0.13)
-        sigma2=usigma2*5
+        # sigma2 = 3.60 +  (0.5*usigma2-0.5/2)
+        sigma2=usigma2*4
         # amp2 = 0.42 + (0.08*uamp2-0.04)
         # amp2 = 0.59 + (0.08*uamp2-0.04)
         amp2 = uamp2*1
@@ -255,7 +259,7 @@ for sloop in range(len(step)):
     # In[9]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=300,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=200,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -374,14 +378,12 @@ for sloop in range(len(step)):
     # print('Total area = %.3f'%(gau1[0]+gau2[0]))
     # print(30*'&')
     
-# =============================================================================
-#     if sloop==0:
-#         with open (pruebas+'brick_vx_gauss_var.txt', 'w') as f:
-#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-#     else:
-#         with open (pruebas+'brick_vx_gauss_var.txt', 'a') as f:
-#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-# =============================================================================
+    if sloop==0:
+        with open (pruebas+'brick_vx_2gauss_var.txt', 'w') as f:
+            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],len(h[0]))+'\n')
+    else:
+        with open (pruebas+'brick_vx_2gauss_var.txt', 'a') as f:
+            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],len(h[0]))+'\n')
     
 #%%
 # =============================================================================
@@ -423,4 +425,20 @@ plt.ylabel('N')
 plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+
+#%%
+
+samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+mean, cov = dyfunc.mean_and_cov(samples, weights)
+# print(mean)
+quantiles = [dyfunc.quantile(samps, [0.34,.64], weights=weights)
+             for samps in samples.T]
+
+for i in range(6):
+    print(mean[i],quantiles[i])
+
+#%%
+
+for i in range(6):
+    print('mean %.2f +- %2f %2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1])))
 

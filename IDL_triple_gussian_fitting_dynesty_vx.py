@@ -60,7 +60,7 @@ auto='auto'
 if auto =='auto':
     step=np.arange(0,2,1)#also works if running each bing width one by one, for some reason...
 else:
-    step=np.arange(1,1.2,0.1)#also works if running each bing width one by one, for some reason...
+    step=np.arange(0.7,1.301,0.1)#also works if running each bing width one by one, for some reason...
 
 print(step)
 media_amp=[]
@@ -493,6 +493,19 @@ for sloop in range(len(step)-1):
 #%%
 
 
+samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+mean, cov = dyfunc.mean_and_cov(samples, weights)
+# print(mean)
+quantiles = [dyfunc.quantile(samps, [0.34,.64], weights=weights)
+             for samps in samples.T]
+
+for i in range(9):
+    print(mean[i],quantiles[i])
+
+#%%
+
+for i in range(9):
+    print('mean %.2f +- %2f %2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1])))
 
 
 
