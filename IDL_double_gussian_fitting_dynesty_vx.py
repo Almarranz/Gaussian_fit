@@ -407,7 +407,7 @@ for sloop in range(len(step)):
 fig, ax = plt.subplots(figsize=(8,8))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
-h=plt.hist(v_x*-1, bins= 18, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+h=plt.hist(v_x*-1, bins= 21, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(-15, 15, 100)
 
@@ -422,7 +422,7 @@ plt.xlim(-15,15)
 plt.gca().invert_xaxis()
   
 plt.ylabel('N')
-plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+plt.legend(['Brick Zone'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
 
