@@ -465,19 +465,28 @@ print(list_bin)
     
 #%%
 
+#%%
+
+
 samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
 mean, cov = dyfunc.mean_and_cov(samples, weights)
 # print(mean)
-quantiles = [dyfunc.quantile(samps, [0.34,.64], weights=weights)
+quantiles = [dyfunc.quantile(samps, [0.16,0.5,0.84], weights=weights)
              for samps in samples.T]
 
-for i in range(6):
-    print(mean[i],quantiles[i])
-    
+# for i in range(6):
+#     print(mean[i],quantiles[i])
+
 #%%
 
 for i in range(6):
-    print('mean %.2f +- %2f %2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1])))
+    print('mean %.2f -+ %2f %2f'%(mean[i],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    if i==0:
+        with open (pruebas+'brick_vy_erros.txt', 'w') as f:
+            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
+    else:
+        with open (pruebas+'brick_vy_erros.txt', 'a') as f:
+           f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
 
 
 #%%

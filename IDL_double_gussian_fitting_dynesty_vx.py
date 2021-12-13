@@ -74,7 +74,7 @@ else:
 #chip='both'
 ran=0
 for sloop in range(len(step)):
-    sm=0.25
+    sm=0.45
     chip='both'
     
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
@@ -140,7 +140,7 @@ for sloop in range(len(step)):
     v_y=v_y[sel]
     mh=mh[sel]
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
+    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
     v_x=v_x[sig_h.mask==False]
     if auto != 'auto':
         list_bin=np.arange(min(v_y),max(v_y),step[sloop])
@@ -428,17 +428,25 @@ plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')
 
 #%%
 
+
 samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
 mean, cov = dyfunc.mean_and_cov(samples, weights)
 # print(mean)
-quantiles = [dyfunc.quantile(samps, [0.34,.64], weights=weights)
+quantiles = [dyfunc.quantile(samps, [0.16,0.5,0.84], weights=weights)
              for samps in samples.T]
 
-for i in range(6):
-    print(mean[i],quantiles[i])
+# for i in range(6):
+#     print(mean[i],quantiles[i])
 
 #%%
 
 for i in range(6):
-    print('mean %.2f +- %2f %2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1])))
+    print('mean %.2f -+ %2f %2f'%(mean[i],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    if i==0:
+        with open (pruebas+'brick_vx_erros.txt', 'w') as f:
+            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
+    else:
+        with open (pruebas+'brick_vx_erros.txt', 'a') as f:
+           f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
 
+    
