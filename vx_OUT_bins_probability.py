@@ -69,7 +69,7 @@ for sloop in range(len(step)-1):
     chip=3#can be 1 or 4 (refers to the chip on GNS fields)
     field=16#fields can be 3 or 20 (refers to GNS fields)
     
-    sm=0.5#limit in difference of mag
+    sm=0.25#limit in difference of mag
     show_field='no'
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
     
@@ -138,18 +138,18 @@ for sloop in range(len(step)-1):
     # ax.set_xlim(0,2)
     y=h[0]#height for each bin
 # %%
-    w=h[1]
-    pij=np.empty([len(v_x),len(h[0])])
-    for b in range(len(y)):
-        for v in range(len(v_x)):
-            # snd = stats.norm(v_x[v],dvx[v])
-            pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
-    pij=np.array(pij)
-    np.savetxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
+# =============================================================================
+#     w=h[1]
+#     pij=np.empty([len(v_x),len(h[0])])
+#     for b in range(len(y)):
+#         for v in range(len(v_x)):
+#             # snd = stats.norm(v_x[v],dvx[v])
+#             pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
+#     pij=np.array(pij)
+#     np.savetxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
+# =============================================================================
     
-# =============================================================================
-#     pij=np.loadtxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm))
-# =============================================================================
+    pij=np.loadtxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm))
     vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
     sj=np.sqrt(vj)   
     sj_n=sj/(len(v_x)*(h[1][1]-h[1][0]))
@@ -218,7 +218,7 @@ for sloop in range(len(step)-1):
     # In[8]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=200,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=500,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -360,10 +360,31 @@ for sloop in range(len(step)-1):
     #     else:
     #         plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
     plt.ylabel('N')
-    plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+    plt.legend(['Control Zone'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
     plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
-    
+#%%    
+samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+mean, cov = dyfunc.mean_and_cov(samples, weights)
+# print(mean)
+quantiles = [dyfunc.quantile(samps, [0.16,0.5,.84], weights=weights)
+             for samps in samples.T]
+
+for i in range(9):
+    print(mean[i],quantiles[i])
+
+#%%
+
+for i in range(9):
+    print('mean %.2f -+ %2f %2f'%(mean[i],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    if i==0:
+        with open (pruebas+'%s_vx_erros.txt'%(zone), 'w') as f:
+            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
+    else:
+        with open (pruebas+'%s_vx_erros.txt'%(zone), 'a') as f:
+           f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
+
+       
     
     
     

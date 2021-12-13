@@ -78,13 +78,13 @@ for sloop in range(len(step)-1):
     show_field='no'
     chip=3 #can be 1 or 4 (refers to the chip on GNS fields)
     field=16 #fields can be 3 or 20 (refers to GNS fields)
-    sm=0.5
+    sm=0.25
     
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
 
     # nbins=25+sloop
-    accu=2
+    accu=1.5
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
     flds=[16]#I feel that field 10 make things worse for some reason
@@ -502,7 +502,7 @@ plt.xlim(-15,15)
 plt.gca().invert_xaxis()
   
 plt.ylabel('N')
-plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+plt.legend(['Control Zone'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
 

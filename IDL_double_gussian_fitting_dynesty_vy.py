@@ -490,9 +490,9 @@ ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[0.236233333333333,	2.9802,	0.5134,	-0.0537,	1.1566,	0.451833333333333]
 # mean=[0.03,	3.37,	0.55,	0.00,	1.40,	0.46]
 
-h=plt.hist(v_y*-1, bins= 29, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+h=plt.hist(v_y*-1, bins= 27, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
-xplot = np.linspace(-13, 11                                 , 100)
+xplot = np.linspace(-13, 11 , 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
@@ -506,7 +506,7 @@ plt.xlim(-15,15)
 plt.gca().invert_xaxis()
   
 plt.ylabel('N')
-plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+plt.legend(['Control Zone'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
 
