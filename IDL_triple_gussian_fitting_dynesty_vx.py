@@ -84,7 +84,7 @@ for sloop in range(len(step)-1):
 
 
     # nbins=25+sloop
-    accu=1.5
+    accu=2
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
     flds=[16]#I feel that field 10 make things worse for some reason
@@ -283,7 +283,7 @@ for sloop in range(len(step)-1):
     # In[8]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=500,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=2000,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -513,7 +513,7 @@ plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')
 samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
 mean, cov = dyfunc.mean_and_cov(samples, weights)
 # print(mean)
-quantiles = [dyfunc.quantile(samps, [0.34,.68], weights=weights)
+quantiles = [dyfunc.quantile(samps, [0.16,0.5,.84], weights=weights)
              for samps in samples.T]
 
 for i in range(9):
@@ -522,8 +522,14 @@ for i in range(9):
 #%%
 
 for i in range(9):
-    print('%s %.2f -+ %2f %2f'%(labels[i],mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1])))
+    print('mean %.2f -+ %2f %2f'%(mean[i],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    if i==0:
+        with open (pruebas+'%s_vx_erros.txt'%(zone), 'w') as f:
+            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
+    else:
+        with open (pruebas+'%s_vx_erros.txt'%(zone), 'a') as f:
+           f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
 
-
-
+    
+         
 

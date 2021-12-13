@@ -269,7 +269,7 @@ for sloop in range(len(step)-1):
     # In[9]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=2000,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=500,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -314,9 +314,20 @@ for sloop in range(len(step)-1):
     # fig, axes = dyplot.cornerplot(res, truths=truths, color='blue', show_titles=True, 
     #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
     # 
+    
+    # In[13]:
+    
+    
+    from dynesty import utils as dyfunc
+    
+    samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+    mean, cov = dyfunc.mean_and_cov(samples, weights)
+    print(mean)
+    
+    
     #%%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
     # This is de corner plot
-    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=False, quantiles=[0.34,0.68],truths=mean,
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, quantiles=[0.34,0.68],truths=mean,
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
     plt.legend(['Zone B, $\mu_{b}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
@@ -330,16 +341,7 @@ for sloop in range(len(step)-1):
     res.summary()
     
     
-    # In[13]:
-    
-    
-    from dynesty import utils as dyfunc
-    
-    samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
-    mean, cov = dyfunc.mean_and_cov(samples, weights)
-    print(mean)
-    
-    
+
     # In[14]:
     
     
@@ -515,22 +517,22 @@ plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')
 samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
 mean, cov = dyfunc.mean_and_cov(samples, weights)
 # print(mean)
-quantiles = [dyfunc.quantile(samps, [0.34,.64], weights=weights)
+quantiles = [dyfunc.quantile(samps, [0.16,0.5,0.84], weights=weights)
              for samps in samples.T]
 
-for i in range(6):
-    print(mean[i],quantiles[i])
+# for i in range(6):
+#     print(mean[i],quantiles[i])
 
 #%%
 
 for i in range(6):
-    print('mean %.2f -+ %2f %2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1])))
+    print('mean %.2f -+ %2f %2f'%(mean[i],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
     if i==0:
         with open (pruebas+'%s_vy_erros.txt'%(zone), 'w') as f:
-            f.write('%.2f %.2f %.2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1]))+'\n')
+            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
     else:
         with open (pruebas+'%s_vy_erros.txt'%(zone), 'a') as f:
-           f.write('%.2f %.2f %.2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1]))+'\n')
+           f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
 
     
               
