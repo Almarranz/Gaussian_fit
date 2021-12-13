@@ -55,7 +55,7 @@ import seaborn as sns
 from matplotlib import rc
 #%%
 # step=np.arange(1,1.75,0.25)
-auto='no'
+auto='auto'
 if auto =='auto':
     step=np.arange(0,2,1)#
 else:
@@ -63,7 +63,7 @@ else:
 
 media_amp=[]
 zone='Z1'
-degree=3
+degree=2
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)-1):
@@ -269,7 +269,7 @@ for sloop in range(len(step)-1):
     # In[9]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=200,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=6, nlive=2000,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -296,9 +296,9 @@ for sloop in range(len(step)-1):
 #%%
     rcParams.update({'font.size': 10})
     # truths = [mu1_true, sigma1_true, amp1_true, mu2_true, sigma2_true, amp2_true]
-    labels = [r'$mu1$', r'$sigma1$', r'$amp1$', r'$mu2$', r'$sigma2$', r'$amp2$']
+    labels = [r'$\mathrm{\mu 1}$', r'$\mathrm{\sigma 1}$', r'$amp1$', r'$\mathrm{\mu 2}$', r'$\mathrm{\sigma 2}$', r'$amp2$']
     # fig, axes = dyplot.traceplot(sampler.results, truths=truths, labels=labels,
-    #                              fig=plt.subplots(6, 2, figsize=(16, 27)))
+    #      $\mathrm{\mu_{b}}                        fig=plt.subplots(6, 2, figsize=(16, 27)))
     
     fig, axes = dyplot.traceplot(sampler.results,labels=labels,show_titles=True,
                                  fig=plt.subplots(6, 2, figsize=(20, 16)))
@@ -316,7 +316,7 @@ for sloop in range(len(step)-1):
     # 
     #%%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
     # This is de corner plot
-    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, 
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=False, quantiles=[0.34,0.68],truths=mean,
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
     plt.legend(['Zone B, $\mu_{b}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
@@ -452,30 +452,32 @@ for sloop in range(len(step)-1):
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 #%%
 #for file in range(1,4):
-    if sloop==0:
-        with open (pruebas+'%s_vy_gauss_var.txt'%(zone), 'w') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-    else:
-        with open (pruebas+'%s_vy_gauss_var.txt'%(zone), 'a') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-
+# =============================================================================
+#     if sloop==0:
+#         with open (pruebas+'%s_vy_gauss_var.txt'%(zone), 'w') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
+#     else:
+#         with open (pruebas+'%s_vy_gauss_var.txt'%(zone), 'a') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
+# 
+# =============================================================================
 
 #%%
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 
-media=np.loadtxt(pruebas+'%s_vy_gauss_var.txt'%(zone))#,delimiter=',')
-va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
-print('Media area broad = %.3f'%np.average(media_amp))
-for i in range(len(va)):
-    print('%s = %.4f '%(va[i],np.average(media[:,i])))
-    print('-'*20)
-for i in range(len(va)):
-    print('+'*20)
-    print('d%s = %.4f'%(va[i],np.std(media[:,i])))
-#%%
-for i in range(len(va)):
-    print('+'*20)
-    print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
+# media=np.loadtxt(pruebas+'%s_vy_gauss_var.txt'%(zone))#,delimiter=',')
+# va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
+# print('Media area broad = %.3f'%np.average(media_amp))
+# for i in range(len(va)):
+#     print('%s = %.4f '%(va[i],np.average(media[:,i])))
+#     print('-'*20)
+# for i in range(len(va)):
+#     print('+'*20)
+#     print('d%s = %.4f'%(va[i],np.std(media[:,i])))
+# #%%
+# for i in range(len(va)):
+#     print('+'*20)
+#     print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
    
 #%%
 
@@ -483,7 +485,7 @@ for i in range(len(va)):
 fig, ax = plt.subplots(figsize=(8,8))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 
-mean=[0.236233333333333,	2.9802,	0.5134,	-0.0537,	1.1566,	0.451833333333333]
+# mean=[0.236233333333333,	2.9802,	0.5134,	-0.0537,	1.1566,	0.451833333333333]
 # mean=[0.03,	3.37,	0.55,	0.00,	1.40,	0.46]
 
 h=plt.hist(v_y*-1, bins= 29, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
@@ -505,3 +507,49 @@ plt.ylabel('N')
 plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
+
+
+#%%
+
+
+samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+mean, cov = dyfunc.mean_and_cov(samples, weights)
+# print(mean)
+quantiles = [dyfunc.quantile(samps, [0.34,.64], weights=weights)
+             for samps in samples.T]
+
+for i in range(6):
+    print(mean[i],quantiles[i])
+
+#%%
+
+for i in range(6):
+    print('mean %.2f -+ %2f %2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1])))
+    if i==0:
+        with open (pruebas+'%s_vy_erros.txt'%(zone), 'w') as f:
+            f.write('%.2f %.2f %.2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1]))+'\n')
+    else:
+        with open (pruebas+'%s_vy_erros.txt'%(zone), 'a') as f:
+           f.write('%.2f %.2f %.2f'%(mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1]))+'\n')
+
+    
+              
+         
+       
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         

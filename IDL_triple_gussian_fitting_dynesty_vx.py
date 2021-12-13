@@ -60,7 +60,7 @@ rcParams.update({
 
 from matplotlib import rc
 # In[5]:
-auto='no'
+auto='auto'
 if auto =='auto':
     step=np.arange(1.5,2.5,0.5)#
 else:
@@ -84,7 +84,7 @@ for sloop in range(len(step)-1):
 
 
     # nbins=25+sloop
-    accu=2
+    accu=1.5
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
     flds=[16]#I feel that field 10 make things worse for some reason
@@ -267,7 +267,7 @@ for sloop in range(len(step)-1):
         mu2=2*umu2-2/2
         # sigma2 =3.6*usigma2
         sigma2=3.37+ (usigma2*1-1/2)
-        amp2 = uamp2  * 1                                          
+        amp2 = uamp2  * .55                                      
         # amp2=0.35 +(uamp2*0.2-0.2/2)
         
         mu3 =4*(umu3) # scale and shift to [-3., 3.)
@@ -320,6 +320,14 @@ for sloop in range(len(step)-1):
     
     plt.show()
     
+        # In[13]:
+    
+    
+    from dynesty import utils as dyfunc
+    
+    samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+    mean, cov = dyfunc.mean_and_cov(samples, weights)
+    print(mean)
     
     # In[11]:
     
@@ -329,7 +337,7 @@ for sloop in range(len(step)-1):
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     #Thsi is the corner plot
     sp=np.ones(9)*0.68
-    fig, axes = dyplot.cornerplot(res, color='royalblue' ,show_titles=True, quantiles_2d=[0.025, 0.5, 0.975],
+    fig, axes = dyplot.cornerplot(res, color='royalblue' ,show_titles=True,quantiles=[0.34,0.68],truths=mean,
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(9, 9, figsize=(28, 28)))
     
@@ -346,11 +354,11 @@ for sloop in range(len(step)-1):
     # In[13]:
     
     
-    from dynesty import utils as dyfunc
+    # from dynesty import utils as dyfunc
     
-    samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
-    mean, cov = dyfunc.mean_and_cov(samples, weights)
-    print(mean)
+    # samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+    # mean, cov = dyfunc.mean_and_cov(samples, weights)
+    # print(mean)
     
     
     # In[14]:
@@ -477,7 +485,7 @@ for sloop in range(len(step)-1):
 # In[ ]:
 #This plot the mean gaussian, put values of the gaussian in mean[]
 plt.figure(figsize =(8,8))
-mean=[-1.6043,	1.86713333333333,	0.360133333333333,	-0.4019,	3.41566666666667,	0.375,	2.78246666666667,	1.79223333333333,	0.257133333333333,]
+# mean=[-1.6043,	1.86713333333333,	0.360133333333333,	-0.4019,	3.41566666666667,	0.375,	2.78246666666667,	1.79223333333333,	0.257133333333333,]
 h=plt.hist(v_x*-1, bins= 20, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(-12, max(x), 100)
@@ -497,4 +505,25 @@ plt.ylabel('N')
 plt.legend(['Zone B'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+
+
+#%%
+
+
+samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+mean, cov = dyfunc.mean_and_cov(samples, weights)
+# print(mean)
+quantiles = [dyfunc.quantile(samps, [0.34,.68], weights=weights)
+             for samps in samples.T]
+
+for i in range(9):
+    print(mean[i],quantiles[i])
+
+#%%
+
+for i in range(9):
+    print('%s %.2f -+ %2f %2f'%(labels[i],mean[i],abs(mean[i]-quantiles[i][0]),abs(mean[i]-quantiles[i][1])))
+
+
+
 
