@@ -360,7 +360,7 @@ for sloop in range(len(step)-1):
     #     else:
     #         plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
     plt.ylabel('N')
-    plt.legend(['Comparation field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+    plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
     plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
 #%%    

@@ -108,7 +108,7 @@ absc=[x_in[1,:],x_out[1,:]]
 ejes_no=[no_x_in[0,:],no_x_out[0,:]]
 absc_no=[no_x_in[1,:],no_x_out[1,:]]
 
-zones=['Brick field', 'Comparation field']
+zones=['Brick field', 'Comparison field']
 rcParams.update({'font.size': 40})
 accu=2
 fig, ax=plt.subplots(1,2,figsize=(20,10))
