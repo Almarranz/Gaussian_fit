@@ -108,7 +108,7 @@ absc=[x_in[1,:],x_out[1,:]]
 ejes_no=[no_x_in[0,:],no_x_out[0,:]]
 absc_no=[no_x_in[1,:],no_x_out[1,:]]
 
-zones=['Zone A', 'Zone B']
+zones=['Brick field', 'Comparation field']
 rcParams.update({'font.size': 40})
 accu=2
 fig, ax=plt.subplots(1,2,figsize=(20,10))
@@ -122,7 +122,7 @@ for i in range(len(ejes)):
     ax[i].set_ylim(0,8)
     ax[i].set_xlabel('[H]',fontsize=40)
     ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=40)
-    ax[i].legend(['%s'%(zones[i])],fontsize=40,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+    ax[i].legend(['%s'%(zones[i])],fontsize=40,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 
 #%%
 print(len(x_in[0]))
