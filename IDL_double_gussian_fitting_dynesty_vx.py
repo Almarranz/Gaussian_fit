@@ -74,7 +74,7 @@ else:
 #chip='both'
 ran=0
 for sloop in range(len(step)):
-    sm=0.45
+    sm=0.33
     chip='both'
     
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
@@ -289,10 +289,10 @@ for sloop in range(len(step)):
     #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     
-    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, 
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, truths=mean,
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
-    plt.legend(['Zone A, $\mu_{l}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
+    plt.legend(['Brick field, $\mu_{l}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
 
     
     plt.show() 
@@ -435,13 +435,14 @@ mean, cov = dyfunc.mean_and_cov(samples, weights)
 quantiles = [dyfunc.quantile(samps, [0.16,0.5,0.84], weights=weights)
              for samps in samples.T]
 
-# for i in range(6):
-#     print(mean[i],quantiles[i])
+for i in range(6):
+    print(mean[i],quantiles[i])
 
 #%%
 
 for i in range(6):
-    print('mean %.2f -+ %2f %2f'%(mean[i],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    print('medin %.2f -+ %2f %2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    print(' mean %.2f -+ %2f %2f'%(mean[i],mean[i]-quantiles[i][0],quantiles[i][2]-mean[i])+'\n'+30*'*')
     if i==0:
         with open (pruebas+'brick_vx_erros.txt', 'w') as f:
             f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
