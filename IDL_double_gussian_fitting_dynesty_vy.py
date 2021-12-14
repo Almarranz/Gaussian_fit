@@ -506,7 +506,7 @@ plt.xlim(-15,15)
 plt.gca().invert_xaxis()
   
 plt.ylabel('N')
-plt.legend(['Control Zone'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+plt.legend(['Control field'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
 
@@ -534,16 +534,12 @@ for i in range(6):
         with open (pruebas+'%s_vy_erros.txt'%(zone), 'a') as f:
            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
 
-    
-              
+#%%
+print(np.mean(results.samples[:,5]))   
          
-       
-         
-         
-         
-         
-         
-         
+fig, ax = plt.subplots(figsize=(8,8))
+h=ax.hist(results.samples[:,1], bins= auto, color='darkblue', alpha = 0.6, density =False, histtype = 'stepfilled')
+           
          
          
          
