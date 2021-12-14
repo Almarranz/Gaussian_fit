@@ -422,7 +422,7 @@ plt.xlim(-15,15)
 plt.gca().invert_xaxis()
   
 plt.ylabel('N')
-plt.legend(['Brick Zone'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
 

@@ -40,7 +40,7 @@ rcParams.update({'ytick.major.width': '1.5'})
 rcParams.update({'ytick.minor.pad': '7.0'})
 rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
-rcParams.update({'font.size': 20})
+rcParams.update({'font.size': 15})
 
 #%%
 # data='/Users/amartinez/Desktop/for_Rainer/same_pix_scale/'
@@ -66,6 +66,8 @@ rcParams.update({'font.size': 20})
 # # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 # plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 #%%
+rcParams.update({'font.size': 20})
+
 band='H'
 exptime=10
 #chip=1
@@ -77,7 +79,7 @@ name='NPL_054'
 chip=3
 ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b=np.loadtxt(results+name+'_chip%s.txt'%(chip),unpack=True)#header='ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b'
 dxy=np.sqrt((dx)**2+(dy)**2)
-fig, ax =plt.subplots(1,1,figsize=(10,10))
+fig, ax =plt.subplots(1,1,figsize=(8,8))
 ax.scatter(mag,dxy*1000,color='k',s=5, marker='.')
 ax.grid()
 plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
@@ -92,7 +94,7 @@ ax.set_xlim(12,19)
 plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 
 #%%
-rcParams.update({'font.size': 30})
+
 x_in=np.loadtxt(pruebas+'dvx_mag_IN.txt')#header='mh_all,dvx_all')
 no_x_in=np.loadtxt(pruebas+'NO_dvx_mag_IN.txt')#header='mh_all,dvx_all')
 
@@ -106,23 +108,52 @@ absc=[x_in[1,:],x_out[1,:]]
 ejes_no=[no_x_in[0,:],no_x_out[0,:]]
 absc_no=[no_x_in[1,:],no_x_out[1,:]]
 
-zones=['Zone A', 'Zone B']
-
-accu=[2,2]
+zones=['Brick field', 'Control field']
+rcParams.update({'font.size': 40})
+accu=2
 fig, ax=plt.subplots(1,2,figsize=(20,10))
 for i in range(len(ejes)):
     ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
     # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
-    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=1,s=30)
-    ax[i].axhline(accu[i], color='r', linestyle='dashed', linewidth=3)
+    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=25)
+    ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
     # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
     ax[i].set_xlim(12,19)
     ax[i].set_ylim(0,8)
     ax[i].set_xlabel('[H]',fontsize=40)
-    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas\ a^{-1})}$',fontsize=30)
-    ax[i].legend(['%s'%(zones[i])],fontsize=30,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=40)
+    ax[i].legend(['%s'%(zones[i])],fontsize=40,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
 
-
+#%%
+print(len(x_in[0]))
+#%%
+brick='/Users/amartinez/Desktop/PhD/My_papers/brick/'
+im3 = plt.imread(brick+'1_vy_in_poiss.png')
+im4 = plt.imread(brick+'2_vx_in_poiss.png')
+im1 = plt.imread(brick+'3_vy_out_poiss.png')
+im2 = plt.imread(brick+'4_vx_out_poiss.png')
+ims=[[im1,im2],[im3,im4]]
+fig, ax = plt.subplots(2,2,figsize=(40,40))
+for i in range(2):
+    for j in range(2):
+        ax[i,j].imshow(ims[i][j])
+        ax[i,j].axis('off')
+plt.subplots_adjust(wspace=-0.005, hspace=0)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 
