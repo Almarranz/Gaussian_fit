@@ -327,10 +327,11 @@ for sloop in range(len(step)-1):
     
     #%%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
     # This is de corner plot
-    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, quantiles=[0.34,0.68],truths=mean,
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=False, quantiles=[0.16,0.5,0.68],truths=mean,
+                                  quantiles_2d=[0.16,0.5,0.68],
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
-    plt.legend(['Zone B, $\mu_{b}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
+    plt.legend(['Comparison field, $\mu_{b}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
     
     plt.show() 
     
@@ -526,7 +527,8 @@ quantiles = [dyfunc.quantile(samps, [0.16,0.5,0.84], weights=weights)
 #%%
 
 for i in range(6):
-    print('mean %.2f -+ %2f %2f'%(mean[i],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    print('medin %.2f -+ %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    print(' mean %.2f -+ %.2f %.2f'%(mean[i],mean[i]-quantiles[i][0],quantiles[i][2]-mean[i])+'\n'+30*'*')
     if i==0:
         with open (pruebas+'%s_vy_erros.txt'%(zone), 'w') as f:
             f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
@@ -535,11 +537,13 @@ for i in range(6):
            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
 
 #%%
-print(np.mean(results.samples[:,5]))   
-         
-fig, ax = plt.subplots(figsize=(8,8))
-h=ax.hist(results.samples[:,1], bins= auto, color='darkblue', alpha = 0.6, density =False, histtype = 'stepfilled')
-           
+# =============================================================================
+# print(np.mean(results.samples[:,5]))   
+#          
+# fig, ax = plt.subplots(figsize=(8,8))
+# h=ax.hist(results.samples[:,1], bins= auto, color='darkblue', alpha = 0.6, density =False, histtype = 'stepfilled')
+#            
+# =============================================================================
          
          
          

@@ -311,7 +311,8 @@ for sloop in range(len(step)-1):
     
     
     # truths = [mu1_true, sigma1_true, amp1_true, mu2_true, sigma2_true, amp2_true]
-    labels = [r'$mu1$', r'$sigma1$', r'$amp1$', r'$mu2$', r'$sigma2$', r'$amp2$',r'$mu3$', r'$sigma3$', r'$amp3$']
+    labels = [r'$\mathrm{\mu 1}$', r'$\mathrm{\sigma 1}$', r'$amp1$', r'$\mathrm{\mu 2}$', r'$\mathrm{\sigma 2}$', r'$amp2$', 
+              r'$\mathrm{\mu 3}$', r'$\mathrm{\sigma 3}$', r'$amp3$']
     # fig, axes = dyplot.traceplot(sampler.results, truths=truths, labels=labels,
     #                              fig=plt.subplots(6, 2, figsize=(16, 27)))
     
@@ -337,11 +338,12 @@ for sloop in range(len(step)-1):
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     #Thsi is the corner plot
     sp=np.ones(9)*0.68
-    fig, axes = dyplot.cornerplot(res, color='royalblue' ,show_titles=True,quantiles=[0.34,0.68],truths=mean,
-                                  title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
+    fig, axes = dyplot.cornerplot(res, color='royalblue' ,show_titles=False,quantiles=[0.16,0.5,0.84],truths=mean,
+                                  quantiles_2d=[0.16,0.5,0.84],
+                                  title_kwargs=({'x': 0.65, 'y': 1.05}), labels=labels,
                                   fig=plt.subplots(9, 9, figsize=(28, 28)))
     
-    plt.legend(['Zone B, $\mu_{l}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1.2,9.8),handlelength=-0.0)
+    plt.legend(['Comparison field, $\mu_{l}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1.2,9.8),handlelength=-0.0)
     plt.show() 
     
     
@@ -486,7 +488,7 @@ for sloop in range(len(step)-1):
 #This plot the mean gaussian, put values of the gaussian in mean[]
 plt.figure(figsize =(8,8))
 # mean=[-1.6043,	1.86713333333333,	0.360133333333333,	-0.4019,	3.41566666666667,	0.375,	2.78246666666667,	1.79223333333333,	0.257133333333333,]
-h=plt.hist(v_x*-1, bins= 20, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+h=plt.hist(v_x*-1, bins= 18, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(-12, max(x), 100)
 
@@ -502,7 +504,7 @@ plt.xlim(-15,15)
 plt.gca().invert_xaxis()
   
 plt.ylabel('N')
-plt.legend(['Control field'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
 
@@ -522,7 +524,8 @@ for i in range(9):
 #%%
 
 for i in range(9):
-    print('mean %.2f -+ %2f %2f'%(mean[i],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    print('medin %.2f -+ %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
+    print(' mean %.2f -+ %.2f %.2f'%(mean[i],mean[i]-quantiles[i][0],quantiles[i][2]-mean[i])+'\n'+30*'*')
     if i==0:
         with open (pruebas+'%s_vx_erros.txt'%(zone), 'w') as f:
             f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
