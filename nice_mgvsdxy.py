@@ -140,6 +140,21 @@ for i in range(2):
         ax[i,j].axis('off')
 plt.subplots_adjust(wspace=-0.005, hspace=0)
     
+# =============================================================================
+# brick='/Users/amartinez/Desktop/PhD/My_papers/brick/'
+# im3 = plt.imread(brick+'1_vy_in_poiss_unc.png')
+# im4 = plt.imread(brick+'2_vx_in_poiss_unc.png')
+# im1 = plt.imread(brick+'3_vy_out_poiss_unc.png')
+# im2 = plt.imread(brick+'4_vx_out_poiss_unc.png')
+# ims=[[im1,im2],[im3,im4]]
+# fig, ax = plt.subplots(2,2,figsize=(40,40))
+# for i in range(2):
+#     for j in range(2):
+#         ax[i,j].imshow(ims[i][j])
+#         ax[i,j].axis('off')
+# plt.subplots_adjust(wspace=-0.005, hspace=0)
+# =============================================================================
+    
     
     
     

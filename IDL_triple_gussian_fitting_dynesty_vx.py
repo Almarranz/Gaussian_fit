@@ -25,6 +25,7 @@ import dynesty
 import scipy.integrate as integrate
 from astropy.stats import sigma_clip
 from astropy.stats import sigma_clipped_stats
+from matplotlib.ticker import FormatStrFormatter
 # In[4]:
 
 band='H'
@@ -283,7 +284,7 @@ for sloop in range(len(step)-1):
     # In[8]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=2000,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=2009,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -533,6 +534,75 @@ for i in range(9):
         with open (pruebas+'%s_vx_erros.txt'%(zone), 'a') as f:
            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
 
-    
-         
+#%%  
+qua=[]
+parts=[0.16,0.5,0.84]
+qua= [dyfunc.quantile(samps,[0.16,0.5,0.84], weights=weights) for samps in samples.T]
+
+qua=np.array(qua)
+for i in range(2):
+    ga16=qua[:,0]
+    ga84=qua[:,2]
+print(qua[:,1])
+gau1_16= gaussian(xplot, ga16[0], ga16[1], ga16[2]) 
+gau1_84= gaussian(xplot, ga84[0], ga84[1], ga84[2])
+
+gau2_16= gaussian(xplot, ga16[3], ga16[4], ga16[5]) 
+gau2_84= gaussian(xplot, ga84[3], ga84[4], ga84[5])
+
+gau3_16= gaussian(xplot, ga16[6], ga16[7], ga16[8]) 
+gau3_84= gaussian(xplot, ga84[6], ga84[7], ga84[8])
+
+
+
+gau_med = gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]) + gaussian(xplot*-1, mean[6], mean[7], mean[8])
+
+gau_med1 = gaussian(xplot*-1, mean[0], mean[1], mean[2])
+gau_med2 = gaussian(xplot*-1, mean[3], mean[4], mean[5])
+#%%
+
+fig, ax = plt.subplots(figsize=(8,8))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+# mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
+h=plt.hist(v_x*-1, bins= 18, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
+xplot = np.linspace(min(x)-2, max(x), 100)
+
+
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]) + gaussian(xplot*-1, mean[6], mean[7], mean[8]), color="darkorange", linewidth=3, alpha=1)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
+
+# plt.plot(xplot, gau1_16 , color="yellow", linewidth=2, alpha=1)
+# plt.plot(xplot, gau2_16 , color="red", linewidth=2, alpha=1)
+
+# plt.plot(xplot, gau1_84 , color="yellow", linewidth=2, alpha=1)
+# plt.plot(xplot, gau2_84 , color="red", linewidth=2, alpha=1)
+
+
+plt.fill_between(xplot*-1,gau1_16+gau2_16+gau3_16,gau1_84+gau2_84+gau3_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+
+plt.fill_between(xplot*-1,gau1_16,gau1_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+plt.fill_between(xplot*-1,gau2_16,gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+plt.fill_between(xplot*-1,gau3_16,gau3_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+
+plt.xlim(-15,15)
+# plt.ylim(-0,0.15)
+plt.gca().invert_xaxis()
+  
+plt.ylabel('N')
+plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+
+        
+
+
+
+
+
 
