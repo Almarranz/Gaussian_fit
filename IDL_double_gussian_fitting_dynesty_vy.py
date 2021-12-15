@@ -265,7 +265,7 @@ for sloop in range(len(step)-1):
     
     
     # truths = [mu1_true, sigma1_true, amp1_true, mu2_true, sigma2_true, amp2_true]
-    labels = [r'$mu1$', r'$sigma1$', r'$amp1$', r'$mu2$', r'$sigma2$', r'$amp2$']
+    labels =[r'$\mathrm{\mu 1}$', r'$\mathrm{\sigma 1}$', r'$amp1$', r'$\mathrm{\mu 2}$', r'$\mathrm{\sigma 2}$', r'$amp2$']
     # fig, axes = dyplot.traceplot(sampler.results, truths=truths, labels=labels,
     #                              fig=plt.subplots(6, 2, figsize=(16, 27)))
     
@@ -280,9 +280,18 @@ for sloop in range(len(step)-1):
     # fig, axes = dyplot.cornerplot(res, truths=truths, color='blue', show_titles=True, 
     #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
     # 
+        # In[13]:
+    
+    
+    from dynesty import utils as dyfunc
+    
+    samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+    mean, cov = dyfunc.mean_and_cov(samples, weights)
+    print(mean)
     # %%                              fig=plt.subplots(6, 6, figsize=(28, 28)))
     # This is de corner plot
-    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=True, truths=mean,
+    fig, axes = dyplot.cornerplot(res, color='royalblue', show_titles=False, truths=mean,
+                                  quantiles=[0.16,0.5,0.84], quantiles_2d=[0.16,0.5,0.84],
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
     plt.legend(['Brick field, $\mu_{b}$'],fontsize=70,markerscale=0,shadow=True,bbox_to_anchor=(1,6.5),handlelength=-0.0)
@@ -296,14 +305,7 @@ for sloop in range(len(step)-1):
     res.summary()
     
     
-    # In[13]:
-    
-    
-    from dynesty import utils as dyfunc
-    
-    samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
-    mean, cov = dyfunc.mean_and_cov(samples, weights)
-    print(mean)
+
     
     
     # In[14]:
@@ -508,5 +510,128 @@ for i in range(6):
 # print(len(hi2[0]),len(yerr))
 # print(hi2[0][10]) 
 # print(yerr[10])     
- 
+#%%   
+# =============================================================================
+# import numpy_indexed as npi
+# def sample_walkers(nsamples,flattened_chain):
+#     models = []
+#     models1 =[]
+#     models2 =[]
+#     # draw = np.floor(np.random.uniform(0,len(flattened_chain),size=nsamples)).astype(int)
+#     orden=(results.logl)[::-1]
+#     orden=orden[0:nsamples]
+#     draw=npi.indices(results.logl, orden)
+#     print(draw)
+#     # draw=[3009, 3008, 3007, 3006, 3005, 3004, 3003, 3002, 3001, 3000]
+#     thetas = flattened_chain[draw]
+#     for i in thetas:
+#         mod =  gaussian(xplot*-1, i[0],i[1],i[2])+gaussian(xplot*-1, i[3],i[4],i[5])
+#         models.append(mod)
+#         
+#         mod1 =  gaussian(xplot*-1, i[0],i[1],i[2])
+#         models1.append(mod1)
+#         
+#         mod2 =  gaussian(xplot*-1, i[3],i[4],i[5])
+#         models2.append(mod2)
+#     
+#     spread = np.std(models,axis=0)
+#     med_model = np.median(models,axis=0)
+#     
+#     spread1 = np.std(models1,axis=0)
+#     med_model1 = np.median(models1,axis=0)
+#     
+#     spread2 = np.std(models2,axis=0)
+#     med_model2 = np.median(models2,axis=0)
+#     print(draw)
+#     return med_model,spread,med_model1,spread1,med_model2,spread2
+# med_model,spread,med_model1,spread1,med_model2,spread2 = sample_walkers(int(len(samples)*0.34),samples)
+# # med_model,spread,med_model1,spread1,med_model2,spread2 = sample_walkers(2,samples)
+# 
+# 
+# fig, ax = plt.subplots(figsize=(8,8))
+# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+# # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
+# h=plt.hist(v_y*-1, bins= 30, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+# 
+# xplot = np.linspace(-15, 15, 100)
+# 
+# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+# 
+# plt.fill_between(xplot,med_model-spread,med_model+spread,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# plt.fill_between(xplot,med_model1-spread1,med_model1+spread1,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# plt.fill_between(xplot,med_model2-spread2,med_model2+spread2,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# 
+# plt.xlim(-15,15)
+# # plt.ylim(-0,0.15)
+# plt.gca().invert_xaxis()
+#   
+# plt.ylabel('N')
+# plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+# =============================================================================
+#%%
+qua=[]
+parts=[0.16,0.5,0.84]
+qua= [dyfunc.quantile(samps,[0.16,0.5,0.84], weights=weights) for samps in samples.T]
+
+qua=np.array(qua)
+for i in range(2):
+    ga16=qua[:,0]
+    ga84=qua[:,2]
+print(qua[:,1])
+gau1_16= gaussian(xplot*-1, ga16[0], ga16[1], ga16[2]) 
+gau1_84= gaussian(xplot*-1, ga84[0], ga84[1], ga84[2])
+
+gau2_16= gaussian(xplot*-1, ga16[3], ga16[4], ga16[5]) 
+gau2_84= gaussian(xplot*-1, ga84[3], ga84[4], ga84[5])
+
+gau_med = gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
+gau_med1 = gaussian(xplot*-1, mean[0], mean[1], mean[2])
+gau_med2 = gaussian(xplot*-1, mean[3], mean[4], mean[5])
+#%%
+
+fig, ax = plt.subplots(figsize=(8,8))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+# mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
+h=plt.hist(v_y, bins= 30, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+
+xplot = np.linspace(min(x)-2, max(x), 100)
+
+
+# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+
+plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+
+# plt.plot(xplot, gau1_16 , color="yellow", linewidth=2, alpha=1)
+# plt.plot(xplot, gau2_16 , color="red", linewidth=2, alpha=1)
+
+# plt.plot(xplot, gau1_84 , color="yellow", linewidth=2, alpha=1)
+# plt.plot(xplot, gau2_84 , color="red", linewidth=2, alpha=1)
+
+
+plt.fill_between(xplot,gau1_16+gau2_16,gau1_84+gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+
+plt.fill_between(xplot,gau1_16,gau1_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+plt.fill_between(xplot,gau2_16,gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+
+plt.xlim(-15,15)
+# plt.ylim(-0,0.15)
+plt.gca().invert_xaxis()
+  
+plt.ylabel('N')
+plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+
+
+
     
