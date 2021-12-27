@@ -435,20 +435,20 @@ print(list_bin)
 fig, ax = plt.subplots(figsize=(8,8))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[-0.0112947266666667,	1.52403177,	0.503273866666667,	-0.00513169666666667,	3.58441010666667,	0.496824623333333]
-h=plt.hist(v_y*-1, bins= 30, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+h=plt.hist(v_y, bins= 30, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(min(x)-2, max(x), 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
 
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
-plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
 plt.xlim(-15,15)
 plt.ylim(0,0.22)
 
-plt.gca().invert_xaxis()
+# plt.gca().invert_xaxis()
   
 plt.ylabel('N')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
@@ -585,15 +585,15 @@ for i in range(2):
     ga16=qua[:,0]
     ga84=qua[:,2]
 print(qua[:,1])
-gau1_16= gaussian(xplot*-1, ga16[0], ga16[1], ga16[2]) 
-gau1_84= gaussian(xplot*-1, ga84[0], ga84[1], ga84[2])
+gau1_16= gaussian(xplot, ga16[0], ga16[1], ga16[2]) 
+gau1_84= gaussian(xplot, ga84[0], ga84[1], ga84[2])
 
-gau2_16= gaussian(xplot*-1, ga16[3], ga16[4], ga16[5]) 
-gau2_84= gaussian(xplot*-1, ga84[3], ga84[4], ga84[5])
+gau2_16= gaussian(xplot, ga16[3], ga16[4], ga16[5]) 
+gau2_84= gaussian(xplot, ga84[3], ga84[4], ga84[5])
 
-gau_med = gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
-gau_med1 = gaussian(xplot*-1, mean[0], mean[1], mean[2])
-gau_med2 = gaussian(xplot*-1, mean[3], mean[4], mean[5])
+gau_med = gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5])
+gau_med1 = gaussian(xplot, mean[0], mean[1], mean[2])
+gau_med2 = gaussian(xplot, mean[3], mean[4], mean[5])
 #%%
 
 fig, ax = plt.subplots(figsize=(8,8))
@@ -606,10 +606,10 @@ xplot = np.linspace(min(x)-2, max(x), 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
 
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
-plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
 
 # plt.plot(xplot, gau1_16 , color="yellow", linewidth=2, alpha=1)
 # plt.plot(xplot, gau2_16 , color="red", linewidth=2, alpha=1)
@@ -618,14 +618,16 @@ plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", li
 # plt.plot(xplot, gau2_84 , color="red", linewidth=2, alpha=1)
 
 
-plt.fill_between(xplot,gau1_16+gau2_16,gau1_84+gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
-
-plt.fill_between(xplot,gau1_16,gau1_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
-plt.fill_between(xplot,gau2_16,gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
-
+# =============================================================================
+# plt.fill_between(xplot,gau1_16+gau2_16,gau1_84+gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# 
+# plt.fill_between(xplot,gau1_16,gau1_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# plt.fill_between(xplot,gau2_16,gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# 
+# =============================================================================
 plt.xlim(-15,15)
 # plt.ylim(-0,0.15)
-plt.gca().invert_xaxis()
+# plt.gca().invert_xaxis()
   
 plt.ylabel('N')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
