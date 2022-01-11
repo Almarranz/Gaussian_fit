@@ -63,7 +63,7 @@ from matplotlib import rc
 # In[5]:
 auto='auto'
 if auto =='auto':
-    step=np.arange(1.5,2.5,0.5)#
+    step=np.arange(1.5,2.1,0.5)#
 else:
     step=np.arange(0.7,1.21,0.1)#also works if running each bing width one by one, for some reason...
 print(step)
@@ -132,7 +132,8 @@ for sloop in range(len(step)-1):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
+        v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
+        
     print(len(v_x))
     mh_all=mh
     m_all=m
@@ -144,6 +145,7 @@ for sloop in range(len(step)-1):
     v_x=v_x[sel_M]
     v_y=v_y[sel_M]
     mh=mh[sel_M]
+    mk=mk[sel_M]
     m=m[sel_M]
     dvx=dvx[sel_M]
     dvy=dvy[sel_M]
@@ -153,14 +155,23 @@ for sloop in range(len(step)-1):
     v_x=v_x[sel_m]
     v_y=v_y[sel_m]
     mh=mh[sel_m]
+    mk=mk[sel_m]
     m=m[sel_m]
     dvx=dvx[sel_m]
     dvy=dvy[sel_m]
+    arg=arg[sel_m]
+    decg=decg[sel_m]
     
     sel=np.where((dvx<accu)&(dvy<accu))
     v_x=v_x[sel]
     v_y=v_y[sel]
     mh=mh[sel]
+    mk=mk[sel]
+    arg=arg[sel]
+    decg=decg[sel]
+    print(20*'$')
+    print(len(arg))
+    np.savetxt(gaussian+'%s_comparison_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),np.array([arg,decg,v_x,v_y,mk]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
 #%%
 
     fig,ax=plt.subplots(1,1)
@@ -284,7 +295,7 @@ for sloop in range(len(step)-1):
     # In[8]:
     
     
-    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=2009,
+    sampler = dynesty.NestedSampler(loglike, prior_transform, ndim=9, nlive=500,
                                             bound='multi', sample='rwalk')
     sampler.run_nested()
     res = sampler.results
@@ -584,11 +595,13 @@ plt.plot(xplot, gaussian(xplot*-1, mean[6], mean[7], mean[8])  , color="k", line
 # plt.plot(xplot, gau2_84 , color="red", linewidth=2, alpha=1)
 
 
-plt.fill_between(xplot*-1,gau1_16+gau2_16+gau3_16,gau1_84+gau2_84+gau3_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# =============================================================================
+# plt.fill_between(xplot*-1,gau1_16+gau2_16+gau3_16,gau1_84+gau2_84+gau3_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# =============================================================================
 
-plt.fill_between(xplot*-1,gau1_16,gau1_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
-plt.fill_between(xplot*-1,gau2_16,gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
-plt.fill_between(xplot*-1,gau3_16,gau3_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+plt.fill_between(xplot*-1,gau1_16,gau1_84,color='yellow',alpha=0.9,label=r'$1\sigma$ Posterior Spread')
+plt.fill_between(xplot*-1,gau2_16,gau2_84,color='red',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+plt.fill_between(xplot*-1,gau3_16,gau3_84,color='black',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
 
 plt.xlim(-15,15)
 # plt.ylim(-0,0.15)
