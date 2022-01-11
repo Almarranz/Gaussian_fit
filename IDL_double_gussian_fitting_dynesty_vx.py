@@ -60,7 +60,7 @@ rcParams.update({
 
 from matplotlib import rc
 # In[5]:
-auto='no'
+auto='auto'
 if auto =='auto':
     step=np.arange(1.5,2.5,0.5)#
 else:
@@ -68,7 +68,7 @@ else:
 print(step)
 media_amp=[]
 zone='Z1'
-
+degree=2
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)):
@@ -79,14 +79,14 @@ for sloop in range(len(step)):
     show_field='no'
     chip=3 #can be 1 or 4 (refers to the chip on GNS fields)
     field=16 #fields can be 3 or 20 (refers to GNS fields)
-    sm=0.5
+    sm=0.25
     
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
 
     # nbins=25+sloop
     
-    accu=2
+    accu=1.5
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
     flds=[16]#I feel that field 10 make things worse for some reason
@@ -133,7 +133,7 @@ for sloop in range(len(step)):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s.txt'%(zone,field,chip),unpack=True)
+        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx
@@ -422,13 +422,15 @@ for sloop in range(len(step)):
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 #%%
 #for file in range(1,4):
-    if sloop==0:
-        with open (pruebas+'%s_vx_2gauss_var.txt'%(zone), 'w') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-    else:
-        with open (pruebas+'%s_vx2gauss_var.txt'%(zone), 'a') as f:
-            f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
-
+# =============================================================================
+#     if sloop==0:
+#         with open (pruebas+'%s_vx_2gauss_var.txt'%(zone), 'w') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
+#     else:
+#         with open (pruebas+'%s_vx2gauss_var.txt'%(zone), 'a') as f:
+#             f.write('%.4f %.4f %.4f %.4f %.4f %.4f %.0f %s'%(mean[0], mean[1], mean[2],mean[3], mean[4], mean[5],results['logz'][-1],nbins)+'\n')
+# 
+# =============================================================================
 
 #%%
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
