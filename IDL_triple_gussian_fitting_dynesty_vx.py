@@ -81,16 +81,17 @@ for sloop in range(len(step)-1):
     accu=2 # select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
-            v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'UP_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
-            v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            # v_x2,v_y2,dvx2,dvy2,mh2,m2,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
-            # v_x3,v_y3,dvx3,dvy3,mh3,m3,ar,dec,arg,decg=np.loadtxt(data+'new_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
+            v_x2,v_y2,dvx2,dvy2,mh2,mk2,m2,ar2,dec2,arg2,decg2=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
+            v_x3,v_y3,dvx3,dvy3,mh3,mk3,m3,ar3,dec3,arg3,decg3=np.loadtxt(data+'UP_aa_IDL_arcsec_vx_vy_chip3.txt',unpack=True)
             v_x=np.r_[v_x2,v_x3]
             v_y=np.r_[v_y2,v_y3]
             dvx=np.r_[dvx2,dvx3]
             dvy=np.r_[dvy2,dvy3]
             mh=np.r_[mh2,mh3]
+            mk=np.r_[mk2,mk3]
             m=np.r_[m2,m3]
+            arg=np.r_[arg2,arg3]
+            decg=np.r_[dec2,dec3]
         elif chip==2 or chip==3:
             # lst=np.loadtxt(tmp+'aa_IDL_lst_chip%s.txt'%(chip))
             lst=np.loadtxt(tmp+'aa_IDL_lst_chip%s.txt'%(chip))
@@ -133,13 +134,22 @@ for sloop in range(len(step)-1):
     v_y=v_y[sel_m]
     mh=mh[sel_m]
     m=m[sel_m]
+    mk=mk[sel_m]
     dvx=dvx[sel_m]
     dvy=dvy[sel_m]
+    arg=arg[sel_m]
+    decg=decg[sel_m]
     
     sel=np.where((dvx<accu)&(dvy<accu))
     v_x=v_x[sel]
     v_y=v_y[sel]
     mh=mh[sel]
+    mk=mk[sel]
+    arg=arg[sel]
+    decg=decg[sel]
+    np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
+    # np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk]).T,header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
+
     fig,ax=plt.subplots(1,1)
     sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
