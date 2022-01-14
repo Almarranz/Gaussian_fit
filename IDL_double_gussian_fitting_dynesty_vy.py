@@ -129,7 +129,7 @@ for sloop in range(len(step)-1):
     mk=mk[sel]
     arg=arg[sel]
     decg=decg[sel]
-    np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
+    np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk,mh]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs, mH. (vx in image coordinates system)')
     # np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk]).T,header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
 
     fig,ax=plt.subplots(1,1)
@@ -620,7 +620,7 @@ xplot = np.linspace(min(x)-2, max(x), 100)
 
 plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) + gaussian(xplot, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
 
-plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2])  , color="k", linestyle='dashed', linewidth=2, alpha=1)
 plt.plot(xplot, gaussian(xplot, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
 
 # plt.plot(xplot, gau1_16 , color="yellow", linewidth=2, alpha=1)
@@ -644,7 +644,7 @@ plt.xlim(-15,15)
 plt.ylabel('N')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
 
 
 
