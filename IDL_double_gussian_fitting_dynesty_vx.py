@@ -62,9 +62,9 @@ from matplotlib import rc
 # In[5]:
 auto='auto'
 if auto =='auto':
-    step=np.arange(1.5,2.5,0.5)#
+    step=np.arange(1.5,2.0,0.5)#
 else:
-   step=np.arange(0.7,1.21,0.1)#also works if running each bing width one by one, for some reason...
+   step=np.arange(1,1.21,0.2)#also works if running each bing width one by one, for some reason...
 print(step)
 media_amp=[]
 zone='Z1'
@@ -74,7 +74,7 @@ degree=2
 for sloop in range(len(step)):
     
     
-    plt.rc('text', usetex=True)
+    # plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
     show_field='no'
     chip=3 #can be 1 or 4 (refers to the chip on GNS fields)
@@ -133,7 +133,7 @@ for sloop in range(len(step)):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
+        v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx
@@ -164,7 +164,7 @@ for sloop in range(len(step)):
 #%%
 
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=60,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
     # h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
     # h=ax.hist(v_x,bins=list_bin,edgecolor='black',linewidth=2,density=True)
@@ -190,18 +190,18 @@ for sloop in range(len(step)):
 #     y1=np.where(y1==0,0.001,y1)
 #     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
 # =============================================================================
-    yerr=[]
-    y=np.where(y==0,0.001,y)
-    y1=h1[0]
-    y1=np.where(y1==0,0.001,y1)
-    # yerr = y*np.sqrt(1/y1+1/len(v_x))
-    yerr = y*np.sqrt(1/y1)
-
 # =============================================================================
-#     yerr=0.0001
-#     y += yerr
-#     ax.scatter(x,y,color='g',zorder=3)
+#     yerr=[]
+#     y=np.where(y==0,0.001,y)
+#     y1=h1[0]
+#     y1=np.where(y1==0,0.001,y1)
+#     # yerr = y*np.sqrt(1/y1+1/len(v_x))
+#     yerr = y*np.sqrt(1/y1)
+# 
 # =============================================================================
+    yerr=0.0001
+    y += yerr
+    ax.scatter(x,y,color='g',zorder=3)
     
     # In[6]:
     count=0
@@ -261,12 +261,12 @@ for sloop in range(len(step)):
         umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
     
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-        mu1 =6*umu1-6/3  # scale and shift to [-3., 3.)
+        mu1 =-3*umu1-1  # scale and shift to [-3., 3.)
         sigma1 = 5*(usigma1)
-        amp1 = uamp1
+        amp1 = uamp1*0.5
         
         # mu2 = 0.12+((umu2*0.06)-0.03)
-        mu2=4*umu2-2
+        mu2=4*umu2+1
         # sigma2 =3.3+((usigma2*0.33)-0.33/2)
         sigma2=5*usigma2
         amp2 = uamp2*1                                                   
@@ -433,23 +433,25 @@ for sloop in range(len(step)):
 # =============================================================================
 
 #%%
-pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
-
-media=np.loadtxt(pruebas+'%s_vx_gauss_var.txt'%(zone))#,delimiter=',')
-va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
-for i in range(len(va)):
-    print('%s = %.4f '%(va[i],np.average(media[:,i])))
-    print('-'*20)
-for i in range(len(va)):
-    print('+'*20)
-    print('d%s = %.4f'%(va[i],np.std(media[:,i])))
-#%%
-for i in range(len(va)):
-    print('+'*20)
-    print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
-
-# In[ ]:
-
-print(sampler.citations)
-
+# =============================================================================
+# pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
+# 
+# media=np.loadtxt(pruebas+'%s_vx_gauss_var.txt'%(zone))#,delimiter=',')
+# va=['mu1','sigma1','amp1','mu2','sigma2','amp2']
+# for i in range(len(va)):
+#     print('%s = %.4f '%(va[i],np.average(media[:,i])))
+#     print('-'*20)
+# for i in range(len(va)):
+#     print('+'*20)
+#     print('d%s = %.4f'%(va[i],np.std(media[:,i])))
+# #%%
+# for i in range(len(va)):
+#     print('+'*20)
+#     print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
+# 
+# # In[ ]:
+# 
+# print(sampler.citations)
+# 
+# =============================================================================
 

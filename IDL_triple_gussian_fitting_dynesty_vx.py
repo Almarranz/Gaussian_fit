@@ -79,13 +79,13 @@ for sloop in range(len(step)-1):
     show_field='no'
     chip=3 #can be 1 or 4 (refers to the chip on GNS fields)
     field=16 #fields can be 3 or 20 (refers to GNS fields)
-    sm=0.25
+    sm=0.5
     
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
 
     # nbins=25+sloop
-    accu=1.5
+    accu=2
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
     flds=[16]#I feel that field 10 make things worse for some reason
@@ -171,7 +171,7 @@ for sloop in range(len(step)-1):
     decg=decg[sel]
     print(20*'$')
     print(len(arg))
-    np.savetxt(gaussian+'%s_comparison_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),np.array([arg,decg,v_x,v_y,mk]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
+    np.savetxt(gaussian+'%s_comparison_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),np.array([arg,decg,v_x,v_y,mk,mh]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs, mh. (vx in image coordinates system)')
 #%%
 
     fig,ax=plt.subplots(1,1)
