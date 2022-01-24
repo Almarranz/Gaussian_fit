@@ -81,7 +81,7 @@ for sloop in range(len(step)):
     
     # nbins=9
     
-    accu=2# select stars cutting by uncertainty. With a large value all star are selected
+    accu=1# select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
             v_x2,v_y2,dvx2,dvy2,mh2,mk2,m2,ar2,dec2,arg2,decg2=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
@@ -146,6 +146,18 @@ for sloop in range(len(step)):
     arg=arg[sel]
     decg=decg[sel]
     np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
+
+#Choose extintion  
+# =============================================================================
+#     ext=np.where((mh-mk<1.9) & (mh-mk>1.3))
+#     v_x=v_x[ext]
+#     v_y=v_y[ext]
+#     mh=mh[ext]
+#     mk=mk[ext]
+#     arg=arg[ext]
+#     decg=decg[ext]
+#     
+# =============================================================================
     # np.savetxt(data+'brick_fiel
     fig,ax=plt.subplots(1,1)
     sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx

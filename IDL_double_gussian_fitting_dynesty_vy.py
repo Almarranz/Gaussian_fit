@@ -132,6 +132,20 @@ for sloop in range(len(step)-1):
     np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk,mh]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs, mH. (vx in image coordinates system)')
     # np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk]).T,header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
 
+#Choose extintion   
+# =============================================================================
+#     ext=np.where(mh-mk)
+#     v_x=v_x[ext]
+#     v_y=v_y[ext]
+#     mh=mh[ext]
+#     mk=mk[ext]
+#     arg=arg[ext]
+#     decg=decg[ext]
+#     
+# =============================================================================
+    
+    
+    
     fig,ax=plt.subplots(1,1)
     sig_h=sigma_clip(v_y,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_y=v_y[sig_h.mask==False]

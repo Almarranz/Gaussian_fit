@@ -71,14 +71,14 @@ media_amp=[]
     # plt.rc('text', usetex=True)
     # plt.rc('font', family='serif')
 for sloop in range(len(step)-1):
-    sm=0.5
+    sm=10
     chip='both'
     # list_bin=np.arange(-15,15+step[sloop],step[sloop])
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
    
    
 
-    accu=2 # select stars cutting by uncertainty. With a large value all star are selected
+    accu=20 # select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
             v_x2,v_y2,dvx2,dvy2,mh2,mk2,m2,ar2,dec2,arg2,decg2=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
@@ -148,8 +148,20 @@ for sloop in range(len(step)-1):
     arg=arg[sel]
     decg=decg[sel]
     np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
+   
     # np.savetxt(data+'brick_field_degree%s.txt'%(2),np.array([arg,decg,v_x,v_y,mk]).T,header='ra, dec, vx(mas/yr), vy(mas/yr), mKs. (vx in image coordinates system)')
-
+#Chooose extintion    
+# =============================================================================
+#     ext=np.where((mh-mk<2) & (mh-mk>1.3))
+#     v_x=v_x[ext]
+#     v_y=v_y[ext]
+#     mh=mh[ext]
+#     mk=mk[ext]
+#     arg=arg[ext]
+#     decg=decg[ext]
+# =============================================================================
+    
+    
     fig,ax=plt.subplots(1,1)
     sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
