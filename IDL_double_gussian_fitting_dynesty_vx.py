@@ -74,7 +74,7 @@ else:
 #chip='both'
 ran=0
 for sloop in range(len(step)):
-    sm=0.5
+    sm=0.47
     chip='both'
     
     in_brick=1#slect stars on the brick, if =1 or out of brick if =1.
@@ -160,7 +160,7 @@ for sloop in range(len(step)):
 # =============================================================================
     # np.savetxt(data+'brick_fiel
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
+    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
     v_x=v_x[sig_h.mask==False]
     if auto != 'auto':
         list_bin=np.arange(min(v_y),max(v_y),step[sloop])
@@ -428,9 +428,9 @@ for sloop in range(len(step)):
 fig, ax = plt.subplots(figsize=(8,8))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
-h=plt.hist(v_x*-1, bins= 20, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+h=plt.hist(v_x*-1, bins= 21, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
-xplot = np.linspace(min(x)-3, max(x), 100)
+xplot = np.linspace(min(x), max(x)+3, 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
@@ -575,61 +575,64 @@ for i in range(6):
 #     qua.append(results.logl[::-1][pos1])
 # qua=np.array(qua)
 # idx = npi.indices(results.logl, qua)
-#%%
-qua=[]
-parts=[0.16,0.5,0.84]
-qua= [dyfunc.quantile(samps,[0.16,0.5,0.84], weights=weights) for samps in samples.T]
-
-qua=np.array(qua)
-for i in range(2):
-    ga16=qua[:,0]
-    ga84=qua[:,2]
-print(qua[:,1])
-gau1_16= gaussian(xplot*-1, ga16[0], ga16[1], ga16[2]) 
-gau1_84= gaussian(xplot*-1, ga84[0], ga84[1], ga84[2])
-
-gau2_16= gaussian(xplot*-1, ga16[3], ga16[4], ga16[5]) 
-gau2_84= gaussian(xplot*-1, ga84[3], ga84[4], ga84[5])
-
-gau_med = gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
-gau_med1 = gaussian(xplot*-1, mean[0], mean[1], mean[2])
-gau_med2 = gaussian(xplot*-1, mean[3], mean[4], mean[5])
-#%%
-
-fig, ax = plt.subplots(figsize=(8,8))
-ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-# mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
-h=plt.hist(v_x*-1, bins= 21, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-
-xplot = np.linspace(min(x), max(x)+2, 100)
-
-# plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
-
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
-
-plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
-plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
-
-# plt.plot(xplot, gau1_16 , color="yellow", linewidth=2, alpha=1)
-# plt.plot(xplot, gau2_16 , color="red", linewidth=2, alpha=1)
-
-# plt.plot(xplot, gau1_84 , color="yellow", linewidth=2, alpha=1)
-# plt.plot(xplot, gau2_84 , color="red", linewidth=2, alpha=1)
-
-
-
-plt.fill_between(xplot,gau1_16+gau2_16,gau1_84+gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
-
-plt.fill_between(xplot,gau1_16,gau1_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
-plt.fill_between(xplot,gau2_16,gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
-
-plt.xlim(-15,15)
-# plt.ylim(-0,0.15)
-plt.gca().invert_xaxis()
-  
-plt.ylabel('N')
-plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
-# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
-
-
+#%%Plot uncertainties 
+# =============================================================================
+# qua=[]
+# parts=[0.16,0.5,0.84]
+# qua= [dyfunc.quantile(samps,[0.16,0.5,0.84], weights=weights) for samps in samples.T]
+# 
+# qua=np.array(qua)
+# for i in range(2):
+#     ga16=qua[:,0]
+#     ga84=qua[:,2]
+# print(qua[:,1])
+# gau1_16= gaussian(xplot*-1, ga16[0], ga16[1], ga16[2]) 
+# gau1_84= gaussian(xplot*-1, ga84[0], ga84[1], ga84[2])
+# 
+# gau2_16= gaussian(xplot*-1, ga16[3], ga16[4], ga16[5]) 
+# gau2_84= gaussian(xplot*-1, ga84[3], ga84[4], ga84[5])
+# 
+# gau_med = gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5])
+# gau_med1 = gaussian(xplot*-1, mean[0], mean[1], mean[2])
+# gau_med2 = gaussian(xplot*-1, mean[3], mean[4], mean[5])
+# #%%
+# 
+# fig, ax = plt.subplots(figsize=(8,8))
+# ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+# # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
+# h=plt.hist(v_x*-1, bins= 21, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+# 
+# xplot = np.linspace(min(x), max(x)+2, 100)
+# 
+# # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2]) + gaussian(xplot*-1, mean[3], mean[4], mean[5]), color="darkorange", linewidth=3, alpha=1)
+# 
+# plt.plot(xplot, gaussian(xplot*-1, mean[0], mean[1], mean[2])  , color="yellow", linestyle='dashed', linewidth=2, alpha=1)
+# plt.plot(xplot, gaussian(xplot*-1, mean[3], mean[4], mean[5])  , color="red", linestyle='dashed', linewidth=2, alpha=1)
+# 
+# # plt.plot(xplot, gau1_16 , color="yellow", linewidth=2, alpha=1)
+# # plt.plot(xplot, gau2_16 , color="red", linewidth=2, alpha=1)
+# 
+# # plt.plot(xplot, gau1_84 , color="yellow", linewidth=2, alpha=1)
+# # plt.plot(xplot, gau2_84 , color="red", linewidth=2, alpha=1)
+# 
+# 
+# 
+# plt.fill_between(xplot,gau1_16+gau2_16,gau1_84+gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# 
+# plt.fill_between(xplot,gau1_16,gau1_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# plt.fill_between(xplot,gau2_16,gau2_84,color='grey',alpha=0.5,label=r'$1\sigma$ Posterior Spread')
+# 
+# plt.xlim(-15,15)
+# # plt.ylim(-0,0.15)
+# plt.gca().invert_xaxis()
+#   
+# plt.ylabel('N')
+# plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
+# 
+# 
+# 
+# =============================================================================
