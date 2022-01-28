@@ -384,7 +384,7 @@ for sloop in range(len(step)-1):
     # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
     plt.text(min(x),max(h[0]-0.05),'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # # # if accu <10:
-    # # #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+    # # #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ yr^{-1}$'%(accu),color='b')
     plt.text(min(x),max(h[0]-0.04),'nbins=%s'%(len(h[0])),color='b')
     # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
     # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
@@ -397,7 +397,7 @@ for sloop in range(len(step)-1):
     #         plt.text(max(x)/2,max(h[0]-0.05),'$list =%s %s$'%(lst,'out'),color='b')
     plt.ylabel('N')
     # # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-    plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$') 
+    plt.xlabel(r'$\mathrm{\mu_{b} (mas\ yr^{-1})}$') 
     plt.legend(['Zone A'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0) 
     # # #%%
     pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
@@ -479,7 +479,7 @@ plt.ylim(0,0.22)
 plt.ylabel('N')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{b} (mas\ yr^{-1})}$')    
     
  
 #%%
@@ -599,7 +599,7 @@ for i in range(6):
 # plt.ylabel('N')
 # plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
 # =============================================================================
 #%%
 qua=[]
@@ -658,7 +658,7 @@ plt.xlim(-15,15)
 plt.ylabel('N')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{b} (mas\ yr^{-1})}$')    
 
 
 

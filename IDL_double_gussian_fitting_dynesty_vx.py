@@ -81,7 +81,7 @@ for sloop in range(len(step)):
     
     # nbins=9
     
-    accu=1# select stars cutting by uncertainty. With a large value all star are selected
+    accu=2# select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
             v_x2,v_y2,dvx2,dvy2,mh2,mk2,m2,ar2,dec2,arg2,decg2=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
@@ -160,7 +160,7 @@ for sloop in range(len(step)):
 # =============================================================================
     # np.savetxt(data+'brick_fiel
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
+    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)#an outlier on vy is not(genarally) also on vx
     v_x=v_x[sig_h.mask==False]
     if auto != 'auto':
         list_bin=np.arange(min(v_y),max(v_y),step[sloop])
@@ -364,7 +364,7 @@ for sloop in range(len(step)):
     # plt.text(max(x)/2,max(h[0]),'$\mu_{2}=%.3f$'%(mean[3]),color='red')
     plt.text(min(x),max(h[0]-0.04),'$logz=%.0f$'%(results['logz'][-1]),color='b')
     # if accu<10:
-    #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+    #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vx}<%.1f\ mas\ yr^{-1}$'%(accu),color='b')
     plt.text(max(x)/2,max(h[0]-0.04),'$nbins=%s$'%(len(h[0])),color='b')
     # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]),color='red')
     # plt.text(max(x)/2,max(h[0]-0.02),'$amp_{2}=%.3f$'%(mean[5]),color='red')
@@ -377,7 +377,7 @@ for sloop in range(len(step)):
     plt.gca().invert_xaxis()
     plt.ylabel('N')
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-    plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
+    plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$') 
     
     fun1= lambda x: (mean[2] * (1 / (mean[1] * (np.sqrt(2 * np.pi)))) * np.exp(-np.power(x - mean[0], 2.) / (2 * np.power(mean[1], 2.))) )
     # result = integrate.quad(gaussian(x, mean[0], mean[1], mean[2]),-15,15)
@@ -430,7 +430,7 @@ ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
 h=plt.hist(v_x*-1, bins= 20, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
-xplot = np.linspace(min(x), max(x)+2, 100)
+xplot = np.linspace(min(x)-3, max(x), 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
@@ -445,7 +445,7 @@ plt.gca().invert_xaxis()
 plt.ylabel('N')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
 
 #%%
 
@@ -536,7 +536,7 @@ for i in range(6):
 # plt.ylabel('N')
 # plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+# plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
 # 
 # 
 # =============================================================================
@@ -630,6 +630,6 @@ plt.gca().invert_xaxis()
 plt.ylabel('N')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
 
 
