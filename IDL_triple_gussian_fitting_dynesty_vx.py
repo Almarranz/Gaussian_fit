@@ -74,7 +74,7 @@ degree=2
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)-1):
     
-    plt.rc('text', usetex=True)
+    plt.rc('text', usetex=False)
     plt.rc('font', family='serif')
     show_field='no'
     chip=3 #can be 1 or 4 (refers to the chip on GNS fields)
@@ -85,7 +85,7 @@ for sloop in range(len(step)-1):
 
 
     # nbins=25+sloop
-    accu=2
+    accu=1.5
     
     # flds=[16,3,7]#I feel that field 10 make things worse for some reason
     flds=[16]#I feel that field 10 make things worse for some reason
@@ -175,7 +175,7 @@ for sloop in range(len(step)-1):
 #%%
 
     fig,ax=plt.subplots(1,1)
-    sig_h=sigma_clip(v_x,sigma=5,maxiters=20,cenfunc='mean',masked=True)
+    sig_h=sigma_clip(v_x,sigma=500,maxiters=20,cenfunc='mean',masked=True)
     v_x=v_x[sig_h.mask==False]
     # h=ax.hist(v_x,bins=nbins,edgecolor='black',linewidth=2,density=True)
     if auto != 'auto':
