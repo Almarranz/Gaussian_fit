@@ -431,7 +431,7 @@ for sloop in range(len(step)-1):
     
     plt.text(max(x)/2,max(h[0]/2)-0.01,'logz=%.0f'%(results['logz'][-1]),color='b')
     # # if accu<10:
-    # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+    # #     plt.text(min(x),max(h[0]/2)-0.005,'$\sigma_{vx}<%.1f\ mas\ yr^{-1}$'%(accu),color='b')
     plt.text(max(x)/2,max(h[0]/2)-0.020,'nbins=%s'%(len(h[0])),color='b')
     # plt.text(min(x),max(h[0]/2)-0.030,'$diff\ mag < %s$'%(sm),color='b')
     # if show_field=='yes':
@@ -443,7 +443,7 @@ for sloop in range(len(step)-1):
     plt.ylabel('N')
     plt.legend(['Zone B [%s]'%(zone)],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-    plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$') 
+    plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$') 
     
     #%%
     # gau1,gau2,gau3=[],[],[]
@@ -518,7 +518,7 @@ plt.gca().invert_xaxis()
 plt.ylabel('N')
 plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
 
 
 #%%
@@ -610,7 +610,7 @@ plt.gca().invert_xaxis()
 plt.ylabel('N')
 plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
 
         
 

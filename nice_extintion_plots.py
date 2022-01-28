@@ -135,7 +135,7 @@ ax.set_ylim(1.4,3)
 ax.set_xlim(-10.5,10.5)
 ax.grid()
 plt.ylabel(r'$\mathrm{A_{Ks}}$')
-plt.xlabel(r'$\mathrm{\mu_{l}(mas\ a^{-1})}$')#\ Chip \ %s$'%(chip)) 
+plt.xlabel(r'$\mathrm{\mu_{l}(mas\ yr^{-1})}$')#\ Chip \ %s$'%(chip)) 
 plt.gca().invert_xaxis()
 if field=='c':
     plt.legend(['Comparison Field'],fontsize=20,markerscale=1,shadow=True,loc=1,handlelength=0.5)
@@ -166,7 +166,7 @@ ax.set_ylim(1.4,3)
 ax.set_xlim(-12.5,12.5)
 ax.grid()
 plt.ylabel(r'$\mathrm{A_{Ks}}$')
-plt.xlabel(r'$\mathrm{\mu_{l}(mas\ a^{-1})}$')#\ Chip \ %s$'%(chip)) 
+plt.xlabel(r'$\mathrm{\mu_{l}(mas\ yr^{-1})}$')#\ Chip \ %s$'%(chip)) 
 plt.gca().invert_xaxis()
 
 

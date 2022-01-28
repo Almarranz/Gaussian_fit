@@ -400,7 +400,7 @@ for sloop in range(len(step)-1):
     plt.xlim(-15,15)
     # plt.gca().invert_xaxis()
     # if accu <10:
-    #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ a^{-1}$'%(accu),color='b')
+    #     plt.text(min(x),max(h[0]-0.05),'$\sigma_{vy}<%.1f\ mas\ yr^{-1}$'%(accu),color='b')
     # plt.text(min(x),max(h[0]-0.06),'$diff\ mag < %s$'%(sm),color='b')
     
     # plt.text(max(x)/2,max(h[0]-0.01),'$\sigma_{2}=%.3f$'%(mean[4]))
@@ -424,7 +424,7 @@ for sloop in range(len(step)-1):
     plt.rcParams['text.usetex'] = False
     from matplotlib import rc
     rc('font',**{'family':'serif','serif':['Palatino']})
-    plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')
+    plt.xlabel(r'$\mathrm{\mu_{b} (mas\ yr^{-1})}$')
     
     #%%
 
@@ -509,7 +509,7 @@ plt.xlim(-15,15)
 plt.ylabel('N')
 plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{b} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{b} (mas\ yr^{-1})}$')    
 
 
 #%%
@@ -599,7 +599,7 @@ plt.xlim(-15,15)
 plt.ylabel('N')
 plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'$\mathrm{\mu_{l} (mas\ a^{-1})}$')    
+plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
 
 
 
