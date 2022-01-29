@@ -625,9 +625,11 @@ gau_med2 = gaussian(xplot, mean[3], mean[4], mean[5])
 fig, ax = plt.subplots(figsize=(8,8))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
+h=plt.hist(v_y, bins= 30, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')
+plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.8)
 h=plt.hist(v_y, bins= 30, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
-xplot = np.linspace(min(x)-2, max(x), 100)
+xplot = np.linspace(min(x)-2, max(x)+1, 100)
 
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
@@ -656,7 +658,6 @@ plt.xlim(-15,15)
 # plt.gca().invert_xaxis()
   
 plt.ylabel('N')
-plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{b} (mas\ yr^{-1})}$')    
 
