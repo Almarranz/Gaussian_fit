@@ -104,19 +104,49 @@ data = '/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/dxy_GNS_vs_ZOC/'
 
 
 
-az ,dz , mz, dmz, fz, dfz,xz,yz,dxz,dyz,x_disz,y_disz=np.loadtxt(data +'Zoc_c3_commons_w_GNS.txt',unpack=True)
-dx_G,dy_G,H_G= np.loadtxt(data +'GNS_commons_w_Zoc_c3.txt',unpack=True,usecols=(1,3,10))# x_gns, dx_gns, y_gns, dy_gns, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK, H-Ks
+# az ,dz , mz, dmz, fz, dfz,xz,yz,dxz,dyz,x_disz,y_disz=np.loadtxt(data +'Zoc_c3_commons_w_GNS.txt',unpack=True)
+# dx_G,dy_G,H_G= np.loadtxt(data +'GNS_commons_w_Zoc_c3.txt',unpack=True,usecols=(1,3,10))# x_gns, dx_gns, y_gns, dy_gns, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK, H-Ks
+# =============================================================================
+# Zoccaly in and out: a ,d , m, dm, f, df,x,y,dxz,dyz
+# =============================================================================
+tmp_out='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_H/dit_10/'+folder+'tmp_bs/'
+mz_out,dxz_out,dyz_out= np.loadtxt(tmp_out+'%s_stars_calibrated_H_on_field%s_%s.txt'%('Z1',16,3),unpack=True,usecols=(2,8,9))#'Z1_..' hace referencia a una lista sobrre una zona del mismo tamaño de Zone A sobre el Brick
+
+tmp_in='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_H/dit_10/'+folder+'tmp_bs/'
+mz_in,dxz_in,dyz_in= np.loadtxt(tmp_in+'BRICK_stars_calibrated_H_chip'+str(chip)+'_sirius.txt',unpack=True,usecols=(2,8,9))
+
+dxz=np.r_[dxz_out,dxz_in]
+dyz=np.r_[dyz_out,dyz_in]
+mz=np.r_[mz_out,mz_in]
 
 dxyz=np.sqrt((dxz)**2+(dyz)**2)
+
+# =============================================================================
+# GNS in and out: x_gns, dx_gns, y_gns, dy_gns, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK
+# =============================================================================
+GNS_out='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/field%s/'%(16)
+dx_G_out,dy_G_out,H_G_out=np.loadtxt(GNS_out+'%s_cat_Ban_%s_%s.txt'%('Z1',16,3),unpack=True,usecols=(1,3,10))
+
+GNS_in='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/field12/'
+dx_G_in,dy_G_in,H_G_in =np.loadtxt(GNS_in+'field12_on_brick.txt',unpack=True,usecols=(1,3,10))
+
+dx_G=np.r_[dx_G_out,dx_G_in]
+dy_G=np.r_[dy_G_out,dy_G_in]
+H_G=np.r_[H_G_out,H_G_in]
+
 dxyg=np.sqrt((dx_G)**2+(dy_G)**2)
+
+
+
+
 size=50
 fig, ax =plt.subplots(1,1,figsize=(8,8))
-ax.scatter(mz,dxyz*0.106*1000,color='k',s=size, marker='.',label= 'D19')
+ax.scatter(mz,dxyz*1000,color='k',s=size, marker='.',label= 'D19')
 ax.scatter(H_G,dxyg*0.106*1000,color='red',s=size, marker='.',label= 'D15(GNS)')
 ax.legend(fontsize=20,markerscale=3,shadow=True,loc=2,handlelength=0.5)
 ax.grid()
 plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
-ax.set_ylim(0,10)
+# ax.set_ylim(0,10)
 # ax.set_xlim(12,19)
 
 # ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
