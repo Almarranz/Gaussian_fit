@@ -491,9 +491,10 @@ ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[0.236233333333333,	2.9802,	0.5134,	-0.0537,	1.1566,	0.451833333333333]
 # mean=[0.03,	3.37,	0.55,	0.00,	1.40,	0.46]
 
+h=plt.hist(v_y, bins= 27, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')
+plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.8)
 h=plt.hist(v_y, bins= 27, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
-
-xplot = np.linspace(-13, 11 , 100)
+xplot = np.linspace(-13, 13 , 100)
 
 # plt.plot(xplot, gaussian(xplot, mean[0], mean[1], mean[2]) , color="darkorange", linewidth=3, alpha=0.6)
 
@@ -507,7 +508,7 @@ plt.xlim(-15,15)
 # plt.gca().invert_xaxis()
   
 plt.ylabel('N')
-plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+# plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{b} (mas\ yr^{-1})}$')    
 

@@ -74,6 +74,12 @@ exptime=10
 folder='im_jitter_NOgains/'
 results='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'/results_bs/'
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
+GNS_p='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/field16/'
+dxG,dyG,HG=np.loadtxt(GNS_p+'cat_Ban_16_3.txt', unpack=True, usecols=(1,3,10))
+dxG=dxG*0.106*0.5
+dyG=dyG*0.106*0.5
+
+dxyG=np.sqrt((dxG)**2+(dyG)**2)
 
 name='NPL_054'
 chip=3
@@ -81,10 +87,12 @@ ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b=np.loadtxt(results+name+'_chip%s.txt'%(c
 dxy=np.sqrt((dx)**2+(dy)**2)
 fig, ax =plt.subplots(1,1,figsize=(8,8))
 ax.scatter(mag,dxy*1000,color='k',s=5, marker='.')
+ax.scatter(HG,dxyG*1000,color='red',s=5, marker='.')
+
 ax.grid()
 plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
 ax.set_ylim(0,14)
-ax.set_xlim(12,19)
+# ax.set_xlim(12,19)
 
 # ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
 # ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
@@ -102,52 +110,47 @@ folder='im_jitter_NOgains/'
 data = '/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/dxy_GNS_vs_ZOC/'
 
 
-
-
-# az ,dz , mz, dmz, fz, dfz,xz,yz,dxz,dyz,x_disz,y_disz=np.loadtxt(data +'Zoc_c3_commons_w_GNS.txt',unpack=True)
-# dx_G,dy_G,H_G= np.loadtxt(data +'GNS_commons_w_Zoc_c3.txt',unpack=True,usecols=(1,3,10))# x_gns, dx_gns, y_gns, dy_gns, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK, H-Ks
 # =============================================================================
-# Zoccaly in and out: a ,d , m, dm, f, df,x,y,dxz,dyz
 # =============================================================================
-tmp_out='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_H/dit_10/'+folder+'tmp_bs/'
-mz_out,dxz_out,dyz_out= np.loadtxt(tmp_out+'%s_stars_calibrated_H_on_field%s_%s.txt'%('Z1',16,3),unpack=True,usecols=(2,8,9))#'Z1_..' hace referencia a una lista sobrre una zona del mismo tamaño de Zone A sobre el Brick
+# =============================================================================
 
-tmp_in='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_H/dit_10/'+folder+'tmp_bs/'
-mz_in,dxz_in,dyz_in= np.loadtxt(tmp_in+'BRICK_stars_calibrated_H_chip'+str(chip)+'_sirius.txt',unpack=True,usecols=(2,8,9))
+H_G_out,dx_G_out,dy_G_out,mz_out,dxz_out,dyz_out=np.loadtxt(data+'out_comm_GNS_ZOC.txt',unpack=True)
 
-dxz=np.r_[dxz_out,dxz_in]
-dyz=np.r_[dyz_out,dyz_in]
-mz=np.r_[mz_out,mz_in]
+H_G_in_up,dx_G_in_up,dy_G_in_up,mz_in_up,dxz_in_up,dyz_in_up=np.loadtxt(data+'inUP_comm_GNS_ZOC.txt',unpack=True)
+H_G_in_d,dx_G_in_d,dy_G_in_d,mz_in_d,dxz_in_d,dyz_in_d=np.loadtxt(data+'inDOWN_comm_GNS_ZOC.txt',unpack=True)
+
+dxz=np.r_[dxz_out,dxz_in_up,dxz_in_d]
+dyz=np.r_[dyz_out,dyz_in_up,dyz_in_d]
+mz=np.r_[mz_out,mz_in_up,mz_in_d]
+
+dx_G=np.r_[dx_G_out,dx_G_in_up,dx_G_in_d]
+dy_G=np.r_[dy_G_out,dy_G_in_up,dy_G_in_d]
+H_G=np.r_[H_G_out,H_G_in_up,H_G_in_d]
+
+# =============================================================================
+# dxz=np.r_[dxz_in_up,dxz_in_d]
+# dyz=np.r_[dyz_in_up,dyz_in_d]
+# mz=np.r_[mz_in_up,mz_in_d]
+# 
+# dx_G=np.r_[dx_G_in_up,dx_G_in_d]
+# dy_G=np.r_[dy_G_in_up,dy_G_in_d]
+# H_G=np.r_[H_G_in_up,H_G_in_d]
+# =============================================================================
 
 dxyz=np.sqrt((dxz)**2+(dyz)**2)
-
-# =============================================================================
-# GNS in and out: x_gns, dx_gns, y_gns, dy_gns, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK
-# =============================================================================
-GNS_out='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/field%s/'%(16)
-dx_G_out,dy_G_out,H_G_out=np.loadtxt(GNS_out+'%s_cat_Ban_%s_%s.txt'%('Z1',16,3),unpack=True,usecols=(1,3,10))
-
-GNS_in='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/field12/'
-dx_G_in,dy_G_in,H_G_in =np.loadtxt(GNS_in+'field12_on_brick.txt',unpack=True,usecols=(1,3,10))
-
-dx_G=np.r_[dx_G_out,dx_G_in]
-dy_G=np.r_[dy_G_out,dy_G_in]
-H_G=np.r_[H_G_out,H_G_in]
-
 dxyg=np.sqrt((dx_G)**2+(dy_G)**2)
 
-
-
-
-size=50
+size=15
 fig, ax =plt.subplots(1,1,figsize=(8,8))
-ax.scatter(mz,dxyz*1000,color='k',s=size, marker='.',label= 'D19')
-ax.scatter(H_G,dxyg*0.106*1000,color='red',s=size, marker='.',label= 'D15(GNS)')
-ax.legend(fontsize=20,markerscale=3,shadow=True,loc=2,handlelength=0.5)
+ax.scatter(mz,dxyz,color='k',s=size, marker='.',zorder=3,alpha=1)
+ax.scatter(H_G,dxyg*0.5,color='red',s=size, marker='.')
+leg=ax.legend(['D19','D15(GNS)'],fontsize=20,markerscale=3,shadow=True,loc=2,handlelength=0.5)
+for lh in leg.legendHandles: 
+    lh.set_alpha(1)
 ax.grid()
 plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
-# ax.set_ylim(0,10)
-# ax.set_xlim(12,19)
+ax.set_ylim(0,14)
+ax.set_xlim(12,19)
 
 # ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
 # ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
@@ -157,6 +160,35 @@ plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
 plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 
 #%% 
+folder='im_jitter_NOgains/'
+data = '/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/dxy_GNS_vs_ZOC/'
+
+
+
+
+az ,dz , mz, dmz, fz, dfz,xz,yz,dxz,dyz,x_disz,y_disz=np.loadtxt(data +'Zoc_c3_commons_w_GNS.txt',unpack=True)
+dx_G,dy_G,H_G= np.loadtxt(data +'GNS_commons_w_Zoc_c3.txt',unpack=True,usecols=(1,3,10))# x_gns, dx_gns, y_gns, dy_gns, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK, H-Ks
+
+dxyz=np.sqrt((dxz)**2+(dyz)**2)
+dxyg=np.sqrt((dx_G)**2+(dy_G)**2)
+size=50
+fig, ax =plt.subplots(1,1,figsize=(8,8))
+ax.scatter(mz,dxyz*0.106*1000,color='k',s=size, marker='.',label= 'D19')
+ax.scatter(H_G,dxyg*0.106*1000,color='red',s=size, marker='.',label= 'D15(GNS)')
+ax.legend(fontsize=20,markerscale=3,shadow=True,loc=2,handlelength=0.5)
+ax.grid()
+plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
+ax.set_ylim(0,14)
+ax.set_xlim(12,19)
+
+# ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
+# ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
+# plt.text(13,np.mean(gns_dxy)*1000*0.106 +0.15,r'mean=%.3f'%(np.mean(gns_dxy)*1000*0.106),color='red',fontsize=20)
+# plt.text(13,np.mean(zoc_dxy)*1000*0.106 +0.15,r'$\sigma_{2}$=%.3f'%(np.mean(zoc_dxy)*1000*0.106),color='blue',fontsize=20)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
+
+#%%
 
 
 x_in=np.loadtxt(pruebas+'dvx_mag_IN.txt')#header='mh_all,dvx_all')
@@ -179,14 +211,15 @@ fig, ax=plt.subplots(1,2,figsize=(20,10))
 for i in range(len(ejes)):
     ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
     # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+    ax[i].legend(['%s'%(zones[i])],fontsize=40,markerscale=0.0,shadow=True,loc=1,handlelength=-0.8)
     ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=25)
     ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
     # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
     ax[i].set_xlim(12,19)
     ax[i].set_ylim(0,8)
     ax[i].set_xlabel('[H]',fontsize=40)
-    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=40)
-    ax[i].legend(['%s'%(zones[i])],fontsize=40,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas\ yr^{-1})}$',fontsize=40)
+    
 
 #%%
 print(len(x_in[0]))

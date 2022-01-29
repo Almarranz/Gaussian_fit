@@ -155,15 +155,17 @@ b=-0.0
 
 ax.scatter(bi_c+a,AK_c,s=100,color='k',marker='s',zorder=3,alpha=1, label= 'Comparison field')
 ax.errorbar(bi_c+a,AK_c,dK_c,color='k',fmt='none',capsize=3,alpha=1)
-# plt.legend(['Comparison Field'],fontsize=20,markerscale=1,shadow=True,loc=1,handlelength=0.5)
+plt.legend(['Comparison Field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.8)
 
-ax.scatter(bi_t+b,AK_t,s=100,color='red',marker='s',zorder=3,alpha=1, label='Brick field')
-ax.errorbar(bi_t+b,AK_t,dK_t,color='red',fmt='none',capsize=3,alpha=1,zorder=3)
-ax.legend(fontsize=20,markerscale=1,shadow=True,loc=1,handlelength=0.5)
+# =============================================================================
+# ax.scatter(bi_t+b,AK_t,s=100,color='red',marker='s',zorder=3,alpha=1, label='Brick field')
+# ax.errorbar(bi_t+b,AK_t,dK_t,color='red',fmt='none',capsize=3,alpha=1,zorder=3)
+# ax.legend(fontsize=20,markerscale=1,shadow=True,loc=1,handlelength=0.5)
+# =============================================================================
 
 # plt.legend(['Comparison Field'],fontsize=20,markerscale=1,shadow=True,loc=1,handlelength=0.5)
-ax.set_ylim(1.4,3)
-ax.set_xlim(-12.5,12.5)
+ax.set_ylim(1.4,2.4)
+ax.set_xlim(-10,10)
 ax.grid()
 plt.ylabel(r'$\mathrm{A_{Ks}}$')
 plt.xlabel(r'$\mathrm{\mu_{l}(mas\ yr^{-1})}$')#\ Chip \ %s$'%(chip)) 

@@ -441,7 +441,7 @@ for sloop in range(len(step)-1):
     #     else:
     #         plt.text(max(x)/2,max(h[0]-0.06),'$field%s,\ c%s$'%(field,chip),color='b')
     plt.ylabel('N')
-    plt.legend(['Zone B [%s]'%(zone)],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
+    # plt.legend(['Zone B [%s]'%(zone)],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.0)
     # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
     plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$') 
     
@@ -498,8 +498,12 @@ for sloop in range(len(step)-1):
 
 # In[ ]:
 #This plot the mean gaussian, put values of the gaussian in mean[]
+
 plt.figure(figsize =(8,8))
+
 # mean=[-1.6043,	1.86713333333333,	0.360133333333333,	-0.4019,	3.41566666666667,	0.375,	2.78246666666667,	1.79223333333333,	0.257133333333333,]
+h=plt.hist(v_x*-1, bins= 18, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')
+plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.8)
 h=plt.hist(v_x*-1, bins= 18, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(-12, max(x), 100)
@@ -516,7 +520,7 @@ plt.xlim(-15,15)
 plt.gca().invert_xaxis()
   
 plt.ylabel('N')
-plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+# plt.legend(['Comparison field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
 plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')    
 
