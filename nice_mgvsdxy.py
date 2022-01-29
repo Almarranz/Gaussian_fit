@@ -94,6 +94,40 @@ ax.set_xlim(12,19)
 plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 
 #%%
+rcParams.update({'font.size': 20})
+
+
+#chip=1
+folder='im_jitter_NOgains/'
+data = '/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/dxy_GNS_vs_ZOC/'
+
+
+
+
+az ,dz , mz, dmz, fz, dfz,xz,yz,dxz,dyz,x_disz,y_disz=np.loadtxt(data +'Zoc_c3_commons_w_GNS.txt',unpack=True)
+dx_G,dy_G,H_G= np.loadtxt(data +'GNS_commons_w_Zoc_c3.txt',unpack=True,usecols=(1,3,10))# x_gns, dx_gns, y_gns, dy_gns, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK, H-Ks
+
+dxyz=np.sqrt((dxz)**2+(dyz)**2)
+dxyg=np.sqrt((dx_G)**2+(dy_G)**2)
+size=50
+fig, ax =plt.subplots(1,1,figsize=(8,8))
+ax.scatter(mz,dxyz*0.106*1000,color='k',s=size, marker='.',label= 'D19')
+ax.scatter(H_G,dxyg*0.106*1000,color='red',s=size, marker='.',label= 'D15(GNS)')
+ax.legend(fontsize=20,markerscale=3,shadow=True,loc=2,handlelength=0.5)
+ax.grid()
+plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
+ax.set_ylim(0,10)
+# ax.set_xlim(12,19)
+
+# ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
+# ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
+# plt.text(13,np.mean(gns_dxy)*1000*0.106 +0.15,r'mean=%.3f'%(np.mean(gns_dxy)*1000*0.106),color='red',fontsize=20)
+# plt.text(13,np.mean(zoc_dxy)*1000*0.106 +0.15,r'$\sigma_{2}$=%.3f'%(np.mean(zoc_dxy)*1000*0.106),color='blue',fontsize=20)
+# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
+
+#%% 
+
 
 x_in=np.loadtxt(pruebas+'dvx_mag_IN.txt')#header='mh_all,dvx_all')
 no_x_in=np.loadtxt(pruebas+'NO_dvx_mag_IN.txt')#header='mh_all,dvx_all')
