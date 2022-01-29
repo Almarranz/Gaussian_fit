@@ -144,7 +144,7 @@ size=15
 fig, ax =plt.subplots(1,1,figsize=(8,8))
 ax.scatter(mz,dxyz,color='k',s=size, marker='.',zorder=3,alpha=1)
 ax.scatter(H_G,dxyg*0.5,color='red',s=size, marker='.')
-leg=ax.legend(['D19','D15(GNS)'],fontsize=20,markerscale=3,shadow=True,loc=2,handlelength=0.5)
+leg=ax.legend(['D19','D15(GNS)'],fontsize=20,markerscale=6,shadow=True,loc=2,handlelength=0.5)
 for lh in leg.legendHandles: 
     lh.set_alpha(1)
 ax.grid()
@@ -216,7 +216,7 @@ for i in range(len(ejes)):
     ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
     # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
     ax[i].set_xlim(12,19)
-    ax[i].set_ylim(0,8)
+    ax[i].set_ylim(0,4)
     ax[i].set_xlabel('[H]',fontsize=40)
     ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas\ yr^{-1})}$',fontsize=40)
     
