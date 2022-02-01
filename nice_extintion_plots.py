@@ -52,13 +52,14 @@ exptime=10
 folder='im_jitter_NOgains/'
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 data='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/extintion/'
-
-field ='c'
+gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
+field ='c'#cfor control and f for target
 if field == 'c':
    x_coor,y_coor,vx,vy,H,K, AKs= np.loadtxt(data +'control_extintion.txt',unpack=True)
+   dvx,dvy=np.loadtxt(gaussian+'%s_comparison_field%s_chip%s_degree%s.txt'%('Z1',16,3,2),unpack=True,usecols=(6,7))#arg,decg,v_x,v_y,mk,mh,dvx,dvy    
 elif field == 't':
      x_coor,y_coor,vx,vy,H,K, AKs= np.loadtxt(data +'target_extintion.txt',unpack=True)
-
+print(np.std(dvx))
 vx_lim=np.where((vx < 120) & (vx > -120)) 
 vx=vx[vx_lim]
 vx=vx*-1
@@ -93,13 +94,17 @@ fig, ax =plt.subplots(1,1,figsize=(8,8))
 bi=np.arange(-12,15,3)
 n,bins,_=ax.hist(vx,bins=bi)
 all_AKs=[]
+all_dvx=[]
 dKs=[]
 dKs1=[]# here I gonna use the uncertainty for Ks = 0.003
+
 for i in range(len(bins)-1):
     m_AKs=[]
+    m_dvx=[]
     for j in range(len(vx)):
         if vx[j]>=bins[i] and vx[j]<=bins[i+1]:
-             m_AKs.append(AKs[j])        
+             m_AKs.append(AKs[j])  
+             m_dvx.append(dvx[j])
         
     # print(bins[i],bins[i+1])
         
@@ -117,6 +122,7 @@ for i in range(len(bins)-1):
     if len(m_AKs)>int(round(len(vx)*-0.000000001)):
         print('This is the length:',len(m_AKs))
         all_AKs.append(np.mean(m_AKs))
+        all_dvx.append(np.std(m_dvx)/np.sqrt(len(m_AKs)))
         dKs.append(np.std(m_AKs)/np.sqrt(len(m_AKs)))
         dKs1.append(0.03/np.sqrt(len(m_AKs)))
 
@@ -129,8 +135,8 @@ for i in range(len(bins)-1):
     print(bins[i],bins[i+1],all_AKs[i],dKs[i])
 fig, ax =plt.subplots(1,1,figsize=(8,8))
 # ax.scatter(vx,AKs,color='k',s=15, marker='.',alpha=0.5)
-ax.scatter(bi[:-1],all_AKs,s=300,color='red',marker='*',zorder=3,alpha=1)
-ax.errorbar(bi[:-1],all_AKs,dKs,color='darkblue',fmt='none',capsize=3,alpha=0.5)
+ax.scatter(bi[:-1],all_AKs,s=3,color='red',marker='*',zorder=3,alpha=1)
+ax.errorbar(bi[:-1],all_AKs,dKs,all_dvx,color='darkblue',fmt='none',capsize=3,alpha=0.5)
 ax.set_ylim(1.4,3)
 ax.set_xlim(-10.5,10.5)
 ax.grid()
@@ -154,8 +160,8 @@ a=0.0
 b=-0.0
 
 ax.scatter(bi_c+a,AK_c,s=100,color='k',marker='s',zorder=3,alpha=1, label= 'Comparison field')
-ax.errorbar(bi_c+a,AK_c,dK_c,color='k',fmt='none',capsize=3,alpha=1)
-plt.legend(['Comparison Field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.8)
+ax.errorbar(bi_c+a,AK_c,dK_c,np.array(all_dvx),color='k',fmt='none',capsize=3,alpha=1)
+plt.legend(['Comparison Field'],fontsize=20,markerscale=0,shadow=True,loc=2,handlelength=-0.8)
 
 # =============================================================================
 # ax.scatter(bi_t+b,AK_t,s=100,color='red',marker='s',zorder=3,alpha=1, label='Brick field')
@@ -164,7 +170,7 @@ plt.legend(['Comparison Field'],fontsize=20,markerscale=0,shadow=True,loc=1,hand
 # =============================================================================
 
 # plt.legend(['Comparison Field'],fontsize=20,markerscale=1,shadow=True,loc=1,handlelength=0.5)
-ax.set_ylim(1.4,2.4)
+ax.set_ylim(1.6,2.2)
 ax.set_xlim(-10,10)
 ax.grid()
 plt.ylabel(r'$\mathrm{A_{Ks}}$')
