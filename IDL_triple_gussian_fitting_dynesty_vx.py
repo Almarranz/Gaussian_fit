@@ -79,7 +79,7 @@ for sloop in range(len(step)-1):
     show_field='no'
     chip=3 #can be 1 or 4 (refers to the chip on GNS fields)
     field=16 #fields can be 3 or 20 (refers to GNS fields)
-    sm=0.5
+    sm=0.25
     
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
@@ -133,7 +133,7 @@ for sloop in range(len(step)-1):
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
         v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
-        
+        # v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'Copias_de_seguridad/%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
     print(len(v_x))
     mh_all=mh
     m_all=m
@@ -167,11 +167,13 @@ for sloop in range(len(step)-1):
     v_y=v_y[sel]
     mh=mh[sel]
     mk=mk[sel]
+    dvx=dvx[sel]
+    dvy=dvy[sel]
     arg=arg[sel]
     decg=decg[sel]
     print(20*'$')
     print(len(arg))
-    np.savetxt(gaussian+'%s_comparison_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),np.array([arg,decg,v_x,v_y,mk,mh]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs, mh. (vx in image coordinates system)')
+    np.savetxt(gaussian+'%s_comparison_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),np.array([arg,decg,v_x,v_y,mk,mh,dvx,dvy]).T,fmt='%.7f',header='ra, dec, vx(mas/yr), vy(mas/yr), mKs, mh. (vx in image coordinates system)')
 #%%
 
     fig,ax=plt.subplots(1,1)
