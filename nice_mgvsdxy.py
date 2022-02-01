@@ -26,7 +26,6 @@ plt.rcParams["mathtext.fontset"] = 'dejavuserif'
 plt.rcParams['text.usetex'] = False
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Palatino']})
-plt.xlabel(r'$\mathrm{v_{b} (mas\ a^{-1})}$')
 from matplotlib import rcParams
 rcParams.update({'xtick.major.pad': '7.0'})
 rcParams.update({'xtick.major.size': '7.5'})
@@ -42,31 +41,9 @@ rcParams.update({'ytick.minor.size': '3.5'})
 rcParams.update({'ytick.minor.width': '1.0'})
 rcParams.update({'font.size': 15})
 
-#%%
-# data='/Users/amartinez/Desktop/for_Rainer/same_pix_scale/'
-# zoc = np.loadtxt(data +'Zoc_c3_commons_w_GNS.txt')# a ,d , m, dm, f, df,x,y,dx,dy,x_dis,y_dis. X and Y are the correspondig coorinates wit GNS, They are not the original ones!!!!
-# gns= np.loadtxt(data +'GNS_commons_w_Zoc_c3.txt') ## x_gns, dx_gns, y_gns, dy_gns, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK, H-Ks
 
-# gns_dxy=np.sqrt((gns[:,1])**2+(gns[:,3])**2)
-# zoc_dxy=np.sqrt((zoc[:,8])**2+(zoc[:,9])**2)
-
-# fig, ax =plt.subplots(1,1,figsize=(10,10))
-# p1=ax.scatter(gns[:,10],gns_dxy*1000*0.106,color='red',s=30,marker='s')
-# p2=ax.scatter(gns[:,10],zoc_dxy*1000*0.106,color='blue',s=30, marker='D')
-# ax.grid()
-# ax.legend(['GNS', 'Zoc'],fontsize=20,markerscale=3,shadow=True,loc=2)
-# p1.set_alpha(0.3)# toset the alpha of the legend differently, we make the plot and then the legeng (default alpha =1), and then change the alpga for the plots
-# p2.set_alpha(0.3)
-# plt.ylabel(r'$\sigma_{xy}$ (mas)')
-# ax.set_ylim(0,15)
-# ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
-# ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
-# plt.text(13,np.mean(gns_dxy)*1000*0.106 +0.15,r'mean=%.3f'%(np.mean(gns_dxy)*1000*0.106),color='red',fontsize=20)
-# plt.text(13,np.mean(zoc_dxy)*1000*0.106 +0.15,r'$\sigma_{2}$=%.3f'%(np.mean(zoc_dxy)*1000*0.106),color='blue',fontsize=20)
-# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-# plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 #%%
-rcParams.update({'font.size': 20})
+
 
 band='H'
 exptime=10
@@ -75,42 +52,6 @@ folder='im_jitter_NOgains/'
 results='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'/results_bs/'
 pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 GNS_p='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/field16/'
-dxG,dyG,HG=np.loadtxt(GNS_p+'cat_Ban_16_3.txt', unpack=True, usecols=(5,7,10))#x, dx, y, dy, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK
-
-# dxG=dxG*0.106*0.5
-# dyG=dyG*0.106*0.5
-
-# =============================================================================
-# dxyG=np.sqrt((dxG)**2+(dyG)**2)
-# 
-# name='NPL_054'
-# chip=3
-# ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b=np.loadtxt(results+name+'_chip%s.txt'%(chip),unpack=True)#header='ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b'
-# # =============================================================================
-# # dx=np.around(dx,4)
-# # dy=np.around(dy,4)
-# # r_si=10
-# # dxG=np.around(dxG,r_si)
-# # dyG=np.around(dyG,r_si)
-# # =============================================================================
-# 
-# dxy=np.sqrt((dx)**2+(dy)**2)
-# fig, ax =plt.subplots(1,1,figsize=(8,8))
-# ax.scatter(mag,dxy*1000,color='k',s=5, marker='.')
-# ax.scatter(HG,dxG*1000,color='red',s=5, marker='.')
-# 
-# ax.grid()
-# plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
-# ax.set_ylim(2,3)
-# # ax.set_xlim(12,19)
-# 
-# # ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
-# # ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
-# # plt.text(13,np.mean(gns_dxy)*1000*0.106 +0.15,r'mean=%.3f'%(np.mean(gns_dxy)*1000*0.106),color='red',fontsize=20)
-# # plt.text(13,np.mean(zoc_dxy)*1000*0.106 +0.15,r'$\sigma_{2}$=%.3f'%(np.mean(zoc_dxy)*1000*0.106),color='blue',fontsize=20)
-# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-# plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
-# =============================================================================
 
 #%%
 rcParams.update({'font.size': 20})
@@ -125,47 +66,31 @@ data = '/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/dxy_GNS_vs_ZOC/'
 # =============================================================================
 # =============================================================================
 
-H_G_out,dx_G_out,dy_G_out,mz_out,dxz_out,dyz_out,dra_o,ddec_o=np.loadtxt(data+'out_comm_GNS_ZOC.txt',unpack=True)
+mH,dx,dy,draH,ddecH=np.loadtxt(data+'out_comm_GNS_ZOC.txt',unpack=True)
+mH_up,dx_up,dy_up,draH_up,ddecH_up=np.loadtxt(data+'inUP_comm_GNS_ZOC.txt',unpack=True)
 
-H_G_in_up,dx_G_in_up,dy_G_in_up,mz_in_up,dxz_in_up,dyz_in_up,dra_u,ddec_u=np.loadtxt(data+'inUP_comm_GNS_ZOC.txt',unpack=True)
-H_G_in_d,dx_G_in_d,dy_G_in_d,mz_in_d,dxz_in_d,dyz_in_d,dra_d,ddec_d=np.loadtxt(data+'inDOWN_comm_GNS_ZOC.txt',unpack=True)
+dx_all=np.r_[dx,dx_up]
+dy_all=np.r_[dy,dy_up]
+draH_all=np.r_[draH,draH_up]
+ddecH_all=np.r_[ddecH,ddecH_up]
+mH_all=np.r_[mH,mH_up]
 
-dxz=np.r_[dxz_out,dxz_in_up,dxz_in_d]
-dyz=np.r_[dyz_out,dyz_in_up,dyz_in_d]
-mz=np.r_[mz_out,mz_in_up,mz_in_d]
-
-dx_G=np.r_[dx_G_out,dx_G_in_up,dx_G_in_d]
-dy_G=np.r_[dy_G_out,dy_G_in_up,dy_G_in_d]
-H_G=np.r_[H_G_out,H_G_in_up,H_G_in_d]
-
-# dx_G=np.r_[dx_G_out]#,dx_G_in_up,dx_G_in_d]
-# dy_G=np.r_[dy_G_out]#,dy_G_in_up,dy_G_in_d]
-# H_G=np.r_[H_G_out]#,H_G_in_up,H_G_in_d]
-
-# =============================================================================
-# dx_G=np.r_[dra_o,dra_u,dra_d]
-# dy_G=np.r_[ddec_o,ddec_u,ddec_d]
-# H_G=np.r_[H_G_out,H_G_in_up,H_G_in_d]
-# 
-# 
-# =============================================================================
-
-dxyz=np.sqrt((dxz)**2+(dyz)**2)
-dxyg=np.sqrt((dx_G)**2+(dy_G)**2)
+dxyz=np.sqrt((dx_all)**2+(dy_all)**2)
+dxyg=np.sqrt((draH_all)**2+(ddecH_all)**2)
 
 
 
 size=20
 fig, ax =plt.subplots(1,1,figsize=(8,8))
-ax.scatter(mz,dxyz,color='k',s=size, marker='o',alpha=0.3)
-ax.scatter(H_G,dxyg,color='red',s=size, marker='o',zorder=3,alpha=0.3)
+ax.scatter(mH_all,dxyz,color='k',s=size, marker='o',alpha=0.3)
+ax.scatter(mH_all,dxyg*1000,color='red',s=size, marker='o',zorder=3,alpha=0.3)
 leg=ax.legend(['D19','D15(GNS)'],fontsize=20,markerscale=2.5,shadow=True,loc=2,handlelength=0.5)
 for lh in leg.legendHandles: 
     lh.set_alpha(1)
 ax.grid()
 plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
 ax.set_ylim(0,)
-ax.set_xlim(12,19)
+ax.set_xlim(12,19.1)
 
 # ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
 # ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
@@ -175,58 +100,33 @@ ax.set_xlim(12,19)
 plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 
 #%%
-size=25
-dposz=[dxz,dyz]
-dposg=[dx_G,dy_G]
-dposz=np.array(dposz)
-dposg=np.array(dposg)
-ejes=['x','y']
-fig, ax =plt.subplots(1,2,figsize=(20,10))
-for i in range(len(dposg)):
 
-    
-    ax[i].scatter(mz,dposz[i],color='k',s=size, marker='o',alpha=1)
-    ax[i].scatter(H_G,dposg[i],color='red',s=size, marker='o',zorder=3,alpha=1)
-    
-    ax[0].legend(['D19','D15(GNS)'],fontsize=20,markerscale=2.5,shadow=True,loc=2,handlelength=0.5)
-    ax[i].set_ylim(0,)
+
+#%%
+size=10
+
+dposz=[dx_all,dy_all]
+dposg=[draH_all,ddecH_all]
+ejes=['x','y']
+fig, ax =plt.subplots(1,2,figsize=(18,9))
+al=1
+for i in range(len(dposg)):
+    ax[i].scatter(mH_all,dposz[i],color='k',s=size, marker='.',alpha=al)
+    ax[i].scatter(mH_all,dposg[i]*1000,color='red',s=size, marker='.',zorder=3,alpha=al)
+    ax[0].legend(['D19','D15(GNS)'],fontsize=20,markerscale=5,shadow=True,loc=2,handlelength=0.5)
+    ax[i].set_ylim(0,8)
     ax[i].set_xlim(12,19)
     ax[i].set_xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
     ax[i].set_ylabel(r'$\mathrm{\sigma_{%s} (mas)}$'%(ejes[i]))
-    ax[0].legend(['D19','D15(GNS)'],fontsize=20,markerscale=2.5,shadow=True,loc=2,handlelength=0.5)
+    
     ax[i].grid()
 
-#%%
-
 
 #%%
-folder='im_jitter_NOgains/'
-data = '/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/dxy_GNS_vs_ZOC/'
 
 
+#%%
 
-
-az ,dz , mz, dmz, fz, dfz,xz,yz,dxz,dyz,x_disz,y_disz=np.loadtxt(data +'Zoc_c3_commons_w_GNS.txt',unpack=True)
-dx_G,dy_G,H_G= np.loadtxt(data +'GNS_commons_w_Zoc_c3.txt',unpack=True,usecols=(1,3,10))# x_gns, dx_gns, y_gns, dy_gns, raH, draH, decH, ddecH, mJ, dmJ, mH, dmH, mK, dmK, H-Ks
-
-dxyz=np.sqrt((dxz)**2+(dyz)**2)
-dxyg=np.sqrt((dx_G)**2+(dy_G)**2)
-size=50
-fig, ax =plt.subplots(1,1,figsize=(8,8))
-ax.scatter(mz,dxyz*0.106*1000,color='k',s=size, marker='.',label= 'D19')
-ax.scatter(H_G,dxyg*0.106*1000,color='red',s=size, marker='.',label= 'D15(GNS)')
-ax.legend(fontsize=20,markerscale=3,shadow=True,loc=2,handlelength=0.5)
-ax.grid()
-plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
-ax.set_ylim(0,14)
-ax.set_xlim(12,19)
-
-# ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
-# ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
-# plt.text(13,np.mean(gns_dxy)*1000*0.106 +0.15,r'mean=%.3f'%(np.mean(gns_dxy)*1000*0.106),color='red',fontsize=20)
-# plt.text(13,np.mean(zoc_dxy)*1000*0.106 +0.15,r'$\sigma_{2}$=%.3f'%(np.mean(zoc_dxy)*1000*0.106),color='blue',fontsize=20)
-# plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
-plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
 
 #%%
 
