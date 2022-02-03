@@ -204,12 +204,16 @@ for sloop in range(len(step)-1):
     if accu<50:
         fig, ax=plt.subplots(1,2,figsize=(20,10))
         for i in range(len(ejes)):
+            ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3,alpha=0)
+            ax[0].legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.8)
             ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
             ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
-            ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
+            # ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
             ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
             ax[i].set_xlabel('$[H]$',fontsize=20)
-            ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
+            ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas yr^{-1})$'%(names[i]),fontsize=20)
+            ax[i].set_ylim(0,4)
+            ax[i].grid()
             if i ==0:
                 np.savetxt(pruebas+'dvx_mag_IN.txt',(mh_all,ejes[i]),fmt='%.4f',header='mh_all,dvx_all')
                 np.savetxt(pruebas+'NO_dvx_mag_IN.txt',(mh_all[no_m],ejes_m[i]),fmt='%.4f',header='mh_all[no_m],dvx_all[no]')
