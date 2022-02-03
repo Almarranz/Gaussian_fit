@@ -81,7 +81,7 @@ dxyg=np.sqrt((draH_all)**2+(ddecH_all)**2)
 
 
 size=20
-fig, ax =plt.subplots(1,1,figsize=(8,8))
+fig, ax =plt.subplots(1,1,figsize=(10,10))
 ax.scatter(mH_all,dxyz,color='k',s=size, marker='o',alpha=0.3)
 ax.scatter(mH_all,dxyg*1000,color='red',s=size, marker='o',zorder=3,alpha=0.3)
 leg=ax.legend(['D19','D15(GNS)'],fontsize=20,markerscale=2.5,shadow=True,loc=2,handlelength=0.5)
@@ -89,8 +89,8 @@ for lh in leg.legendHandles:
     lh.set_alpha(1)
 ax.grid()
 plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
-ax.set_ylim(0,)
-ax.set_xlim(12,19.1)
+ax.set_ylim(0,12)
+ax.set_xlim(12,19)
 
 # ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
 # ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
@@ -103,21 +103,25 @@ plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip))
 
 
 #%%
-size=10
+size=20
 
 dposz=[dx_all,dy_all]
 dposg=[draH_all,ddecH_all]
 ejes=['x','y']
-fig, ax =plt.subplots(1,2,figsize=(18,9))
-al=1
+fig, ax =plt.subplots(1,2,figsize=(20,10))
+al=0.3
+
 for i in range(len(dposg)):
-    ax[i].scatter(mH_all,dposz[i],color='k',s=size, marker='.',alpha=al)
-    ax[i].scatter(mH_all,dposg[i]*1000,color='red',s=size, marker='.',zorder=3,alpha=al)
-    ax[0].legend(['D19','D15(GNS)'],fontsize=20,markerscale=5,shadow=True,loc=2,handlelength=0.5)
-    ax[i].set_ylim(0,8)
+    ax[i].scatter(mH_all,dposz[i],color='k',s=size, marker='o',alpha=al)
+    ax[i].scatter(mH_all,dposg[i]*1000,color='red',s=size, marker='o',zorder=3,alpha=al)
+    leg=ax[0].legend(['D19','D15(GNS)'],fontsize=20,markerscale=2.5,shadow=True,loc=2,handlelength=0.5)
+    for lh in leg.legendHandles: 
+        lh.set_alpha(1)
+    
+    ax[i].set_ylim(0,10)
     ax[i].set_xlim(12,19)
-    ax[i].set_xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
-    ax[i].set_ylabel(r'$\mathrm{\sigma_{%s} (mas)}$'%(ejes[i]))
+    ax[i].set_xlabel(r'[H]',fontsize=40)#\ Chip \ %s$'%(chip)) 
+    ax[i].set_ylabel(r'$\mathrm{\sigma_{%s} (mas)}$'%(ejes[i]),fontsize=40,labelpad=-10)
     
     ax[i].grid()
 
@@ -159,6 +163,7 @@ for i in range(len(ejes)):
     ax[i].set_ylim(0,4)
     ax[i].set_xlabel('[H]',fontsize=40)
     ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas\ yr^{-1})}$',fontsize=40)
+    ax[i].grid()
     
 
 #%%
@@ -201,7 +206,7 @@ im4 = plt.imread(brick+'2_vx_in_poiss.png')
 im1 = plt.imread(brick+'3_vy_out_poiss.png')
 im2 = plt.imread(brick+'4_vx_out_poiss.png')
 ims=[[im1,im2],[im3,im4]]
-fig, ax = plt.subplots(2,2,figsize=(40,40))
+fig, ax = plt.subplots(2,2,figsize=(20,20))
 for i in range(2):
     for j in range(2):
         ax[i,j].imshow(ims[i][j])
@@ -223,11 +228,31 @@ plt.subplots_adjust(wspace=-0.005, hspace=0)
 # plt.subplots_adjust(wspace=-0.005, hspace=0)
 # =============================================================================
     
-    
-    
-    
-    
-    
+#%%
+
+# =============================================================================
+# name='NPL_054'
+# chip=3
+# ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b=np.loadtxt(results+name+'_chip%s.txt'%(chip),unpack=True)#header='ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b'
+# dxy=np.sqrt((dx)**2+(dy)**2)
+# fig, ax =plt.subplots(1,1,figsize=(20,20))
+# ax.scatter(mag,dy*1000,color='k',s=5, marker='.')
+# ax.grid()
+# plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
+# ax.set_ylim(0,14)
+# ax.set_xlim(12,19)
+# 
+# # ax.axhline(np.mean(gns_dxy)*1000*0.106, color='r', linestyle='dashed', linewidth=3)
+# # ax.axhline(np.mean(zoc_dxy)*1000*0.106, color='blue', linestyle='dashed', linewidth=3)
+# # plt.text(13,np.mean(gns_dxy)*1000*0.106 +0.15,r'mean=%.3f'%(np.mean(gns_dxy)*1000*0.106),color='red',fontsize=20)
+# # plt.text(13,np.mean(zoc_dxy)*1000*0.106 +0.15,r'$\sigma_{2}$=%.3f'%(np.mean(zoc_dxy)*1000*0.106),color='blue',fontsize=20)
+# # plt.xlabel(r'$\mu_{l}$ (Km s$^{-1}$)') 
+# plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip)) 
+#     
+#     
+#     
+#     
+# =============================================================================
     
     
     
