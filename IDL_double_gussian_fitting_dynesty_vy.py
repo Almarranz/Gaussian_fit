@@ -217,6 +217,9 @@ for sloop in range(len(step)-1):
             if i ==0:
                 np.savetxt(pruebas+'dvx_mag_IN.txt',(mh_all,ejes[i]),fmt='%.4f',header='mh_all,dvx_all')
                 np.savetxt(pruebas+'NO_dvx_mag_IN.txt',(mh_all[no_m],ejes_m[i]),fmt='%.4f',header='mh_all[no_m],dvx_all[no]')
+            if i ==1:
+                np.savetxt(pruebas+'dvy_mag_IN.txt',(mh_all,ejes[i]),fmt='%.4f',header='mh_all,dvx_all')
+                np.savetxt(pruebas+'NO_dvy_mag_IN.txt',(mh_all[no_m],ejes_m[i]),fmt='%.4f',header='mh_all[no_m],dvx_all[no]')
     
     # In[7]:
     
