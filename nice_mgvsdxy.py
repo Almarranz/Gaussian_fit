@@ -254,8 +254,31 @@ plt.subplots_adjust(wspace=-0.005, hspace=0)
 #     
 # =============================================================================
     
-    
-    
+#%%
+band='H'
+exptime=10
+#chip=1
+folder='im_jitter_NOgains/'
+results='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/054_'+band+'/dit_'+str(exptime)+'/'+folder+'/results_bs/'
+results1='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'/tmp_bs/'
+
+pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
+
+name='NPL_054'
+chip=4
+mag1, dx1,dy1=np.loadtxt(results1+'stars_calibrated_H_chip%s_sirius.txt'%(chip),unpack=True,usecols=(2,8,9))#header='ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b'
+
+ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b=np.loadtxt(results+name+'_chip%s.txt'%(chip),unpack=True)#header='ra,dec,x_mean,dx,y_mean,dy,mag,dmag,l,b'
+dxy=np.sqrt((dx)**2+(dy)**2)
+dxy1=np.sqrt((dx1)**2+(dy1)**2)
+fig, ax =plt.subplots(1,1,figsize=(20,20))
+ax.scatter(mag,dxy*1000,color='k',s=5, marker='.')
+ax.scatter(mag1,dxy1*1000,color='blue',s=25, marker='.')
+ax.grid()
+plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
+# ax.set_ylim(0,14)
+ax.set_xlim(12,19)
+
     
     
     
