@@ -194,10 +194,10 @@ comp=['vx','vy']
 accu=2
 fig, ax=plt.subplots(1,2,figsize=(20,10))
 for i in range(len(ejes)):
-    ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
+    ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=15)
     # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
     ax[1].legend(['%s'%(zones[i])],fontsize=40,markerscale=0.0,shadow=True,loc=1,handlelength=-0.8)
-    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=25)
+    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=50)
     ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
     # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
     ax[i].set_xlim(12,19.2)
