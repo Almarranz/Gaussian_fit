@@ -78,7 +78,7 @@ for sloop in range(len(step)-1):
    
    
 
-    accu=20 # select stars cutting by uncertainty. With a large value all star are selected
+    accu=1.75 # select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
             v_x2,v_y2,dvx2,dvy2,mh2,mk2,m2,ar2,dec2,arg2,decg2=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)

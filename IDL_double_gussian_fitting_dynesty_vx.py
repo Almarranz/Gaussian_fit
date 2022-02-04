@@ -81,7 +81,7 @@ for sloop in range(len(step)):
     
     # nbins=9
     
-    accu=2# select stars cutting by uncertainty. With a large value all star are selected
+    accu=1.75# select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
             v_x2,v_y2,dvx2,dvy2,mh2,mk2,m2,ar2,dec2,arg2,decg2=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
@@ -466,10 +466,10 @@ for i in range(6):
     print('medin %.2f -+ %2f %2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
     print(' mean %.2f -+ %2f %2f'%(mean[i],mean[i]-quantiles[i][0],quantiles[i][2]-mean[i])+'\n'+30*'*')
     if i==0:
-        with open (pruebas+'brick_vx_erros.txt', 'w') as f:
+        with open (pruebas+'brick_vx_erros_special.txt', 'w') as f:
             f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
     else:
-        with open (pruebas+'brick_vx_erros.txt', 'a') as f:
+        with open (pruebas+'brick_vx_erros_special.txt', 'a') as f:
            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
 
 

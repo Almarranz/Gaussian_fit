@@ -72,7 +72,7 @@ for sloop in range(len(step)-1):
    
 
     # nbins=9
-    accu=2
+    accu=1.75
     sm=0.5
     in_brick=1#slect list in or out brick
     
@@ -516,10 +516,10 @@ for i in range(6):
     print('medin %.2f -+ %2f %2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1]))
     print(' mean %.2f -+ %2f %2f'%(mean[i],mean[i]-quantiles[i][0],quantiles[i][2]-mean[i])+'\n'+30*'*')
     if i==0:
-        with open (pruebas+'brick_vy_erros.txt', 'w') as f:
+        with open (pruebas+'brick_vy_erros_special.txt', 'w') as f:
             f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
     else:
-        with open (pruebas+'brick_vy_erros.txt', 'a') as f:
+        with open (pruebas+'brick_vy_erros_special.txt', 'a') as f:
            f.write('%.2f %.2f %.2f'%(quantiles[i][1],quantiles[i][1]-quantiles[i][0],quantiles[i][2]-quantiles[i][1])+'\n')
 
 
@@ -632,9 +632,9 @@ gau_med2 = gaussian(xplot, mean[3], mean[4], mean[5])
 fig, ax = plt.subplots(figsize=(8,8))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
-h=plt.hist(v_y, bins= 30, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')
+h=plt.hist(v_y, bins= 20, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.8)
-h=plt.hist(v_y, bins= 30, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+h=plt.hist(v_y, bins= 22, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(min(x)-2, max(x)+1, 100)
 
