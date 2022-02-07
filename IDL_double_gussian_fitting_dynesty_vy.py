@@ -64,6 +64,12 @@ else:
 media_amp=[]
 zone='Z1'
 degree=2
+special='yes'
+if special =='yes':
+    spe='special'
+else:
+    spe=''
+
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)-1):
@@ -119,7 +125,7 @@ for sloop in range(len(step)-1):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
+        v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s%s.txt'%(zone,field,chip,degree,spe),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx

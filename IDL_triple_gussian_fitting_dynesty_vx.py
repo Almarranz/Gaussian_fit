@@ -70,6 +70,13 @@ print(step)
 media_amp=[]
 zone='Z1'
 degree=2
+
+special='yes'
+if special =='yes':
+    spe='special'
+else:
+    spe=''
+
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)-1):
@@ -132,7 +139,7 @@ for sloop in range(len(step)-1):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
+        v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s%s.txt'%(zone,field,chip,degree,spe),unpack=True)
         # v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'Copias_de_seguridad/%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
     print(len(v_x))
     mh_all=mh
@@ -233,10 +240,10 @@ for sloop in range(len(step)-1):
         fig, ax=plt.subplots(1,2,figsize=(20,10))
         for i in range(len(ejes)):
             ax[i].scatter(mh_all,ejes[i],color='k',alpha=0.7,s=5)
-            ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+            ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=25)
             ax[i].scatter(mh_all[no_m],ejes_m[i],color='green',alpha=0.7,s=25)
             ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
-            ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
+            # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
             ax[i].set_xlabel('$[H]$',fontsize=20)
             ax[i].set_ylabel(r'$\sigma_{\vec {v%s}}(mas)$'%(names[i]),fontsize=20)
     
@@ -352,7 +359,7 @@ for sloop in range(len(step)-1):
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     #Thsi is the corner plot
     sp=np.ones(9)*0.68
-    fig, axes = dyplot.cornerplot(res, color='royalblue' ,show_titles=False,quantiles=[0.16,0.5,0.84],truths=mean,
+    fig, axes = dyplot.cornerplot(res, color='royalblue' ,show_titles=True,quantiles=[0.16,0.5,0.84],truths=mean,
                                   quantiles_2d=[0.16,0.5,0.84],
                                   title_kwargs=({'x': 0.65, 'y': 1.05}), labels=labels,
                                   fig=plt.subplots(9, 9, figsize=(28, 28)))

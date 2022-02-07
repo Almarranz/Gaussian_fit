@@ -69,6 +69,12 @@ print(step)
 media_amp=[]
 zone='Z1'
 degree=2
+
+special='yes'
+if special =='yes':
+    spe='special'
+else:
+    spe=''
 #%%
 # for sloop in range(ran,ran+1):
 for sloop in range(len(step)):
@@ -79,7 +85,7 @@ for sloop in range(len(step)):
     show_field='no'
     chip=3 #can be 1 or 4 (refers to the chip on GNS fields)
     field=16 #fields can be 3 or 20 (refers to GNS fields)
-    sm=0.25
+    sm=0.5
     
     gaussian='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/058_'+band+'/dit_'+str(exptime)+'/'+folder+'Gaussian_fit/'
 
@@ -133,7 +139,7 @@ for sloop in range(len(step)):
     #     dvy=np.r_[dvy1,dvy2,dvy3,dvy4]
     #     mh=np.r_[mh1,mh2,mh3,mh4]
     else :
-        v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s.txt'%(zone,field,chip,degree),unpack=True)
+        v_x,v_y,dvx,dvy,mh,mk,m,ar,dec,arg,decg=np.loadtxt(gaussian+'%s_aa_NPL058_IDL_mas_vx_vy_field%s_chip%s_degree%s%s.txt'%(zone,field,chip,degree,spe),unpack=True)
     mh_all=mh
     m_all=m
     dvx_all=dvx
@@ -190,18 +196,18 @@ for sloop in range(len(step)):
 #     y1=np.where(y1==0,0.001,y1)
 #     yerr = [np.sqrt(y1[yi])/(len(v_x)*100*((h1[1][3]-h1[1][2]))) for yi in range(len(y))]
 # =============================================================================
+    yerr=[]
+    y=np.where(y==0,0.001,y)
+    y1=h1[0]
+    y1=np.where(y1==0,0.001,y1)
+    # yerr = y*np.sqrt(1/y1+1/len(v_x))
+    yerr = y*np.sqrt(1/y1)
+
 # =============================================================================
-#     yerr=[]
-#     y=np.where(y==0,0.001,y)
-#     y1=h1[0]
-#     y1=np.where(y1==0,0.001,y1)
-#     # yerr = y*np.sqrt(1/y1+1/len(v_x))
-#     yerr = y*np.sqrt(1/y1)
-# 
+#     yerr=0.0001
+#     y += yerr
+#     ax.scatter(x,y,color='g',zorder=3)
 # =============================================================================
-    yerr=0.0001
-    y += yerr
-    ax.scatter(x,y,color='g',zorder=3)
     
     # In[6]:
     count=0
@@ -261,9 +267,9 @@ for sloop in range(len(step)):
         umu1, usigma1, uamp1,  umu2, usigma2, uamp2= utheta
     
     #     mu1 = -1. * umu1-8   # scale and shift to [-10., 10.)
-        mu1 =-3*umu1-1  # scale and shift to [-3., 3.)
+        mu1 =-3*umu1  # scale and shift to [-3., 3.)
         sigma1 = 5*(usigma1)
-        amp1 = uamp1*0.5
+        amp1 = uamp1*1
         
         # mu2 = 0.12+((umu2*0.06)-0.03)
         mu2=4*umu2+1
@@ -319,14 +325,17 @@ for sloop in range(len(step)):
     
     
     # In[11]:
-    
+    from dynesty import utils as dyfunc
+    samples, weights = res.samples, np.exp(res.logwt - res.logz[-1])
+    mean, cov = dyfunc.mean_and_cov(samples, weights)
+    print(mean)
     
     # fig, axes = dyplot.cornerplot(res, truths=truths, color='blue', show_titles=True, 
     #                               title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
     #                               fig=plt.subplots(6, 6, figsize=(28, 28)))
     #Thsi is the corner plot
     
-    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, 
+    fig, axes = dyplot.cornerplot(res, color='blue', show_titles=True, truths=mean,
                                   title_kwargs={'x': 0.65, 'y': 1.05}, labels=labels,
                                   fig=plt.subplots(6, 6, figsize=(28, 28)))
     
