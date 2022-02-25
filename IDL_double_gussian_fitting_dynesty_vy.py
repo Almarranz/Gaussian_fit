@@ -64,7 +64,7 @@ else:
 media_amp=[]
 zone='Z1'
 degree=2
-special='yes'
+special='no'
 if special =='yes':
     spe='special'
 else:
@@ -493,7 +493,11 @@ pruebas='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/pruebas/'
 #This plot the mean gaussian, put values of the gaussian in mean[]
 fig, ax = plt.subplots(figsize=(8,8))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-
+ax.xaxis.set_tick_params(labeltop='on')
+ax.yaxis.set_tick_params(labeltop='rigth')
+ax.xaxis.set_ticks_position('both')
+ax.yaxis.set_ticks_position('both')
+ax.grid()
 # mean=[0.236233333333333,	2.9802,	0.5134,	-0.0537,	1.1566,	0.451833333333333]
 # mean=[0.03,	3.37,	0.55,	0.00,	1.40,	0.46]
 

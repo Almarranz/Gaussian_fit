@@ -71,7 +71,7 @@ media_amp=[]
 zone='Z1'
 degree=2
 
-special='yes'
+special='no'
 if special =='yes':
     spe='special'
 else:
@@ -508,7 +508,13 @@ for sloop in range(len(step)-1):
 # In[ ]:
 #This plot the mean gaussian, put values of the gaussian in mean[]
 
-plt.figure(figsize =(8,8))
+fig, ax = plt.subplots(figsize=(8,8))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+ax.xaxis.set_tick_params(labeltop='on')
+ax.yaxis.set_tick_params(labeltop='rigth')
+ax.xaxis.set_ticks_position('both')
+ax.yaxis.set_ticks_position('both')
+ax.grid()
 
 # mean=[-1.6043,	1.86713333333333,	0.360133333333333,	-0.4019,	3.41566666666667,	0.375,	2.78246666666667,	1.79223333333333,	0.257133333333333,]
 h=plt.hist(v_x*-1, bins= 18, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')
@@ -627,7 +633,8 @@ plt.xlabel(r'$\mathrm{\mu_{l} (mas\ yr^{-1})}$')
 
         
 
-
+#%%
+print("\033[H\033[J") 
 
 
 
