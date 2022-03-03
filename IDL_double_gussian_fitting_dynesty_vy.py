@@ -72,7 +72,7 @@ for sloop in range(len(step)-1):
    
 
     # nbins=9
-    accu=1.75
+    accu=2
     sm=0.5
     in_brick=1#slect list in or out brick
     
@@ -467,6 +467,11 @@ print(list_bin)
 #This plot the mean gaussian, put values of the gaussian in mean[]
 fig, ax = plt.subplots(figsize=(8,8))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+ax.xaxis.set_tick_params(labeltop='on')
+ax.yaxis.set_tick_params(labeltop='rigth')
+ax.xaxis.set_ticks_position('both')
+ax.yaxis.set_ticks_position('both')
+ax.grid()
 # mean=[-0.0112947266666667,	1.52403177,	0.503273866666667,	-0.00513169666666667,	3.58441010666667,	0.496824623333333]
 h=plt.hist(v_y, bins= 30, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
@@ -630,11 +635,18 @@ gau_med2 = gaussian(xplot, mean[3], mean[4], mean[5])
 #%%
 
 fig, ax = plt.subplots(figsize=(8,8))
+ax.locator_params(axis='y', nbins=5)
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+ax.xaxis.set_tick_params(labeltop='on')
+ax.yaxis.set_tick_params(labeltop='rigth')
+ax.xaxis.set_ticks_position('both')
+ax.yaxis.set_ticks_position('both')
+ax.grid()
 # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
-h=plt.hist(v_y, bins= 20, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')
+h=plt.hist(v_y, bins= 30, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.8)
-h=plt.hist(v_y, bins= 22, color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
+h=plt.hist(v_y, bins= 30    , color='royalblue', alpha = 0.6, density =True, histtype = 'stepfilled')
 
 xplot = np.linspace(min(x)-2, max(x)+1, 100)
 

@@ -81,7 +81,7 @@ for sloop in range(len(step)):
     
     # nbins=9
     
-    accu=1.75# select stars cutting by uncertainty. With a large value all star are selected
+    accu=2# select stars cutting by uncertainty. With a large value all star are selected
     if in_brick==1:
         if chip =='both':
             v_x2,v_y2,dvx2,dvy2,mh2,mk2,m2,ar2,dec2,arg2,decg2=np.loadtxt(data+'DOWN_aa_IDL_arcsec_vx_vy_chip2.txt',unpack=True)
@@ -426,6 +426,13 @@ for sloop in range(len(step)):
 #     print('sig_clip_d%s = %s'%(va[i],sigma_clipped_stats(media[:,i],sigma=1))) 
     
 fig, ax = plt.subplots(figsize=(8,8))
+# ax.locator_params(axis='y', nbins=7)
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+ax.xaxis.set_tick_params(labeltop='on')
+ax.yaxis.set_tick_params(labeltop='rigth')
+ax.xaxis.set_ticks_position('both')
+ax.yaxis.set_ticks_position('both')
+ax.grid()
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
 h=plt.hist(v_x*-1, bins= 21, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')

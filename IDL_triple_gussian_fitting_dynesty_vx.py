@@ -268,7 +268,7 @@ for sloop in range(len(step)-1):
         amp1 = uamp1*1
         
         mu2 = 3*umu2
-        sigma2 = 3.58 +  (0.2*usigma2-0.20/2)
+        sigma2 = 3.58 +  (2*usigma2-2/2)
         # sigma2=usigma2*5
         amp2 = uamp2*1
         # amp2=0.5 + (uamp2*0.4-0.4/2)
@@ -276,7 +276,7 @@ for sloop in range(len(step)-1):
         mu3 =6*(umu3) # scale and shift to [-3., 3.)
         # sigma3 = 2.0+ (0.4*usigma3-0.2)
         sigma3 = 5*(usigma3)
-        amp3 = uamp3*1
+        amp3 = uamp3*0.2
         
         
     
