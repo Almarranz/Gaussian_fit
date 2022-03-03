@@ -138,16 +138,14 @@ for sloop in range(len(step)-1):
     # ax.set_xlim(0,2)
     y=h[0]#height for each bin
 # %%
-# =============================================================================
-#     w=h[1]
-#     pij=np.empty([len(v_x),len(h[0])])
-#     for b in range(len(y)):
-#         for v in range(len(v_x)):
-#             # snd = stats.norm(v_x[v],dvx[v])
-#             pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
-#     pij=np.array(pij)
-#     np.savetxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
-# =============================================================================
+    w=h[1]
+    pij=np.empty([len(v_x),len(h[0])])
+    for b in range(len(y)):
+        for v in range(len(v_x)):
+            # snd = stats.norm(v_x[v],dvx[v])
+            pij[v,b]=norm(v_x[v],dvx[v]).cdf(w[b+1])-norm(v_x[v],dvx[v]).cdf(w[b])
+    pij=np.array(pij)
+    np.savetxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm),pij)
     
     pij=np.loadtxt(pruebas+'vx_out_pij_accu%s_sm%s.txt'%(accu,sm))
     vj = [np.sum(pij[:,j]*(1 - pij[:,j])) for j in range(len(h1[1])-1)]
