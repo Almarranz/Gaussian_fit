@@ -497,7 +497,7 @@ ax.xaxis.set_tick_params(labeltop='on')
 ax.yaxis.set_tick_params(labeltop='rigth')
 ax.xaxis.set_ticks_position('both')
 ax.yaxis.set_ticks_position('both')
-ax.grid()
+# ax.grid()
 # mean=[0.236233333333333,	2.9802,	0.5134,	-0.0537,	1.1566,	0.451833333333333]
 # mean=[0.03,	3.37,	0.55,	0.00,	1.40,	0.46]
 

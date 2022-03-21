@@ -514,7 +514,7 @@ ax.xaxis.set_tick_params(labeltop='on')
 ax.yaxis.set_tick_params(labeltop='rigth')
 ax.xaxis.set_ticks_position('both')
 ax.yaxis.set_ticks_position('both')
-ax.grid()
+# ax.grid()
 
 # mean=[-1.6043,	1.86713333333333,	0.360133333333333,	-0.4019,	3.41566666666667,	0.375,	2.78246666666667,	1.79223333333333,	0.257133333333333,]
 h=plt.hist(v_x*-1, bins= 18, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')

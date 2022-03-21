@@ -172,7 +172,7 @@ plt.legend(['Comparison Field'],fontsize=20,markerscale=0,shadow=True,loc=2,hand
 # plt.legend(['Comparison Field'],fontsize=20,markerscale=1,shadow=True,loc=1,handlelength=0.5)
 ax.set_ylim(1.6,2.2)
 ax.set_xlim(-10,10)
-ax.grid()
+# ax.grid()
 plt.ylabel(r'$\mathrm{A_{Ks}}$')
 plt.xlabel(r'$\mathrm{\mu_{l}(mas\ yr^{-1})}$')#\ Chip \ %s$'%(chip)) 
 plt.gca().invert_xaxis()
@@ -198,34 +198,34 @@ plt.gca().invert_xaxis()
 # =============================================================================
 #%%
 
-# x_in=np.loadtxt(pruebas+'dvx_mag_IN.txt')#header='mh_all,dvx_all')
-# no_x_in=np.loadtxt(pruebas+'NO_dvx_mag_IN.txt')#header='mh_all,dvx_all')
+x_in=np.loadtxt(pruebas+'dvx_mag_IN.txt')#header='mh_all,dvx_all')
+no_x_in=np.loadtxt(pruebas+'NO_dvx_mag_IN.txt')#header='mh_all,dvx_all')
 
-# x_out=np.loadtxt(pruebas+'dvx_mag_OUT.txt')#header='mh_all,dvx_all')
-# no_x_out=np.loadtxt(pruebas+'NO_dvx_mag_OUT.txt')#header='mh_all,dvx_all')
+x_out=np.loadtxt(pruebas+'dvx_mag_OUT.txt')#header='mh_all,dvx_all')
+no_x_out=np.loadtxt(pruebas+'NO_dvx_mag_OUT.txt')#header='mh_all,dvx_all')
 
 
-# ejes=[x_in[0,:],x_out[0,:]]
-# absc=[x_in[1,:],x_out[1,:]]
+ejes=[x_in[0,:],x_out[0,:]]
+absc=[x_in[1,:],x_out[1,:]]
 
-# ejes_no=[no_x_in[0,:],no_x_out[0,:]]
-# absc_no=[no_x_in[1,:],no_x_out[1,:]]
+ejes_no=[no_x_in[0,:],no_x_out[0,:]]
+absc_no=[no_x_in[1,:],no_x_out[1,:]]
 
-# zones=['Brick field', 'Comparison field']
-# rcParams.update({'font.size': 40})
-# accu=2
-# fig, ax=plt.subplots(1,2,figsize=(20,10))
-# for i in range(len(ejes)):
-#     ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
-#     # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
-#     ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=25)
-#     ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
-#     # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
-#     ax[i].set_xlim(12,19)
-#     ax[i].set_ylim(0,8)
-#     ax[i].set_xlabel('[H]',fontsize=40)
-#     ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=40)
-#     ax[i].legend(['%s'%(zones[i])],fontsize=40,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
+zones=['Brick field', 'Comparison field']
+rcParams.update({'font.size': 40})
+accu=2
+fig, ax=plt.subplots(1,2,figsize=(20,10))
+for i in range(len(ejes)):
+    ax[i].scatter(ejes[i],absc[i],color='k',alpha=0.7,s=5)
+    # ax[i].scatter(mh_all[no_sel],ejes_accu[i],color='red',alpha=0.7,s=5)
+    ax[i].scatter(ejes_no[i],absc_no[i],color='red',alpha=0.7,s=25)
+    ax[i].axhline(accu, color='r', linestyle='dashed', linewidth=3)
+    # ax[i].axvline(max_M, color='r', linestyle='dashed', linewidth=3)
+    ax[i].set_xlim(12,19)
+    ax[i].set_ylim(0,8)
+    ax[i].set_xlabel('[H]',fontsize=40)
+    ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {vx}}(mas)}$',fontsize=40)
+    ax[i].legend(['%s'%(zones[i])],fontsize=40,markerscale=0,shadow=True,loc=1,handlelength=-0.0)
 
 #%%
 
