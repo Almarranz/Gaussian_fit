@@ -66,7 +66,7 @@ data = '/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/dxy_GNS_vs_ZOC/'
 # =============================================================================
 # =============================================================================
 
-mH,dx,dy,draH,ddecH=np.loadtxt(data+'out_comm_GNS_ZOC.txt',unpack=True)
+mH,dx,dy,draH,ddecH=np.loadtxt(data+'out_comm_GNS_ZOC_special.txt',unpack=True)
 mH_up,dx_up,dy_up,draH_up,ddecH_up=np.loadtxt(data+'inUP_comm_GNS_ZOC.txt',unpack=True)
 
 dx_all=np.r_[dx,dx_up]
@@ -87,7 +87,7 @@ ax.scatter(mH_all,dxyg*1000,color='red',s=size, marker='o',zorder=3,alpha=0.3)
 leg=ax.legend(['D19','D15(GNS)'],fontsize=20,markerscale=2.5,shadow=True,loc=2,handlelength=0.5)
 for lh in leg.legendHandles: 
     lh.set_alpha(1)
-ax.grid()
+# ax.grid()
 plt.ylabel(r'$\mathrm{\sigma_{xy} (mas)}$')
 ax.set_ylim(0,12)
 ax.set_xlim(12,19)
@@ -104,7 +104,7 @@ plt.xlabel(r'[H]')#\ Chip \ %s$'%(chip))
 
 #%%
 size=20
-
+rcParams.update({'font.size': 40})
 dposz=[dx_all,dy_all]
 dposg=[draH_all,ddecH_all]
 ejes=['x','y']
@@ -123,7 +123,7 @@ for i in range(len(dposg)):
     ax[i].set_xlabel(r'[H]',fontsize=40)#\ Chip \ %s$'%(chip)) 
     ax[i].set_ylabel(r'$\mathrm{\sigma_{%s} (mas)}$'%(ejes[i]),fontsize=40,labelpad=-10)
     
-    ax[i].grid()
+    # ax[i].grid()
 
 
 #%%
