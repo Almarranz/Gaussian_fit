@@ -642,7 +642,7 @@ ax.xaxis.set_tick_params(labeltop='on')
 ax.yaxis.set_tick_params(labeltop='rigth')
 ax.xaxis.set_ticks_position('both')
 ax.yaxis.set_ticks_position('both')
-ax.grid()
+# ax.grid()
 # mean=[-1.91049268333333,	1.12003936,	0.18239401,	0.223946633333333,	3.47003635,	0.822778293333333,]
 h=plt.hist(v_y, bins= 30, color='white', alpha = 0.0, density =True, histtype = 'stepfilled')
 plt.legend(['Brick field'],fontsize=20,markerscale=0,shadow=True,loc=1,handlelength=-0.8)

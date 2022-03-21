@@ -210,7 +210,7 @@ for i in range(len(ejes)):
     ax[i].set_ylim(0,4)
     ax[i].set_xlabel('[H]',fontsize=40)
     ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {%s}}(mas\ yr^{-1})}$'%(comp[i]),fontsize=40)
-    ax[i].grid()
+    # ax[i].grid()
 
     
     
