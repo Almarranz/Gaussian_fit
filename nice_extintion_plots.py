@@ -181,7 +181,7 @@ plt.ylabel(r'$\mathrm{A_{Ks}}$')
 plt.xlabel(r'$\mathrm{\mu_{l}(mas\ yr^{-1})}$')#\ Chip \ %s$'%(chip)) 
 plt.gca().invert_xaxis()
 pics='/Users/amartinez/Desktop/PhD/My_papers/brick/corrected_by_language/'
-plt.savefig(pics + 'extintion_vx_comparison.png', dpi=300)
+plt.savefig(pics + 'extintion_vx_comparison.png', dpi=300,bbox_inches='tight')
 
 #%%
 

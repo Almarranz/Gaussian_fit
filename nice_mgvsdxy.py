@@ -125,7 +125,7 @@ for i in range(len(dposg)):
     
     # ax[i].grid()
 pics='/Users/amartinez/Desktop/PhD/My_papers/brick/corrected_by_language/'
-plt.savefig(pics + 'mag_vs_dxy_both_xy.png', dpi=300)
+plt.savefig(pics + 'mag_vs_dxy_both_xy.png', bbox_inches='tight',dpi=300)
 
 #%%
 
@@ -207,7 +207,7 @@ for i in range(len(ejes)):
     ax[i].set_ylabel(r'$\mathrm{\sigma_{\vec {%s}}(mas\ yr^{-1})}$'%(comp[i]),fontsize=40)
     ax[i].grid()
 
-plt.savefig(pics + 'dvx_vs_mag_BRICK.png', dpi=300)
+plt.savefig(pics + 'dvx_vs_mag_BRICK.png', bbox_inches='tight',dpi=300)
 #%%
 # =============================================================================
 # mH_new,dvelc=np.loadtxt(pruebas+'dvx_mag_OUT1.txt',unpack=True)#header='mh_all,dvx_all')
@@ -253,7 +253,7 @@ for i in range(2):
         ax[i,j].imshow(ims[i][j])
         ax[i,j].axis('off')
 plt.subplots_adjust(wspace=-0.005, hspace=0)
-plt.savefig(pics + 'all_in_one1_poiss_revised.png', dpi=300)    
+plt.savefig(pics + 'all_in_one1_poiss_revised.png', bbox_inches='tight',dpi=250)    
 # =============================================================================
 # brick='/Users/amartinez/Desktop/PhD/My_papers/brick/'
 # im3 = plt.imread(brick+'1_vy_in_poiss_unc.png')
