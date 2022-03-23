@@ -151,6 +151,7 @@ if field=='t':
     np.savetxt(data + 'Aks_vs_vx_target.txt',np.array([bi[:-1]+1.5,all_AKs,dKs,dKs1]).T)
 
 #%%
+rcParams.update({'font.size': 20})
 fig, ax =plt.subplots(1,1,figsize=(8,8))
 # ax.scatter(vx,AKs,color='k',s=15, marker='.',alpha=0.5)
 bi_c,AK_c,dK_c,dK1_c=np.loadtxt(data+'Aks_vs_vx_control.txt',unpack=True)
@@ -172,11 +173,15 @@ plt.legend(['Comparison Field'],fontsize=20,markerscale=0,shadow=True,loc=2,hand
 # plt.legend(['Comparison Field'],fontsize=20,markerscale=1,shadow=True,loc=1,handlelength=0.5)
 ax.set_ylim(1.6,2.2)
 ax.set_xlim(-10,10)
+ax.set_xticks( [10,-10,0,5,-5], minor=False)
+ax.set_yticks( [1.6,1.7,1.8,1.9,2.0,2.1,2.2], minor=False)
+
 # ax.grid()
 plt.ylabel(r'$\mathrm{A_{Ks}}$')
 plt.xlabel(r'$\mathrm{\mu_{l}(mas\ yr^{-1})}$')#\ Chip \ %s$'%(chip)) 
 plt.gca().invert_xaxis()
-
+pics='/Users/amartinez/Desktop/PhD/My_papers/brick/corrected_by_language/'
+plt.savefig(pics + 'extintion_vx_comparison.png', dpi=300)
 
 #%%
 
